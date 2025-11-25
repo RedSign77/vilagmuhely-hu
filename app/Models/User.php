@@ -53,10 +53,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        // For development, allow all users. In production, you may want to check roles/permissions
-        return true;
-
-        // Uncomment this for production with email verification:
-        // return $this->hasVerifiedEmail();
+        return $this->hasVerifiedEmail();
     }
 }

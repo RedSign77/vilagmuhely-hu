@@ -1,9 +1,9 @@
 <?php
 
-namespace Vilagmuhely\Sessions\Filament\Resources;
+namespace Webtechsolutions\Sessions\Filament\Resources;
 
-use Vilagmuhely\Sessions\Filament\Resources\SessionResource\Pages;
-use Vilagmuhely\Sessions\Models\Session;
+use Webtechsolutions\Sessions\Filament\Resources\SessionResource\Pages;
+use Webtechsolutions\Sessions\Models\Session;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c615db6ae21ca0a8289668938b3dfde",
+    "content-hash": "a40fe88034dcc79058a2108ba96f50da",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -7508,40 +7508,6 @@
             "time": "2024-12-21T16:25:41+00:00"
         },
         {
-            "name": "vilagmuhely/sessions",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "./packages/sessions",
-                "reference": "9c6f1cc4ebc5df753d5b5a7bdaa9311928435cbe"
-            },
-            "require": {
-                "filament/filament": "^3.3",
-                "illuminate/support": "^12.0",
-                "php": "^8.2"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Vilagmuhely\\Sessions\\Providers\\SessionServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Vilagmuhely\\Sessions\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "Session management package for Laravel with Filament admin interface",
-            "transport-options": {
-                "relative": true
-            }
-        },
-        {
             "name": "vlucas/phpdotenv",
             "version": "v5.6.2",
             "source": {
@@ -7698,6 +7664,74 @@
                 }
             ],
             "time": "2024-11-21T01:49:47+00:00"
+        },
+        {
+            "name": "webtechsolutions/queue-manager",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./packages/queue-manager",
+                "reference": "1e485e2a3a554ac9675c1c15f9b9bb4e113e630d"
+            },
+            "require": {
+                "filament/filament": "^3.3",
+                "illuminate/support": "^12.0",
+                "php": "^8.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Webtechsolutions\\QueueManager\\Providers\\QueueManagerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webtechsolutions\\QueueManager\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Queue management package for Laravel with Filament admin interface",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "webtechsolutions/sessions",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./packages/sessions",
+                "reference": "c9cc3f89ff2c449ca156c5f2f7eb1825a9b4b83a"
+            },
+            "require": {
+                "filament/filament": "^3.3",
+                "illuminate/support": "^12.0",
+                "php": "^8.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Webtechsolutions\\Sessions\\Providers\\SessionServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webtechsolutions\\Sessions\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Session management package for Laravel with Filament admin interface",
+            "transport-options": {
+                "relative": true
+            }
         }
     ],
     "packages-dev": [
@@ -10066,7 +10100,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "vilagmuhely/sessions": 20
+        "webtechsolutions/queue-manager": 20,
+        "webtechsolutions/sessions": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

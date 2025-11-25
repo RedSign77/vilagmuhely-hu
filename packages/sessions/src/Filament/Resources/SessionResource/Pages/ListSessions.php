@@ -1,8 +1,8 @@
 <?php
 
-namespace Vilagmuhely\Sessions\Filament\Resources\SessionResource\Pages;
+namespace Webtechsolutions\Sessions\Filament\Resources\SessionResource\Pages;
 
-use Vilagmuhely\Sessions\Filament\Resources\SessionResource;
+use Webtechsolutions\Sessions\Filament\Resources\SessionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

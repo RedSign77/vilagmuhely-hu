@@ -143,3 +143,23 @@ Located in `packages/sessions/`, this package provides session management throug
   - IP address links to whatismyipaddress.com
 
 See `packages/sessions/README.md` for detailed documentation.
+
+### Queue Manager Package
+
+Located in `packages/queue-manager/`, this package provides queue management through Filament:
+
+- **Location**: `packages/queue-manager/`
+- **Namespace**: `Vilagmuhely\QueueManager`
+- **Admin Path**: `/admin` → Configuration → Pending Jobs / Failed Jobs / Completed Jobs
+- **Features**:
+  - **Pending Jobs**: View, run immediately, or terminate queued jobs
+  - **Failed Jobs**: View exceptions, retry, or clear failed jobs
+  - **Completed Jobs**: View queue statistics and tracking information
+  - Slide-over modals for detailed job inspection
+  - Bulk operations support
+  - Auto-refresh every 10 seconds
+  - Search and filter capabilities
+
+**Requirements**: Database queue driver (`QUEUE_CONNECTION=database`)
+
+See `packages/queue-manager/README.md` for detailed documentation.

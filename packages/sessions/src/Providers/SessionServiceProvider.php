@@ -1,6 +1,6 @@
 <?php
 
-namespace Vilagmuhely\Sessions\Providers;
+namespace Webtechsolutions\Sessions\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Filament\Support\Facades\FilamentAsset;

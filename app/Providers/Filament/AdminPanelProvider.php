@@ -17,6 +17,10 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Webtechsolutions\QueueManager\Filament\Resources\CompletedJobResource;
+use Webtechsolutions\QueueManager\Filament\Resources\FailedJobResource;
+use Webtechsolutions\QueueManager\Filament\Resources\PendingJobResource;
+use Webtechsolutions\Sessions\Filament\Resources\SessionResource;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -27,12 +31,18 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
+            ->passwordReset()
+            ->emailVerification()
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->resources([
-                \Vilagmuhely\Sessions\Filament\Resources\SessionResource::class,
+                SessionResource::class,
+                PendingJobResource::class,
+                FailedJobResource::class,
+                CompletedJobResource::class,
             ])
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
@@ -41,7 +51,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

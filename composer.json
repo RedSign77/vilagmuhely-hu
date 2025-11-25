@@ -10,7 +10,8 @@
         "filament/filament": "^3.3",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "vilagmuhely/sessions": "@dev"
+        "webtechsolutions/sessions": "@dev",
+        "webtechsolutions/queue-manager": "@dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -26,7 +27,8 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Vilagmuhely\\Sessions\\": "packages/sessions/src/"
+            "Webtechsolutions\\Sessions\\": "packages/sessions/src/",
+            "Webtechsolutions\\QueueManager\\": "packages/queue-manager/src/"
         }
     },
     "autoload-dev": {
@@ -38,6 +40,10 @@
         {
             "type": "path",
             "url": "./packages/sessions"
+        },
+        {
+            "type": "path",
+            "url": "./packages/queue-manager"
         }
     ],
     "scripts": {

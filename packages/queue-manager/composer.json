@@ -1,11 +1,11 @@
 {
-    "name": "webtechsolutions/sessions",
-    "description": "Session management package for Laravel with Filament admin interface",
+    "name": "webtechsolutions/queue-manager",
+    "description": "Queue management package for Laravel with Filament admin interface",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Webtechsolutions\\Sessions\\": "src/"
+            "Webtechsolutions\\QueueManager\\": "src/"
         }
     },
     "require": {
@@ -16,7 +16,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Webtechsolutions\\Sessions\\Providers\\SessionServiceProvider"
+                "Webtechsolutions\\QueueManager\\Providers\\QueueManagerServiceProvider"
             ]
         }
     },
