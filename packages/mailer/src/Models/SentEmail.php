@@ -79,4 +79,20 @@ class SentEmail extends Model
     {
         return $query->where('status', 'failed');
     }
+
+    /**
+     * Scope a query to only include emails older than given days.
+     */
+    public function scopeOlderThanDays($query, int $days)
+    {
+        return $query->where('created_at', '<=', now()->subDays($days));
+    }
+
+    /**
+     * Delete sent emails older than specified days.
+     */
+    public static function deleteOlderThan(int $days): int
+    {
+        return static::olderThanDays($days)->delete();
+    }
 }

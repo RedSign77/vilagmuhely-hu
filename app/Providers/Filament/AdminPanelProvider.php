@@ -28,6 +28,7 @@ use Webtechsolutions\Mailer\Filament\Resources\SentEmailResource;
 use Webtechsolutions\Mailer\Filament\Pages\ComposeEmail;
 use Webtechsolutions\UserManager\Filament\Resources\UserResource;
 use Webtechsolutions\UserManager\Filament\Resources\RoleResource;
+use Webtechsolutions\UserManager\Filament\Resources\UserActivityLogResource;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -54,6 +55,7 @@ class AdminPanelProvider extends PanelProvider
             ->resources([
                 UserResource::class,
                 RoleResource::class,
+                UserActivityLogResource::class,
                 SessionResource::class,
                 PendingJobResource::class,
                 FailedJobResource::class,

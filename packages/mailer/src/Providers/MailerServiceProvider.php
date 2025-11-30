@@ -3,6 +3,7 @@
 namespace Webtechsolutions\Mailer\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Webtechsolutions\Mailer\Console\Commands\CleanupSentEmailsCommand;
 
 class MailerServiceProvider extends ServiceProvider
 {
@@ -29,5 +30,12 @@ class MailerServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../resources/views' => resource_path('views/vendor/mailer'),
         ], 'mailer-views');
+
+        // Register commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                CleanupSentEmailsCommand::class,
+            ]);
+        }
     }
 }
