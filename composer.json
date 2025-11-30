@@ -11,7 +11,9 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "webtechsolutions/sessions": "@dev",
-        "webtechsolutions/queue-manager": "@dev"
+        "webtechsolutions/queue-manager": "@dev",
+        "webtechsolutions/mailer": "@dev",
+        "webtechsolutions/user-manager": "@dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -28,7 +30,9 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Webtechsolutions\\Sessions\\": "packages/sessions/src/",
-            "Webtechsolutions\\QueueManager\\": "packages/queue-manager/src/"
+            "Webtechsolutions\\QueueManager\\": "packages/queue-manager/src/",
+            "Webtechsolutions\\Mailer\\": "packages/mailer/src/",
+            "Webtechsolutions\\UserManager\\": "packages/user-manager/src/"
         }
     },
     "autoload-dev": {
@@ -44,6 +48,14 @@
         {
             "type": "path",
             "url": "./packages/queue-manager"
+        },
+        {
+            "type": "path",
+            "url": "./packages/mailer"
+        },
+        {
+            "type": "path",
+            "url": "./packages/user-manager"
         }
     ],
     "scripts": {

@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Webtechsolutions\UserManager\Models\Role;
 
 class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
@@ -23,6 +25,12 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'name',
         'email',
         'password',
+        'avatar',
+        'mobile',
+        'city',
+        'address',
+        'social_media_links',
+        'about',
     ];
 
     /**
@@ -45,7 +53,32 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'social_media_links' => 'array',
         ];
+    }
+
+    /**
+     * Get the roles for the user
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    /**
+     * Check if user has a specific role
+     */
+    public function hasRole(string $roleSlug): bool
+    {
+        return $this->roles()->where('slug', $roleSlug)->exists();
+    }
+
+    /**
+     * Check if user is a supervisor
+     */
+    public function isSupervisor(): bool
+    {
+        return $this->roles()->where('is_supervisor', true)->exists();
     }
 
     /**

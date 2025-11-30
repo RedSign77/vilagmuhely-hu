@@ -25,6 +25,11 @@ class SessionResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form

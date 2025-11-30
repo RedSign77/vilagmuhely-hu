@@ -2,10 +2,12 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\EditProfile;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -21,6 +23,11 @@ use Webtechsolutions\QueueManager\Filament\Resources\CompletedJobResource;
 use Webtechsolutions\QueueManager\Filament\Resources\FailedJobResource;
 use Webtechsolutions\QueueManager\Filament\Resources\PendingJobResource;
 use Webtechsolutions\Sessions\Filament\Resources\SessionResource;
+use Webtechsolutions\Mailer\Filament\Resources\EmailTemplateResource;
+use Webtechsolutions\Mailer\Filament\Resources\SentEmailResource;
+use Webtechsolutions\Mailer\Filament\Pages\ComposeEmail;
+use Webtechsolutions\UserManager\Filament\Resources\UserResource;
+use Webtechsolutions\UserManager\Filament\Resources\RoleResource;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -37,16 +44,28 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->userMenuItems([
+                'profile' => MenuItem::make()
+                    ->label('Edit Profile')
+                    ->url(fn (): string => EditProfile::getUrl())
+                    ->icon('heroicon-o-user-circle'),
+            ])
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->resources([
+                UserResource::class,
+                RoleResource::class,
                 SessionResource::class,
                 PendingJobResource::class,
                 FailedJobResource::class,
                 CompletedJobResource::class,
+                EmailTemplateResource::class,
+                SentEmailResource::class,
             ])
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
                 Pages\Dashboard::class,
+                ComposeEmail::class,
+                EditProfile::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
@@ -65,6 +84,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->renderHook(
+                'panels::body.end',
+                fn (): string => view('filament.footer.custom-footer')->render()
+            );
     }
 }

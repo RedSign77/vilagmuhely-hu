@@ -1,0 +1,25 @@
+{
+    "name": "webtechsolutions/user-manager",
+    "description": "User and role management package for Laravel with Filament admin interface",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Webtechsolutions\\UserManager\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^12.0",
+        "filament/filament": "^3.3"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webtechsolutions\\UserManager\\Providers\\UserManagerServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -8,13 +8,14 @@ use Webtechsolutions\QueueManager\Models\CompletedJob;
 
 class MoveCompletedJobToHistory
 {
+    protected static array $processingJobs = [];
+
     /**
      * Handle the event.
      */
     public function handle(JobProcessed $event): void
     {
         try {
-            // Get the job data before it's deleted
             $connectionName = $event->connectionName;
             $job = $event->job;
 
@@ -23,13 +24,13 @@ class MoveCompletedJobToHistory
                 return;
             }
 
-            // Get the raw job from the database before it's deleted
-            $rawJob = DB::connection()->table('jobs')
-                ->where('id', $job->getJobId())
-                ->first();
+            $jobId = $job->getJobId();
 
-            // If job still exists, move it to completed_jobs
-            if ($rawJob) {
+            // Check if we have stored job data from processing
+            if (isset(self::$processingJobs[$jobId])) {
+                $rawJob = self::$processingJobs[$jobId];
+
+                // Create completed job record
                 CompletedJob::create([
                     'queue' => $rawJob->queue,
                     'payload' => $rawJob->payload,
@@ -39,10 +40,21 @@ class MoveCompletedJobToHistory
                     'created_at' => $rawJob->created_at,
                     'completed_at' => now(),
                 ]);
+
+                // Clean up stored data
+                unset(self::$processingJobs[$jobId]);
             }
         } catch (\Exception $e) {
             // Silently fail - don't break the queue process
             \Log::error('Failed to move completed job to history: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Store job data before processing
+     */
+    public static function storeJobData(int $jobId, object $rawJob): void
+    {
+        self::$processingJobs[$jobId] = $rawJob;
     }
 }

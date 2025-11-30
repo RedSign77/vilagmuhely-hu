@@ -26,6 +26,16 @@ class CompletedJobResource extends Resource
 
     protected static ?int $navigationSort = 22;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

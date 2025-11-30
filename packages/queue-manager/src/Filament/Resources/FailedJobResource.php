@@ -25,6 +25,17 @@ class FailedJobResource extends Resource
 
     protected static ?int $navigationSort = 21;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        $count = static::getModel()::count();
+        return $count > 0 ? 'danger' : 'gray';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

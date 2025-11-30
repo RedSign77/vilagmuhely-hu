@@ -5,8 +5,10 @@ namespace Webtechsolutions\QueueManager\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Console\Scheduling\Schedule;
 use Webtechsolutions\QueueManager\Listeners\MoveCompletedJobToHistory;
+use Webtechsolutions\QueueManager\Listeners\CaptureJobBeforeProcessing;
 use Webtechsolutions\QueueManager\Console\Commands\CleanupCompletedJobsCommand;
 
 class QueueManagerServiceProvider extends ServiceProvider
@@ -31,6 +33,7 @@ class QueueManagerServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
         // Register event listeners
+        Event::listen(JobProcessing::class, CaptureJobBeforeProcessing::class);
         Event::listen(JobProcessed::class, MoveCompletedJobToHistory::class);
 
         // Schedule cleanup task

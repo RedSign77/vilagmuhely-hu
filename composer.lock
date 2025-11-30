@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a40fe88034dcc79058a2108ba96f50da",
+    "content-hash": "7d955c948eb1eeedf161058bca32c60f",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -7666,6 +7666,41 @@
             "time": "2024-11-21T01:49:47+00:00"
         },
         {
+            "name": "webtechsolutions/mailer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./packages/mailer",
+                "reference": "61132448977dadd7062006072f3d98e61fba2a0b"
+            },
+            "require": {
+                "filament/filament": "^3.3",
+                "illuminate/mail": "^12.0",
+                "illuminate/support": "^12.0",
+                "php": "^8.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Webtechsolutions\\Mailer\\Providers\\MailerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webtechsolutions\\Mailer\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Email management package for Laravel with Filament admin interface",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "webtechsolutions/queue-manager",
             "version": "dev-main",
             "dist": {
@@ -7729,6 +7764,40 @@
                 "MIT"
             ],
             "description": "Session management package for Laravel with Filament admin interface",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "webtechsolutions/user-manager",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./packages/user-manager",
+                "reference": "43998f27d38a02cd8e326fc45fe1848e45433c63"
+            },
+            "require": {
+                "filament/filament": "^3.3",
+                "illuminate/support": "^12.0",
+                "php": "^8.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Webtechsolutions\\UserManager\\Providers\\UserManagerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webtechsolutions\\UserManager\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "User and role management package for Laravel with Filament admin interface",
             "transport-options": {
                 "relative": true
             }
@@ -10100,8 +10169,10 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "webtechsolutions/mailer": 20,
         "webtechsolutions/queue-manager": 20,
-        "webtechsolutions/sessions": 20
+        "webtechsolutions/sessions": 20,
+        "webtechsolutions/user-manager": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
