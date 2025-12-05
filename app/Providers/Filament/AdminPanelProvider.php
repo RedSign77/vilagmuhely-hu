@@ -29,6 +29,9 @@ use Webtechsolutions\Mailer\Filament\Pages\ComposeEmail;
 use Webtechsolutions\UserManager\Filament\Resources\UserResource;
 use Webtechsolutions\UserManager\Filament\Resources\RoleResource;
 use Webtechsolutions\UserManager\Filament\Resources\UserActivityLogResource;
+use Webtechsolutions\ContentEngine\Filament\Resources\ContentResource;
+use Webtechsolutions\ContentEngine\Filament\Resources\ContentCategoryResource;
+use Webtechsolutions\ContentEngine\Filament\Resources\ContentTagResource;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -56,6 +59,9 @@ class AdminPanelProvider extends PanelProvider
                 UserResource::class,
                 RoleResource::class,
                 UserActivityLogResource::class,
+                ContentResource::class,
+                ContentCategoryResource::class,
+                ContentTagResource::class,
                 SessionResource::class,
                 PendingJobResource::class,
                 FailedJobResource::class,

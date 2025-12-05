@@ -13,7 +13,8 @@
         "webtechsolutions/sessions": "@dev",
         "webtechsolutions/queue-manager": "@dev",
         "webtechsolutions/mailer": "@dev",
-        "webtechsolutions/user-manager": "@dev"
+        "webtechsolutions/user-manager": "@dev",
+        "webtechsolutions/content-engine": "@dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -56,6 +57,10 @@
         {
             "type": "path",
             "url": "./packages/user-manager"
+        },
+        {
+            "type": "path",
+            "url": "./packages/content-engine"
         }
     ],
     "scripts": {

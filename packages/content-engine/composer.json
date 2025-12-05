@@ -1,0 +1,21 @@
+{
+    "name": "webtechsolutions/content-engine",
+    "description": "Content Engine package for managing various types of content",
+    "type": "library",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webtechsolutions\\ContentEngine\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webtechsolutions\\ContentEngine\\Providers\\ContentEngineServiceProvider"
+            ]
+        }
+    }
+}
