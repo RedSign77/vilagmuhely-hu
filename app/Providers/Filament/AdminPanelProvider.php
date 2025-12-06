@@ -53,6 +53,10 @@ class AdminPanelProvider extends PanelProvider
                     ->label('Edit Profile')
                     ->url(fn (): string => EditProfile::getUrl())
                     ->icon('heroicon-o-user-circle'),
+                'crystal' => MenuItem::make()
+                    ->label('My Crystal')
+                    ->url(fn (): string => route('crystals.show', auth()->user()))
+                    ->icon('heroicon-o-sparkles'),
             ])
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->resources([

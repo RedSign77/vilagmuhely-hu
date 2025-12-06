@@ -137,6 +137,31 @@ class Content extends Model
     }
 
     /**
+     * Get ratings for this content
+     */
+    public function ratings()
+    {
+        return $this->hasMany(ContentRating::class);
+    }
+
+    /**
+     * Get average rating for this content
+     */
+    public function getAverageRatingAttribute(): ?float
+    {
+        $average = $this->ratings()->avg('rating');
+        return $average ? round($average, 2) : null;
+    }
+
+    /**
+     * Get count of helpful ratings
+     */
+    public function getHelpfulRatingsCountAttribute(): int
+    {
+        return $this->ratings()->where('is_helpful', true)->count();
+    }
+
+    /**
      * Scope to filter by type
      */
     public function scopeOfType($query, string $type)

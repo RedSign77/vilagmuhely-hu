@@ -15,13 +15,13 @@ This is a Laravel 12 application with Filament 3.3 admin panel. The application 
 
 ### Initial Setup
 ```bash
-composer setup
+docker exec vilagmuhely-php-fpm-1 composer setup
 ```
 This runs the full setup: composer install, copies .env, generates app key, runs migrations, and builds frontend assets.
 
 ### Development Server
 ```bash
-composer dev
+docker exec vilagmuhely-php-fpm-1 composer dev
 ```
 Starts all development services concurrently:
 - Laravel server (http://localhost:8000)
@@ -31,38 +31,38 @@ Starts all development services concurrently:
 
 Alternatively, run services individually:
 ```bash
-php artisan serve                    # Start Laravel server
-php artisan queue:listen --tries=1   # Start queue worker
-php artisan pail --timeout=0         # Start log viewer
-npm run dev                          # Start Vite dev server
+docker exec vilagmuhely-php-fpm-1 php artisan serve                    # Start Laravel server
+docker exec vilagmuhely-php-fpm-1 php artisan queue:listen --tries=1   # Start queue worker
+docker exec vilagmuhely-php-fpm-1 php artisan pail --timeout=0         # Start log viewer
+docker exec vilagmuhely-php-fpm-1 npm run dev                          # Start Vite dev server
 ```
 
 ### Testing
 ```bash
-composer test                        # Run all tests
-php artisan test                     # Run all tests (direct)
-php artisan test tests/Unit          # Run unit tests only
-php artisan test tests/Feature       # Run feature tests only
-php artisan test --filter=TestName   # Run specific test
+docker exec vilagmuhely-php-fpm-1 composer test                        # Run all tests
+docker exec vilagmuhely-php-fpm-1 php artisan test                     # Run all tests (direct)
+docker exec vilagmuhely-php-fpm-1 php artisan test tests/Unit          # Run unit tests only
+docker exec vilagmuhely-php-fpm-1 php artisan test tests/Feature       # Run feature tests only
+docker exec vilagmuhely-php-fpm-1 php artisan test --filter=TestName   # Run specific test
 ```
 
 ### Code Quality
 ```bash
-./vendor/bin/pint                    # Format code (Laravel Pint)
-./vendor/bin/pint --test             # Check code style without fixing
+docker exec vilagmuhely-php-fpm-1 ./vendor/bin/pint                    # Format code (Laravel Pint)
+docker exec vilagmuhely-php-fpm-1 ./vendor/bin/pint --test             # Check code style without fixing
 ```
 
 ### Build
 ```bash
-npm run build                        # Build production assets
+docker exec vilagmuhely-php-fpm-1 npm run build                        # Build production assets
 ```
 
 ### Database
 ```bash
-php artisan migrate                  # Run migrations
-php artisan migrate:fresh            # Drop all tables and re-migrate
-php artisan migrate:fresh --seed     # Re-migrate and seed
-php artisan db:seed                  # Run seeders
+docker exec vilagmuhely-php-fpm-1 php artisan migrate                  # Run migrations
+docker exec vilagmuhely-php-fpm-1 php artisan migrate:fresh            # Drop all tables and re-migrate
+docker exec vilagmuhely-php-fpm-1 php artisan migrate:fresh --seed     # Re-migrate and seed
+docker exec vilagmuhely-php-fpm-1 php artisan db:seed                  # Run seeders
 ```
 
 ## Architecture
@@ -106,7 +106,7 @@ The application supports multiple languages. Filament panel translations are ava
 
 To create a new Filament resource:
 ```bash
-php artisan make:filament-resource ResourceName --generate
+docker exec vilagmuhely-php-fpm-1 php artisan make:filament-resource ResourceName --generate
 ```
 
 This generates:
@@ -117,13 +117,13 @@ This generates:
 
 Common artisan commands:
 ```bash
-php artisan filament:upgrade         # Upgrade Filament assets
-php artisan filament:cache-components # Cache Filament components
-php artisan filament:assets          # Publish Filament assets
-php artisan config:clear             # Clear configuration cache
-php artisan cache:clear              # Clear application cache
-php artisan route:list               # List all routes
-php artisan tinker                   # Interactive REPL
+docker exec vilagmuhely-php-fpm-1 php artisan filament:upgrade         # Upgrade Filament assets
+docker exec vilagmuhely-php-fpm-1 php artisan filament:cache-components # Cache Filament components
+docker exec vilagmuhely-php-fpm-1 php artisan filament:assets          # Publish Filament assets
+docker exec vilagmuhely-php-fpm-1 php artisan config:clear             # Clear configuration cache
+docker exec vilagmuhely-php-fpm-1 php artisan cache:clear              # Clear application cache
+docker exec vilagmuhely-php-fpm-1 php artisan route:list               # List all routes
+docker exec vilagmuhely-php-fpm-1 php artisan tinker                   # Interactive REPL
 ```
 
 ## Packages

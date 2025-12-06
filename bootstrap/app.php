@@ -32,5 +32,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('user-manager:cleanup-activity-logs --days=90')
             ->dailyAt('04:00')
             ->onOneServer();
+
+        // Process crystal metric updates - runs every 30 minutes
+        $schedule->command('crystal:process-updates')
+            ->everyThirtyMinutes()
+            ->onOneServer();
     })
     ->create();
