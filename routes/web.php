@@ -2,9 +2,21 @@
 
 use App\Http\Controllers\WorldController;
 use Illuminate\Support\Facades\Route;
+use Webtechsolutions\ContentEngine\Models\WorldStructure;
+use Webtechsolutions\ContentEngine\Services\ZoneService;
 
 Route::get('/', function () {
-    return view('welcome');
+    $zoneService = app(ZoneService::class);
+
+    $worldStats = [
+        'total_structures' => WorldStructure::count(),
+        'total_builders' => WorldStructure::distinct('user_id')->count(),
+        'unlocked_zones' => $zoneService->getUnlockedZones()->count(),
+    ];
+
+    $zoneProgress = $zoneService->getNextZoneProgress();
+
+    return view('welcome', compact('worldStats', 'zoneProgress'));
 });
 
 // World Routes
