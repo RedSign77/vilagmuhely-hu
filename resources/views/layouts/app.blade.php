@@ -19,9 +19,14 @@
                     </a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="{{ route('crystals.gallery') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
-                        Crystal Gallery
+                    <a href="{{ route('world.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        World Map
                     </a>
+                    @auth
+                    <a href="{{ route('world.my-structures') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        My Structures
+                    </a>
+                    @endauth
                     <a href="/admin" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                         Admin
                     </a>

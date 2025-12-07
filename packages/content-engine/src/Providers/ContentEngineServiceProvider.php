@@ -2,16 +2,11 @@
 
 namespace Webtechsolutions\ContentEngine\Providers;
 
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use Webtechsolutions\ContentEngine\Console\Commands\ProcessCrystalUpdatesCommand;
-use Webtechsolutions\ContentEngine\Events\AchievementUnlockedEvent;
-use Webtechsolutions\ContentEngine\Events\ContentDownloadedEvent;
-use Webtechsolutions\ContentEngine\Events\ContentPublishedEvent;
-use Webtechsolutions\ContentEngine\Events\ContentRatedEvent;
-use Webtechsolutions\ContentEngine\Events\ContentViewedEvent;
-use Webtechsolutions\ContentEngine\Listeners\QueueCrystalUpdateListener;
-use Webtechsolutions\ContentEngine\Services\CrystalCalculatorService;
+use Webtechsolutions\ContentEngine\Services\WorldResourceService;
+use Webtechsolutions\ContentEngine\Services\WorldBuilderService;
+use Webtechsolutions\ContentEngine\Services\AdjacencyService;
+use Webtechsolutions\ContentEngine\Services\ZoneService;
 
 class ContentEngineServiceProvider extends ServiceProvider
 {
@@ -20,8 +15,11 @@ class ContentEngineServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Bind CrystalCalculatorService as singleton
-        $this->app->singleton(CrystalCalculatorService::class);
+        // Bind World services as singletons
+        $this->app->singleton(ZoneService::class);
+        $this->app->singleton(AdjacencyService::class);
+        $this->app->singleton(WorldResourceService::class);
+        $this->app->singleton(WorldBuilderService::class);
     }
 
     /**
@@ -34,19 +32,5 @@ class ContentEngineServiceProvider extends ServiceProvider
 
         // Load API routes
         $this->loadRoutesFrom(__DIR__ . '/../../routes/api.php');
-
-        // Register event listeners
-        Event::listen(ContentPublishedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentPublished']);
-        Event::listen(ContentViewedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentViewed']);
-        Event::listen(ContentDownloadedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentDownloaded']);
-        Event::listen(ContentRatedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentRated']);
-        Event::listen(AchievementUnlockedEvent::class, [QueueCrystalUpdateListener::class, 'handleAchievementUnlocked']);
-
-        // Register console commands
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                ProcessCrystalUpdatesCommand::class,
-            ]);
-        }
     }
 }

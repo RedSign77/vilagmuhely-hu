@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Controllers\CrystalGalleryController;
+use App\Http\Controllers\WorldController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Crystal Gallery Routes
-Route::get('/crystals/gallery', [CrystalGalleryController::class, 'index'])->name('crystals.gallery');
-Route::get('/crystals/{user}', [CrystalGalleryController::class, 'show'])->name('crystals.show');
+// World Routes
+Route::get('/world', [WorldController::class, 'index'])->name('world.index');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/my-structures', [WorldController::class, 'myStructures'])->name('world.my-structures');
+});

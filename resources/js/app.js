@@ -1,2 +1,2 @@
 import './bootstrap';
-import './components/CrystalViewer.js';
+import './components/WorldViewer.js';
