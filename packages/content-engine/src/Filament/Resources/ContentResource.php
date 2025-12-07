@@ -109,13 +109,18 @@ class ContentResource extends Resource
                     ->schema([
                         Forms\Components\FileUpload::make('file_path')
                             ->label('Upload File')
+                            ->disk('public')
                             ->directory('content/files')
                             ->acceptedFileTypes(['application/pdf', 'application/zip', 'application/x-zip-compressed'])
-                            ->maxSize(102400) // 100MB
+                            ->maxSize(65536) // 64MB in KB
                             ->columnSpanFull()
-                            ->helperText('Accepted formats: PDF, ZIP (Max: 100MB)')
+                            ->helperText('Accepted formats: PDF, ZIP (Max: 64MB)')
+                            ->preserveFilenames()
+                            ->downloadable()
+                            ->openable()
+                            ->live()
                             ->afterStateUpdated(function ($state, Forms\Set $set) {
-                                if ($state) {
+                                if ($state instanceof \Illuminate\Http\UploadedFile) {
                                     $set('file_type', $state->getClientOriginalExtension());
                                     $set('file_size', $state->getSize());
                                 }
