@@ -2,7 +2,12 @@
 
 namespace Webtechsolutions\ContentEngine\Providers;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Webtechsolutions\ContentEngine\Events\ContentPublishedEvent;
+use Webtechsolutions\ContentEngine\Listeners\AwardResourcesOnContentPublished;
+use Webtechsolutions\ContentEngine\Models\Content;
+use Webtechsolutions\ContentEngine\Observers\ContentObserver;
 use Webtechsolutions\ContentEngine\Services\WorldResourceService;
 use Webtechsolutions\ContentEngine\Services\WorldBuilderService;
 use Webtechsolutions\ContentEngine\Services\AdjacencyService;
@@ -32,5 +37,11 @@ class ContentEngineServiceProvider extends ServiceProvider
 
         // Load API routes
         $this->loadRoutesFrom(__DIR__ . '/../../routes/api.php');
+
+        // Register Content observer
+        Content::observe(ContentObserver::class);
+
+        // Register event listeners
+        Event::listen(ContentPublishedEvent::class, AwardResourcesOnContentPublished::class);
     }
 }

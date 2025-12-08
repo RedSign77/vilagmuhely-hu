@@ -54,13 +54,16 @@ class WorldApiController extends Controller
                     'id' => $structure->id,
                     'type' => $structure->structure_type,
                     'type_name' => $structure->type_name,
+                    'name' => $structure->display_name,
+                    'description' => $structure->display_description,
                     'x' => $structure->grid_x,
                     'y' => $structure->grid_y,
                     'level' => $structure->level,
                     'user_id' => $structure->user_id,
                     'user_name' => $structure->user->name,
-                    'color' => $structure->color,
+                    'color' => $structure->primary_color,
                     'decay_state' => $structure->decay_state,
+                    'customization' => $structure->customization,
                 ];
             });
 
@@ -227,6 +230,13 @@ class WorldApiController extends Controller
             'x' => 'required|integer',
             'y' => 'required|integer',
             'metadata' => 'nullable|array',
+            'customization' => 'nullable|array',
+            'customization.name' => 'nullable|string|max:30',
+            'customization.description' => 'nullable|string|max:200',
+            'customization.colors' => 'nullable|array',
+            'customization.colors.primary' => 'nullable|string|regex:/^#[0-9A-Fa-f]{6}$/',
+            'customization.style' => 'nullable|array',
+            'customization.features' => 'nullable|array',
         ]);
 
         try {
@@ -236,7 +246,8 @@ class WorldApiController extends Controller
                 $validated['type'],
                 $validated['x'],
                 $validated['y'],
-                $validated['metadata'] ?? null
+                $validated['metadata'] ?? null,
+                $validated['customization'] ?? null
             );
 
             return response()->json([
@@ -246,8 +257,11 @@ class WorldApiController extends Controller
                     'structure' => [
                         'id' => $structure->id,
                         'type' => $structure->structure_type,
+                        'name' => $structure->display_name,
                         'position' => ['x' => $structure->grid_x, 'y' => $structure->grid_y],
                         'level' => $structure->level,
+                        'color' => $structure->primary_color,
+                        'customization' => $structure->customization,
                     ],
                     'resources' => $this->resourceService->getResourceSummary($user),
                 ],
@@ -328,6 +342,32 @@ class WorldApiController extends Controller
         return response()->json([
             'success' => true,
             'data' => $suggestions,
+        ]);
+    }
+
+    /**
+     * Get available customization options for a structure type
+     */
+    public function getCustomizationOptions(string $type): JsonResponse
+    {
+        $defaults = WorldStructure::getDefaultCustomization($type);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'type' => $type,
+                'defaults' => $defaults,
+                'structure_types' => [
+                    WorldStructure::TYPE_COTTAGE => 'Cottage',
+                    WorldStructure::TYPE_WORKSHOP => 'Workshop',
+                    WorldStructure::TYPE_GALLERY => 'Gallery',
+                    WorldStructure::TYPE_LIBRARY => 'Library',
+                    WorldStructure::TYPE_ACADEMY => 'Academy',
+                    WorldStructure::TYPE_TOWER => 'Tower',
+                    WorldStructure::TYPE_MONUMENT => 'Monument',
+                    WorldStructure::TYPE_GARDEN => 'Garden',
+                ],
+            ],
         ]);
     }
 

@@ -9,6 +9,7 @@ Route::prefix('api/v1')->group(function () {
     Route::get('/world/stats', [WorldApiController::class, 'getStats']);
     Route::get('/world/leaderboard', [WorldApiController::class, 'getLeaderboard']);
     Route::get('/world/structure/{id}', [WorldApiController::class, 'getStructure']);
+    Route::get('/world/customization/{type}', [WorldApiController::class, 'getCustomizationOptions']);
 
     // Authenticated world endpoints
     Route::middleware(['auth:sanctum'])->group(function () {

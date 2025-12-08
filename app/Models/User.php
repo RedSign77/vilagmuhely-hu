@@ -6,12 +6,14 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Webtechsolutions\UserManager\Models\Role;
 use Webtechsolutions\ContentEngine\Models\Content;
+use Webtechsolutions\ContentEngine\Models\UserWorldResource;
 
 class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
@@ -73,6 +75,14 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     public function contents(): HasMany
     {
         return $this->hasMany(Content::class, 'creator_id');
+    }
+
+    /**
+     * Get user's world resources
+     */
+    public function worldResources(): HasOne
+    {
+        return $this->hasOne(UserWorldResource::class);
     }
 
     /**

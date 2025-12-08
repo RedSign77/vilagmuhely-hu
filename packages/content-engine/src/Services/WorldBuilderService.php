@@ -31,7 +31,8 @@ class WorldBuilderService
         string $type,
         int $x,
         int $y,
-        ?array $metadata = null
+        ?array $metadata = null,
+        ?array $customization = null
     ): WorldStructure {
         // Validate position
         if (!$this->adjacencyService->isValidPosition($x, $y)) {
@@ -51,6 +52,10 @@ class WorldBuilderService
             throw new \RuntimeException('Failed to spend resources');
         }
 
+        // Merge customization with defaults
+        $defaults = WorldStructure::getDefaultCustomization($type);
+        $finalCustomization = $customization ? array_replace_recursive($defaults, $customization) : $defaults;
+
         // Create structure
         $structure = WorldStructure::create([
             'user_id' => $user->id,
@@ -62,6 +67,7 @@ class WorldBuilderService
             'health' => 100,
             'decay_state' => WorldStructure::DECAY_ACTIVE,
             'metadata' => $metadata,
+            'customization' => $finalCustomization,
             'placed_at' => now(),
             'last_owner_activity' => now(),
         ]);

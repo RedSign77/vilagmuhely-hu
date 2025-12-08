@@ -380,15 +380,23 @@ export class WorldViewer {
             this.container.appendChild(panel);
         }
 
+        const name = structure.name || structure.type_name;
+        const description = structure.description || '';
+
         panel.innerHTML = `
             <div class="structure-details-header">
-                <h3>${structure.type_name}</h3>
+                <h3>${name}</h3>
                 <button class="close-btn" onclick="this.parentElement.parentElement.remove()">×</button>
             </div>
             <div class="structure-details-body">
+                ${description ? `<p class="structure-description">${description}</p>` : ''}
                 <div class="detail-row">
                     <span class="label">Owner:</span>
                     <span class="value">${structure.user_name}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Type:</span>
+                    <span class="value">${structure.type_name}</span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Level:</span>
