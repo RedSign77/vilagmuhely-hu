@@ -5,7 +5,7 @@
         </div>
         <div class="resource-info">
             <span class="resource-name">Stone</span>
-            <span class="resource-amount">{{ $resources['resources']['stone'] ?? 0 }}</span>
+            <span class="resource-amount" id="resource-stone">{{ $resources['resources']['stone'] ?? 0 }}</span>
         </div>
     </div>
 
@@ -15,7 +15,7 @@
         </div>
         <div class="resource-info">
             <span class="resource-name">Wood</span>
-            <span class="resource-amount">{{ $resources['resources']['wood'] ?? 0 }}</span>
+            <span class="resource-amount" id="resource-wood">{{ $resources['resources']['wood'] ?? 0 }}</span>
         </div>
     </div>
 
@@ -25,7 +25,7 @@
         </div>
         <div class="resource-info">
             <span class="resource-name">Crystal</span>
-            <span class="resource-amount">{{ $resources['resources']['crystal_shards'] ?? 0 }}</span>
+            <span class="resource-amount" id="resource-crystal">{{ $resources['resources']['crystal_shards'] ?? 0 }}</span>
         </div>
     </div>
 
@@ -35,7 +35,7 @@
         </div>
         <div class="resource-info">
             <span class="resource-name">Magic</span>
-            <span class="resource-amount">{{ $resources['resources']['magic_essence'] ?? 0 }}</span>
+            <span class="resource-amount" id="resource-magic">{{ $resources['resources']['magic_essence'] ?? 0 }}</span>
         </div>
     </div>
 

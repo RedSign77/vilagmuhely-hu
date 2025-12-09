@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Webtechsolutions\ContentEngine\Http\Controllers\Api\WorldApiController;
 
-Route::prefix('api/v1')->group(function () {
+Route::prefix('api/v1')->middleware(['web'])->group(function () {
     // Public world endpoints
     Route::get('/world/map', [WorldApiController::class, 'getMap']);
     Route::get('/world/stats', [WorldApiController::class, 'getStats']);
@@ -12,7 +12,7 @@ Route::prefix('api/v1')->group(function () {
     Route::get('/world/customization/{type}', [WorldApiController::class, 'getCustomizationOptions']);
 
     // Authenticated world endpoints
-    Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['auth'])->group(function () {
         Route::get('/world/my-resources', [WorldApiController::class, 'getMyResources']);
         Route::get('/world/my-structures', [WorldApiController::class, 'getMyStructures']);
         Route::post('/world/build', [WorldApiController::class, 'build']);

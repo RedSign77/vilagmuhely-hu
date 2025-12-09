@@ -57,8 +57,20 @@
          data-world-viewer
          data-chunk-size="30"
          data-enable-building="{{ auth()->check() ? 'true' : 'false' }}"
-         data-show-mini-map="true">
+         data-show-mini-map="true"
+         data-api-base="/api/v1/world"
+         data-csrf-token="{{ csrf_token() }}">
     </div>
+
+    <!-- Build Panel (outside world-viewer) -->
+    @if(auth()->check())
+    <div id="build-panel" class="build-panel" style="display: none;">
+        <div class="build-panel-loading">
+            <div class="loading-spinner"></div>
+            <span>Loading build options...</span>
+        </div>
+    </div>
+    @endif
 
     <!-- Instructions -->
     <div class="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">

@@ -1,4 +1,5 @@
-// 2D Canvas-based isometric world viewer
+import * as THREE from 'three';
+
 export class WorldViewer {
     constructor(containerId, options = {}) {
         this.containerId = containerId;
@@ -14,39 +15,30 @@ export class WorldViewer {
             chunkSize: options.chunkSize ?? 20,
             enableBuilding: options.enableBuilding ?? false,
             showMiniMap: options.showMiniMap ?? true,
+            viewMode: options.viewMode ?? 'isometric', // 'isometric' or 'topdown'
             tileWidth: 32,
             tileHeight: 16,
             ...options
         };
 
-        // Canvas and context
-        this.canvas = null;
-        this.ctx = null;
-
-        // Viewport (camera replacement)
-        this.viewport = {
-            x: 0,
-            y: 0,
-            zoom: 1
-        };
-
-        // Data
-        this.structures = new Map();
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+        this.structures = new Map(); // Map of structure id -> mesh
         this.currentChunk = { x: -10, y: -10 };
+        this.animationId = null;
         this.isLoading = true;
         this.selectedStructure = null;
 
-        // Controls
+        // Camera controls
         this.isDragging = false;
-        this.lastMouse = { x: 0, y: 0 };
+        this.previousMousePosition = { x: 0, y: 0 };
+        this.cameraPosition = { x: 0, y: 0 };
 
         // Build mode
         this.buildPanel = null;
         this.positionMarkers = new Map();
         this.highlightedPosition = null;
-
-        // Animation frame ID
-        this.animationId = null;
 
         this.init();
     }
@@ -55,8 +47,11 @@ export class WorldViewer {
         try {
             this.showLoading();
 
-            // Setup canvas
-            this.setupCanvas();
+            // Setup Three.js scene
+            this.setupScene();
+            this.setupCamera();
+            this.setupRenderer();
+            this.setupLights();
 
             // Load initial map chunk
             await this.loadChunk(this.currentChunk.x, this.currentChunk.y);
@@ -78,8 +73,8 @@ export class WorldViewer {
                 console.log('Building is disabled (user not authenticated)');
             }
 
-            // Start render loop
-            this.startRenderLoop();
+            // Start animation
+            this.animate();
 
             // Handle resize
             window.addEventListener('resize', () => this.onResize());
@@ -91,317 +86,326 @@ export class WorldViewer {
         }
     }
 
-    setupCanvas() {
-        this.canvas = document.createElement('canvas');
-        this.canvas.width = this.container.clientWidth;
-        this.canvas.height = this.container.clientHeight;
-        this.canvas.style.display = 'block';
-        this.ctx = this.canvas.getContext('2d');
+    setupScene() {
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x1a1a2e); // Dark blue background
 
-        // Clear any existing canvas
-        const existingCanvas = this.container.querySelector('canvas');
-        if (existingCanvas) {
-            this.container.removeChild(existingCanvas);
-        }
-
-        this.container.appendChild(this.canvas);
+        // Add grid helper
+        const gridSize = 100;
+        const gridHelper = new THREE.GridHelper(gridSize, gridSize, 0x404040, 0x202020);
+        gridHelper.rotation.x = Math.PI / 2;
+        this.scene.add(gridHelper);
     }
 
-    // Isometric coordinate conversion (unchanged from 3D version)
+    setupCamera() {
+        // Orthographic camera for isometric view
+        const aspect = this.container.clientWidth / this.container.clientHeight;
+        const frustumSize = 50;
+
+        this.camera = new THREE.OrthographicCamera(
+            frustumSize * aspect / -2,
+            frustumSize * aspect / 2,
+            frustumSize / 2,
+            frustumSize / -2,
+            0.1,
+            1000
+        );
+
+        // Isometric angle
+        this.camera.position.set(30, 30, 30);
+        this.camera.lookAt(0, 0, 0);
+    }
+
+    setupRenderer() {
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: false,
+            powerPreference: 'high-performance'
+        });
+
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Add renderer to container
+        const canvasWrapper = document.createElement('div');
+        canvasWrapper.className = 'world-canvas-wrapper';
+        canvasWrapper.appendChild(this.renderer.domElement);
+        this.container.appendChild(canvasWrapper);
+    }
+
+    setupLights() {
+        // Ambient light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        this.scene.add(ambientLight);
+
+        // Main directional light
+        const mainLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        mainLight.position.set(10, 20, 10);
+        this.scene.add(mainLight);
+
+        // Fill light
+        const fillLight = new THREE.DirectionalLight(0x8888ff, 0.2);
+        fillLight.position.set(-10, 5, -10);
+        this.scene.add(fillLight);
+    }
+
+    async loadChunk(chunkX, chunkY) {
+        try {
+            const response = await fetch(
+                `/api/v1/world/map?chunk_x=${chunkX}&chunk_y=${chunkY}&size=${this.options.chunkSize}`
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                this.renderStructures(result.data.structures);
+                this.renderZones(result.data.zones);
+            }
+        } catch (error) {
+            console.error('Error loading chunk:', error);
+        }
+    }
+
+    renderStructures(structures) {
+        // Clear existing structures
+        this.structures.forEach((mesh) => {
+            this.scene.remove(mesh);
+            if (mesh.geometry) mesh.geometry.dispose();
+            if (mesh.material) {
+                if (Array.isArray(mesh.material)) {
+                    mesh.material.forEach(m => m.dispose());
+                } else {
+                    mesh.material.dispose();
+                }
+            }
+        });
+        this.structures.clear();
+
+        // Render new structures
+        structures.forEach((structure) => {
+            const mesh = this.createStructureMesh(structure);
+            this.scene.add(mesh);
+            this.structures.set(structure.id, mesh);
+        });
+    }
+
+    createStructureMesh(structure) {
+        const isoPos = this.gridToIso(structure.x, structure.y);
+
+        // Create structure based on type and level
+        const height = 0.5 + (structure.level * 0.3);
+        const width = 0.8;
+        const depth = 0.8;
+
+        const geometry = new THREE.BoxGeometry(width, height, depth);
+
+        // Color based on structure type
+        const color = new THREE.Color(structure.color);
+
+        // Apply decay state opacity
+        const opacity = structure.decay_state === 'active' ? 1.0 :
+                       structure.decay_state === 'fading' ? 0.7 : 0.4;
+
+        const material = new THREE.MeshPhongMaterial({
+            color: color,
+            transparent: opacity < 1.0,
+            opacity: opacity,
+            emissive: color,
+            emissiveIntensity: 0.2,
+            shininess: 60,
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(isoPos.x, height / 2, isoPos.y);
+
+        // Store structure data
+        mesh.userData = {
+            structureId: structure.id,
+            structureData: structure,
+        };
+
+        // Add wireframe for detail
+        const wireframeGeo = new THREE.EdgesGeometry(geometry);
+        const wireframeMat = new THREE.LineBasicMaterial({
+            color: 0xffffff,
+            opacity: 0.3,
+            transparent: true
+        });
+        const wireframe = new THREE.LineSegments(wireframeGeo, wireframeMat);
+        mesh.add(wireframe);
+
+        return mesh;
+    }
+
+    renderZones(zones) {
+        // Render zone boundaries (optional visual)
+        zones.forEach((zone) => {
+            if (!zone.is_unlocked) return;
+
+            const centerX = (zone.bounds.min_x + zone.bounds.max_x) / 2;
+            const centerY = (zone.bounds.min_y + zone.bounds.max_y) / 2;
+            const width = zone.bounds.max_x - zone.bounds.min_x;
+            const height = zone.bounds.max_y - zone.bounds.min_y;
+
+            const isoPos = this.gridToIso(centerX, centerY);
+
+            // Create zone plane
+            const geometry = new THREE.PlaneGeometry(width * 0.8, height * 0.8);
+            const material = new THREE.MeshBasicMaterial({
+                color: new THREE.Color(zone.color),
+                transparent: true,
+                opacity: 0.05,
+                side: THREE.DoubleSide
+            });
+
+            const plane = new THREE.Mesh(geometry, material);
+            plane.position.set(isoPos.x, 0.01, isoPos.y);
+            plane.rotation.x = -Math.PI / 2;
+            this.scene.add(plane);
+        });
+    }
+
     gridToIso(gridX, gridY) {
         const isoX = (gridX - gridY) * this.options.tileWidth / 2;
         const isoY = (gridX + gridY) * this.options.tileHeight / 2;
         return { x: isoX, y: isoY };
     }
 
-    isoToGrid(isoX, isoY) {
-        const gridX = Math.round((isoX / this.options.tileWidth + isoY / this.options.tileHeight));
-        const gridY = Math.round((isoY / this.options.tileHeight - isoX / this.options.tileWidth));
+    isoToGrid(screenX, screenY) {
+        const gridX = Math.round((screenX / this.options.tileWidth + screenY / this.options.tileHeight));
+        const gridY = Math.round((screenY / this.options.tileHeight - screenX / this.options.tileWidth));
         return { x: gridX, y: gridY };
     }
 
-    // Convert grid coordinates to screen coordinates (with viewport)
-    gridToScreen(gridX, gridY) {
-        const iso = this.gridToIso(gridX, gridY);
-        return {
-            x: (iso.x * this.viewport.zoom) + this.viewport.x + this.canvas.width / 2,
-            y: (iso.y * this.viewport.zoom) + this.viewport.y + this.canvas.height / 2
-        };
-    }
-
-    // Convert screen coordinates to grid coordinates
-    screenToGrid(screenX, screenY) {
-        const isoX = (screenX - this.viewport.x - this.canvas.width / 2) / this.viewport.zoom;
-        const isoY = (screenY - this.viewport.y - this.canvas.height / 2) / this.viewport.zoom;
-        return this.isoToGrid(isoX, isoY);
-    }
-
-    // Color utility functions
-    lightenColor(hex, percent) {
-        const num = parseInt(hex.replace('#', ''), 16);
-        const amt = Math.round(2.55 * percent);
-        const R = Math.min(255, (num >> 16) + amt);
-        const G = Math.min(255, ((num >> 8) & 0x00FF) + amt);
-        const B = Math.min(255, (num & 0x0000FF) + amt);
-        return `rgb(${R},${G},${B})`;
-    }
-
-    darkenColor(hex, percent) {
-        const num = parseInt(hex.replace('#', ''), 16);
-        const amt = Math.round(2.55 * percent);
-        const R = Math.max(0, (num >> 16) - amt);
-        const G = Math.max(0, ((num >> 8) & 0x00FF) - amt);
-        const B = Math.max(0, (num & 0x0000FF) - amt);
-        return `rgb(${R},${G},${B})`;
-    }
-
-    // Draw isometric grid
-    drawGrid() {
-        this.ctx.strokeStyle = 'rgba(64, 64, 64, 0.3)';
-        this.ctx.lineWidth = 1;
-
-        const gridSize = 50;
-
-        for (let i = -gridSize; i <= gridSize; i++) {
-            // Horizontal lines
-            const start1 = this.gridToScreen(-gridSize, i);
-            const end1 = this.gridToScreen(gridSize, i);
-            this.ctx.beginPath();
-            this.ctx.moveTo(start1.x, start1.y);
-            this.ctx.lineTo(end1.x, end1.y);
-            this.ctx.stroke();
-
-            // Vertical lines
-            const start2 = this.gridToScreen(i, -gridSize);
-            const end2 = this.gridToScreen(i, gridSize);
-            this.ctx.beginPath();
-            this.ctx.moveTo(start2.x, start2.y);
-            this.ctx.lineTo(end2.x, end2.y);
-            this.ctx.stroke();
-        }
-    }
-
-    // Draw a single structure as 2D isometric box
-    drawStructure(structure) {
-        const { x, y } = this.gridToScreen(structure.x, structure.y);
-        const height = (20 + (structure.level * 6)) * this.viewport.zoom;
-        const width = this.options.tileWidth * 0.8 * this.viewport.zoom;
-        const tileHeight = this.options.tileHeight * this.viewport.zoom;
-
-        // Apply opacity based on decay state
-        const opacity = structure.decay_state === 'active' ? 1.0 :
-                       structure.decay_state === 'fading' ? 0.7 : 0.4;
-
-        this.ctx.save();
-        this.ctx.globalAlpha = opacity;
-        this.ctx.translate(x, y);
-
-        // Top face (lightest)
-        this.ctx.fillStyle = this.lightenColor(structure.color, 20);
-        this.ctx.beginPath();
-        this.ctx.moveTo(0, -height);
-        this.ctx.lineTo(width / 2, -height + tileHeight / 2);
-        this.ctx.lineTo(0, -height + tileHeight);
-        this.ctx.lineTo(-width / 2, -height + tileHeight / 2);
-        this.ctx.closePath();
-        this.ctx.fill();
-
-        // Left face (base color)
-        this.ctx.fillStyle = structure.color;
-        this.ctx.beginPath();
-        this.ctx.moveTo(-width / 2, -height + tileHeight / 2);
-        this.ctx.lineTo(0, -height + tileHeight);
-        this.ctx.lineTo(0, tileHeight);
-        this.ctx.lineTo(-width / 2, tileHeight / 2);
-        this.ctx.closePath();
-        this.ctx.fill();
-
-        // Right face (darkest)
-        this.ctx.fillStyle = this.darkenColor(structure.color, 20);
-        this.ctx.beginPath();
-        this.ctx.moveTo(width / 2, -height + tileHeight / 2);
-        this.ctx.lineTo(0, -height + tileHeight);
-        this.ctx.lineTo(0, tileHeight);
-        this.ctx.lineTo(width / 2, tileHeight / 2);
-        this.ctx.closePath();
-        this.ctx.fill();
-
-        // Outline for definition
-        this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
-        this.ctx.lineWidth = 1;
-        this.ctx.stroke();
-
-        this.ctx.restore();
-    }
-
-    // Draw position marker
-    drawMarker(marker) {
-        const { x, y } = this.gridToScreen(marker.x, marker.y);
-        const tileWidth = this.options.tileWidth * this.viewport.zoom;
-        const tileHeight = this.options.tileHeight * this.viewport.zoom;
-
-        this.ctx.save();
-        this.ctx.globalAlpha = 0.6;
-        this.ctx.fillStyle = marker.color || '#60a5fa';
-
-        // Draw diamond shape
-        this.ctx.beginPath();
-        this.ctx.moveTo(x, y - tileHeight / 2);
-        this.ctx.lineTo(x + tileWidth / 2, y);
-        this.ctx.lineTo(x, y + tileHeight / 2);
-        this.ctx.lineTo(x - tileWidth / 2, y);
-        this.ctx.closePath();
-        this.ctx.fill();
-
-        // Glow effect
-        this.ctx.shadowColor = marker.color || '#60a5fa';
-        this.ctx.shadowBlur = 10 * this.viewport.zoom;
-        this.ctx.strokeStyle = marker.color || '#60a5fa';
-        this.ctx.lineWidth = 2 * this.viewport.zoom;
-        this.ctx.stroke();
-
-        this.ctx.restore();
-    }
-
-    // Main render method
-    render() {
-        // Clear canvas
-        this.ctx.fillStyle = '#1a1a2e';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Draw grid
-        this.drawGrid();
-
-        // Sort structures by y then x for proper layering (back to front)
-        const sorted = [...this.structures.values()].sort((a, b) => {
-            if (a.y !== b.y) return a.y - b.y;
-            return a.x - b.x;
-        });
-
-        // Draw each structure
-        sorted.forEach(structure => this.drawStructure(structure));
-
-        // Draw position markers
-        this.positionMarkers.forEach(marker => this.drawMarker(marker));
-    }
-
-    // Start continuous render loop
-    startRenderLoop() {
-        const loop = () => {
-            this.render();
-            this.animationId = requestAnimationFrame(loop);
-        };
-        loop();
-    }
-
-    // Setup mouse/touch controls
     setupControls() {
-        // Mouse down
-        this.canvas.addEventListener('mousedown', (e) => {
+        const canvas = this.renderer.domElement;
+
+        // Mouse drag to pan
+        canvas.addEventListener('mousedown', (e) => {
             this.isDragging = true;
-            this.lastMouse = { x: e.clientX, y: e.clientY };
+            this.previousMousePosition = { x: e.clientX, y: e.clientY };
         });
 
-        // Mouse move (pan)
-        this.canvas.addEventListener('mousemove', (e) => {
+        canvas.addEventListener('mousemove', (e) => {
             if (this.isDragging) {
-                const dx = e.clientX - this.lastMouse.x;
-                const dy = e.clientY - this.lastMouse.y;
-                this.viewport.x += dx;
-                this.viewport.y += dy;
-                this.lastMouse = { x: e.clientX, y: e.clientY };
+                const deltaX = e.clientX - this.previousMousePosition.x;
+                const deltaY = e.clientY - this.previousMousePosition.y;
+
+                this.camera.position.x -= deltaX * 0.05;
+                this.camera.position.z -= deltaY * 0.05;
+
+                this.previousMousePosition = { x: e.clientX, y: e.clientY };
             }
         });
 
-        // Mouse up
-        window.addEventListener('mouseup', () => {
+        canvas.addEventListener('mouseup', () => {
             this.isDragging = false;
         });
 
-        // Mouse wheel (zoom)
-        this.canvas.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const zoomDelta = e.deltaY > 0 ? 0.9 : 1.1;
-            this.viewport.zoom = Math.max(0.5, Math.min(3, this.viewport.zoom * zoomDelta));
-        }, { passive: false });
+        canvas.addEventListener('mouseleave', () => {
+            this.isDragging = false;
+        });
 
-        // Click (structure selection)
-        this.canvas.addEventListener('click', (e) => {
+        // Click to select structure
+        canvas.addEventListener('click', (e) => {
             if (this.isDragging) return;
+            this.handleClick(e);
+        });
 
-            const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const structure = this.getStructureAtPoint(x, y);
+        // Zoom with mouse wheel
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomSpeed = 0.1;
+            const delta = e.deltaY > 0 ? 1 : -1;
 
-            if (structure) {
-                this.onStructureSelected(structure);
-            }
+            this.camera.zoom = Math.max(0.5, Math.min(3, this.camera.zoom - delta * zoomSpeed));
+            this.camera.updateProjectionMatrix();
         });
 
         // Touch support
-        this.canvas.addEventListener('touchstart', (e) => {
+        canvas.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
                 this.isDragging = true;
-                this.lastMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                this.previousMousePosition = {
+                    x: e.touches[0].clientX,
+                    y: e.touches[0].clientY
+                };
             }
         });
 
-        this.canvas.addEventListener('touchmove', (e) => {
+        canvas.addEventListener('touchmove', (e) => {
             if (this.isDragging && e.touches.length === 1) {
-                const dx = e.touches[0].clientX - this.lastMouse.x;
-                const dy = e.touches[0].clientY - this.lastMouse.y;
-                this.viewport.x += dx;
-                this.viewport.y += dy;
-                this.lastMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                const deltaX = e.touches[0].clientX - this.previousMousePosition.x;
+                const deltaY = e.touches[0].clientY - this.previousMousePosition.y;
+
+                this.camera.position.x -= deltaX * 0.05;
+                this.camera.position.z -= deltaY * 0.05;
+
+                this.previousMousePosition = {
+                    x: e.touches[0].clientX,
+                    y: e.touches[0].clientY
+                };
             }
         });
 
-        this.canvas.addEventListener('touchend', () => {
+        canvas.addEventListener('touchend', () => {
             this.isDragging = false;
         });
     }
 
-    // Hit detection - find structure at screen coordinates
-    getStructureAtPoint(screenX, screenY) {
-        const gridPos = this.screenToGrid(screenX, screenY);
+    handleClick(event) {
+        const rect = this.renderer.domElement.getBoundingClientRect();
+        const mouse = new THREE.Vector2(
+            ((event.clientX - rect.left) / rect.width) * 2 - 1,
+            -((event.clientY - rect.top) / rect.height) * 2 + 1
+        );
 
-        // Find structure at this grid position (allow 1 tile tolerance)
-        for (const [id, structure] of this.structures) {
-            if (Math.abs(structure.x - gridPos.x) <= 1 && Math.abs(structure.y - gridPos.y) <= 1) {
-                return structure;
-            }
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, this.camera);
+
+        const intersects = raycaster.intersectObjects(Array.from(this.structures.values()));
+
+        if (intersects.length > 0) {
+            const structure = intersects[0].object.userData.structureData;
+            this.onStructureSelected(structure);
         }
-        return null;
     }
 
-    // Handle structure selection
     onStructureSelected(structure) {
         console.log('Structure selected:', structure);
-        this.selectedStructure = structure;
-        this.showStructureDetails(structure);
 
-        // Dispatch custom event
-        const event = new CustomEvent('structure-selected', { detail: structure });
+        // Dispatch custom event for structure selection
+        const event = new CustomEvent('structure-selected', {
+            detail: structure
+        });
         this.container.dispatchEvent(event);
+
+        // Optional: Show structure details panel
+        this.showStructureDetails(structure);
     }
 
-    // Show structure details panel
     showStructureDetails(structure) {
-        const existingPanel = this.container.querySelector('.structure-details-panel');
-        if (existingPanel) {
-            existingPanel.remove();
+        // Create or update details panel
+        let panel = document.getElementById('structure-details-panel');
+
+        if (!panel) {
+            panel = document.createElement('div');
+            panel.id = 'structure-details-panel';
+            panel.className = 'structure-details-panel';
+            this.container.appendChild(panel);
         }
 
         const name = structure.name || structure.type_name;
         const description = structure.description || '';
 
-        const panel = document.createElement('div');
-        panel.className = 'structure-details-panel';
         panel.innerHTML = `
             <div class="structure-details-header">
                 <h3>${name}</h3>
-                <button class="close-btn">×</button>
+                <button class="close-btn" onclick="this.parentElement.parentElement.remove()">×</button>
             </div>
             <div class="structure-details-body">
                 ${description ? `<p class="structure-description">${description}</p>` : ''}
@@ -427,76 +431,116 @@ export class WorldViewer {
                 </div>
             </div>
         `;
-
-        panel.querySelector('.close-btn').addEventListener('click', () => {
-            panel.remove();
-        });
-
-        this.container.appendChild(panel);
     }
 
-    // Load map chunk from API
-    async loadChunk(chunkX, chunkY) {
-        try {
-            const response = await axios.get('/api/v1/world/map', {
-                params: {
-                    chunk_x: chunkX,
-                    chunk_y: chunkY,
-                    size: this.options.chunkSize
-                }
-            });
+    animate() {
+        this.animationId = requestAnimationFrame(() => this.animate());
+        this.renderer.render(this.scene, this.camera);
+    }
 
-            if (response.data.success) {
-                this.renderStructures(response.data.data.structures);
-            }
-        } catch (error) {
-            console.error('Failed to load chunk:', error);
+    onResize() {
+        if (!this.camera || !this.renderer) return;
+
+        const aspect = this.container.clientWidth / this.container.clientHeight;
+        const frustumSize = 50;
+
+        this.camera.left = frustumSize * aspect / -2;
+        this.camera.right = frustumSize * aspect / 2;
+        this.camera.top = frustumSize / 2;
+        this.camera.bottom = frustumSize / -2;
+
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+    }
+
+    showLoading() {
+        this.container.innerHTML = `
+            <div class="world-loading">
+                <div class="loading-spinner"></div>
+                <p>Loading world...</p>
+            </div>
+        `;
+    }
+
+    hideLoading() {
+        const loading = this.container.querySelector('.world-loading');
+        if (loading) {
+            loading.remove();
         }
     }
 
-    // Render structures
-    renderStructures(structures) {
-        this.structures.clear();
-
-        structures.forEach(structure => {
-            this.structures.set(structure.id, structure);
-        });
+    showError(message) {
+        this.container.innerHTML = `
+            <div class="world-error">
+                <p>${message}</p>
+            </div>
+        `;
     }
 
-    // Position marker methods (for build mode)
     highlightPosition(x, y, bonuses, color) {
         this.clearPositionHighlights();
 
-        const marker = {
-            x,
-            y,
-            color: color || '#60a5fa',
-            bonuses
-        };
-
+        const marker = this.createPositionMarker(x, y, true, bonuses, color);
         this.positionMarkers.set(`${x},${y}`, marker);
+        this.scene.add(marker);
         this.highlightedPosition = { x, y };
     }
 
     clearPositionHighlights() {
+        if (!this.positionMarkers) return;
+
+        this.positionMarkers.forEach((marker) => {
+            this.scene.remove(marker);
+            if (marker.geometry) marker.geometry.dispose();
+            if (marker.material) marker.material.dispose();
+        });
         this.positionMarkers.clear();
         this.highlightedPosition = null;
     }
 
+    createPositionMarker(x, y, isSelected, bonuses, color) {
+        const isoPos = this.gridToIso(x, y);
+
+        const geometry = new THREE.BoxGeometry(0.9, 0.1, 0.9);
+        const markerColor = new THREE.Color(color || '#60a5fa');
+
+        const material = new THREE.MeshPhongMaterial({
+            color: markerColor,
+            transparent: true,
+            opacity: 0.6,
+            emissive: markerColor,
+            emissiveIntensity: 0.5,
+        });
+
+        const marker = new THREE.Mesh(geometry, material);
+        marker.position.set(isoPos.x, 0.05, isoPos.y);
+
+        marker.userData = {
+            isPositionMarker: true,
+            x, y,
+            bonuses,
+            pulseTime: 0
+        };
+
+        return marker;
+    }
+
     updatePositionMarkerColor(x, y, color) {
+        if (!this.positionMarkers) return;
+
         const key = `${x},${y}`;
         const marker = this.positionMarkers.get(key);
-        if (marker) {
-            marker.color = color;
+        if (marker && marker.material) {
+            const newColor = new THREE.Color(color);
+            marker.material.color = newColor;
+            marker.material.emissive = newColor;
         }
     }
 
-    // Refresh map (reload current chunk)
     async refreshMap() {
         await this.loadChunk(this.currentChunk.x, this.currentChunk.y);
     }
 
-    // Update resource bar in DOM
     updateResourceBar(resources) {
         const updates = {
             'resource-stone': resources.stone,
@@ -515,52 +559,35 @@ export class WorldViewer {
         });
     }
 
-    // Handle window resize
-    onResize() {
-        this.canvas.width = this.container.clientWidth;
-        this.canvas.height = this.container.clientHeight;
-    }
-
-    // Loading and error states
-    showLoading() {
-        const loading = document.createElement('div');
-        loading.className = 'world-loading';
-        loading.innerHTML = `
-            <div class="loading-spinner"></div>
-            <span>Loading world...</span>
-        `;
-        this.container.appendChild(loading);
-    }
-
-    hideLoading() {
-        const loading = this.container.querySelector('.world-loading');
-        if (loading) {
-            loading.remove();
-        }
-    }
-
-    showError(message) {
-        const error = document.createElement('div');
-        error.className = 'world-error';
-        error.textContent = message;
-        this.container.appendChild(error);
-    }
-
-    // Cleanup
     destroy() {
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
         }
 
-        if (this.canvas) {
-            this.canvas.remove();
+        if (this.renderer) {
+            this.renderer.dispose();
+        }
+
+        if (this.scene) {
+            this.scene.traverse((object) => {
+                if (object.geometry) {
+                    object.geometry.dispose();
+                }
+                if (object.material) {
+                    if (Array.isArray(object.material)) {
+                        object.material.forEach(material => material.dispose());
+                    } else {
+                        object.material.dispose();
+                    }
+                }
+            });
         }
 
         window.removeEventListener('resize', () => this.onResize());
     }
 }
 
-// BuildPanel class (unchanged from 3D version)
+// BuildPanel class
 class BuildPanel {
     constructor(worldViewer, container) {
         this.worldViewer = worldViewer;
