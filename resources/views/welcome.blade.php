@@ -16,9 +16,7 @@
                     <span class="text-xl font-bold">Világműhely</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="{{ route('world.index') }}" class="hover:text-indigo-300 transition">Explore World</a>
                     @auth
-                        <a href="{{ route('world.my-structures') }}" class="hover:text-indigo-300 transition">My Structures</a>
                         <a href="/admin" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition">Dashboard</a>
                     @else
                         <a href="/admin/login" class="hover:text-indigo-300 transition">Login</a>
@@ -48,40 +46,21 @@
                     Earn resources through your work, place structures, and watch our shared world grow.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="{{ route('world.index') }}" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg text-lg font-semibold shadow-lg shadow-indigo-500/50 transition transform hover:scale-105">
-                        Explore the World 🗺️
-                    </a>
                     @guest
-                    <a href="/admin/register" class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-lg rounded-lg text-lg font-semibold border border-white/20 transition">
-                        Start Building
+                    <a href="/admin/register" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg text-lg font-semibold shadow-lg shadow-indigo-500/50 transition transform hover:scale-105">
+                        Join the Adventure
+                    </a>
+                    <a href="/admin/login" class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-lg rounded-lg text-lg font-semibold border border-white/20 transition">
+                        Login
                     </a>
                     @else
-                    <a href="{{ route('world.my-structures') }}" class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-lg rounded-lg text-lg font-semibold border border-white/20 transition">
-                        My Structures 🏗️
+                    <a href="/admin" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg text-lg font-semibold shadow-lg shadow-indigo-500/50 transition transform hover:scale-105">
+                        Dashboard 📊
                     </a>
                     @endguest
                 </div>
             </div>
 
-            <!-- Live Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-16">
-                <div class="bg-white/5 backdrop-blur-lg rounded-lg p-6 border border-white/10 text-center">
-                    <div class="text-3xl font-bold text-indigo-400">{{ $worldStats['total_structures'] ?? 1 }}</div>
-                    <div class="text-sm text-gray-400 mt-1">Structures Built</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-lg rounded-lg p-6 border border-white/10 text-center">
-                    <div class="text-3xl font-bold text-purple-400">{{ $worldStats['total_builders'] ?? 1 }}</div>
-                    <div class="text-sm text-gray-400 mt-1">Active Builders</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-lg rounded-lg p-6 border border-white/10 text-center">
-                    <div class="text-3xl font-bold text-pink-400">{{ $worldStats['unlocked_zones'] ?? 1 }}</div>
-                    <div class="text-sm text-gray-400 mt-1">Unlocked Zones</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-lg rounded-lg p-6 border border-white/10 text-center">
-                    <div class="text-3xl font-bold text-blue-400">∞</div>
-                    <div class="text-sm text-gray-400 mt-1">Possibilities</div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -104,7 +83,7 @@
                      style="height: 500px; border-radius: 1rem; overflow: hidden;">
                 </div>
                 <div class="text-center mt-6">
-                    <a href="{{ route('world.index') }}" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
+                    <a href="/admin" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
                         <span>View Full Interactive Map</span>
                         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -306,7 +285,7 @@
 
                             <div class="text-center pt-4">
                                 <p class="text-sm text-gray-400 mb-4">Ready to start building?</p>
-                                <a href="{{ route('world.index') }}" class="inline-block px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg font-semibold transition transform hover:scale-105">
+                                <a href="/admin" class="inline-block px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg font-semibold transition transform hover:scale-105">
                                     Explore the World
                                 </a>
                             </div>
@@ -334,12 +313,12 @@
                 <a href="/admin/register" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg text-lg font-semibold shadow-lg shadow-indigo-500/50 transition transform hover:scale-105">
                     Create Your Account
                 </a>
-                <a href="{{ route('world.index') }}" class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-lg rounded-lg text-lg font-semibold border border-white/20 transition">
+                <a href="/admin" class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-lg rounded-lg text-lg font-semibold border border-white/20 transition">
                     View World First
                 </a>
                 @else
-                <a href="{{ route('world.my-structures') }}" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg text-lg font-semibold shadow-lg shadow-indigo-500/50 transition transform hover:scale-105">
-                    Start Building Now
+                <a href="/admin" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg text-lg font-semibold shadow-lg shadow-indigo-500/50 transition transform hover:scale-105">
+                    Explore World Now
                 </a>
                 @endguest
             </div>
@@ -362,10 +341,7 @@
                 <div>
                     <h4 class="font-bold mb-4">Explore</h4>
                     <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="{{ route('world.index') }}" class="hover:text-white transition">World Map</a></li>
-                        @auth
-                        <li><a href="{{ route('world.my-structures') }}" class="hover:text-white transition">My Structures</a></li>
-                        @endauth
+                        <li><a href="/admin" class="hover:text-white transition">World Map</a></li>
                         <li><a href="/admin" class="hover:text-white transition">Dashboard</a></li>
                     </ul>
                 </div>

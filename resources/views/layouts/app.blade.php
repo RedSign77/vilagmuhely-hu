@@ -8,6 +8,7 @@
     <title>{{ config('app.name', 'Világműhely') }} - @yield('title', 'Workshop Crystals')</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('head')
 </head>
 <body class="bg-gray-50 dark:bg-gray-900">
     <nav class="bg-white dark:bg-gray-800 shadow-sm">
@@ -19,14 +20,6 @@
                     </a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="{{ route('world.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
-                        World Map
-                    </a>
-                    @auth
-                    <a href="{{ route('world.my-structures') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
-                        My Structures
-                    </a>
-                    @endauth
                     <a href="/admin" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                         Admin
                     </a>
@@ -57,5 +50,7 @@
             </div>
         </div>
     </footer>
+
+    @stack('scripts')
 </body>
 </html>

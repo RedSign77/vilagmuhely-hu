@@ -1,2 +1,2 @@
 import './bootstrap';
-import './components/WorldViewer.js';
+// WorldViewer.js is deprecated - use TopDownMapViewer.js as an ES6 module import instead
