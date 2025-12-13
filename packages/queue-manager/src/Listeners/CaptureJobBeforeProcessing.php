@@ -34,7 +34,7 @@ class CaptureJobBeforeProcessing
             }
         } catch (\Exception $e) {
             // Silently fail - don't break the queue process
-            \Log::error('Failed to capture job before processing: ' . $e->getMessage());
+            \Log::error('Failed to capture job before processing: '.$e->getMessage());
         }
     }
 }

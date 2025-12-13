@@ -36,7 +36,7 @@ class AdjacencyService
                 }
 
                 // Check if in unlocked zone
-                if (!$this->zoneService->isPositionInUnlockedZone($neighbor['x'], $neighbor['y'])) {
+                if (! $this->zoneService->isPositionInUnlockedZone($neighbor['x'], $neighbor['y'])) {
                     continue;
                 }
 
@@ -86,6 +86,7 @@ class AdjacencyService
         if ($userStructures->isEmpty()) {
             // User has no structures, find any available adjacent cell
             $availableCells = $this->findAvailableAdjacentCells(1);
+
             return $availableCells->first();
         }
 
@@ -164,12 +165,12 @@ class AdjacencyService
         }
 
         // Check if in unlocked zone
-        if (!$this->zoneService->isPositionInUnlockedZone($x, $y)) {
+        if (! $this->zoneService->isPositionInUnlockedZone($x, $y)) {
             return false;
         }
 
         // Check if adjacent to existing structure
-        if (!$this->isAdjacentToStructure($x, $y)) {
+        if (! $this->isAdjacentToStructure($x, $y)) {
             return false;
         }
 

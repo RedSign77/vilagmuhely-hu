@@ -8,9 +8,9 @@ use Webtechsolutions\ContentEngine\Events\ContentPublishedEvent;
 use Webtechsolutions\ContentEngine\Listeners\AwardResourcesOnContentPublished;
 use Webtechsolutions\ContentEngine\Models\Content;
 use Webtechsolutions\ContentEngine\Observers\ContentObserver;
-use Webtechsolutions\ContentEngine\Services\WorldResourceService;
-use Webtechsolutions\ContentEngine\Services\WorldBuilderService;
 use Webtechsolutions\ContentEngine\Services\AdjacencyService;
+use Webtechsolutions\ContentEngine\Services\WorldBuilderService;
+use Webtechsolutions\ContentEngine\Services\WorldResourceService;
 use Webtechsolutions\ContentEngine\Services\ZoneService;
 
 class ContentEngineServiceProvider extends ServiceProvider
@@ -33,10 +33,10 @@ class ContentEngineServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
         // Load API routes
-        $this->loadRoutesFrom(__DIR__ . '/../../routes/api.php');
+        $this->loadRoutesFrom(__DIR__.'/../../routes/api.php');
 
         // Register Content observer
         Content::observe(ContentObserver::class);

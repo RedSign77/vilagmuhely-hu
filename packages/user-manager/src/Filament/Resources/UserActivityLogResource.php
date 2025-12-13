@@ -5,9 +5,9 @@ namespace Webtechsolutions\UserManager\Filament\Resources;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Support\Enums\FontWeight;
 use Webtechsolutions\UserManager\Filament\Resources\UserActivityLogResource\Pages;
 use Webtechsolutions\UserManager\Models\UserActivityLog;
 
@@ -115,7 +115,7 @@ class UserActivityLogResource extends Resource
                     ->label('IP Address')
                     ->searchable()
                     ->copyable()
-                    ->url(fn ($record) => $record->ip_address ? 'https://whatismyipaddress.com/ip/' . $record->ip_address : null)
+                    ->url(fn ($record) => $record->ip_address ? 'https://whatismyipaddress.com/ip/'.$record->ip_address : null)
                     ->openUrlInNewTab()
                     ->toggleable(),
 
@@ -165,11 +165,12 @@ class UserActivityLogResource extends Resource
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['from'] ?? null) {
-                            $indicators['from'] = 'From ' . \Carbon\Carbon::parse($data['from'])->toFormattedDateString();
+                            $indicators['from'] = 'From '.\Carbon\Carbon::parse($data['from'])->toFormattedDateString();
                         }
                         if ($data['until'] ?? null) {
-                            $indicators['until'] = 'Until ' . \Carbon\Carbon::parse($data['until'])->toFormattedDateString();
+                            $indicators['until'] = 'Until '.\Carbon\Carbon::parse($data['until'])->toFormattedDateString();
                         }
+
                         return $indicators;
                     }),
             ])

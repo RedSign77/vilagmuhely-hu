@@ -10,6 +10,7 @@ class WorldMilestoneReachedEvent
     use Dispatchable, SerializesModels;
 
     public string $milestoneType;
+
     public array $stats;
 
     public function __construct(string $milestoneType, array $stats)

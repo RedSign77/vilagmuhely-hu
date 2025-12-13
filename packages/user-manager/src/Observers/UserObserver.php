@@ -3,7 +3,7 @@
 namespace Webtechsolutions\UserManager\Observers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Webtechsolutions\UserManager\Models\Role;
 use Webtechsolutions\UserManager\Models\UserActivityLog;
 
 class UserObserver
@@ -21,6 +21,30 @@ class UserObserver
         'social_media_links',
         'about',
     ];
+
+    /**
+     * Handle the User "created" event.
+     */
+    public function created(User $user): void
+    {
+        // Assign the Guest role to newly created users
+        $guestRole = Role::where('slug', 'guests')->first();
+
+        if ($guestRole) {
+            $user->roles()->attach($guestRole->id);
+
+            UserActivityLog::log(
+                userId: $user->id,
+                activityType: UserActivityLog::TYPE_ROLE_CHANGE,
+                description: 'Guest role automatically assigned to new user',
+                properties: [
+                    'added_role_ids' => [$guestRole->id],
+                    'removed_role_ids' => [],
+                    'current_role_ids' => [$guestRole->id],
+                ]
+            );
+        }
+    }
 
     /**
      * Handle the User "updated" event.
@@ -42,7 +66,7 @@ class UserObserver
             $this->profileAttributes
         );
 
-        if (!empty($changedProfileFields)) {
+        if (! empty($changedProfileFields)) {
             $changes = [];
             foreach ($changedProfileFields as $field) {
                 $changes[$field] = [
@@ -54,7 +78,7 @@ class UserObserver
             UserActivityLog::log(
                 userId: $user->id,
                 activityType: UserActivityLog::TYPE_PROFILE_CHANGE,
-                description: 'User profile was updated: ' . implode(', ', $changedProfileFields),
+                description: 'User profile was updated: '.implode(', ', $changedProfileFields),
                 properties: ['changes' => $changes]
             );
         }
@@ -68,7 +92,7 @@ class UserObserver
         $added = array_diff($newRoleIds, $oldRoleIds);
         $removed = array_diff($oldRoleIds, $newRoleIds);
 
-        if (!empty($added) || !empty($removed)) {
+        if (! empty($added) || ! empty($removed)) {
             UserActivityLog::log(
                 userId: $user->id,
                 activityType: UserActivityLog::TYPE_ROLE_CHANGE,

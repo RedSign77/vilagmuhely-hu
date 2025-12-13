@@ -12,7 +12,9 @@ class StructureUpgradedEvent
     use Dispatchable, SerializesModels;
 
     public User $user;
+
     public WorldStructure $structure;
+
     public int $previousLevel;
 
     public function __construct(User $user, WorldStructure $structure, int $previousLevel)

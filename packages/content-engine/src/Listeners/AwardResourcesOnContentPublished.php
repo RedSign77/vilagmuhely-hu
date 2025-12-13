@@ -24,7 +24,7 @@ class AwardResourcesOnContentPublished implements ShouldQueue
         $content = $event->content;
         $user = $content->creator;
 
-        if (!$user) {
+        if (! $user) {
             return;
         }
 

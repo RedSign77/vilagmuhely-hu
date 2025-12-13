@@ -3,7 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Admin\Pages\EditProfile;
-use Filament\Http\Middleware\Authenticate;
+use App\Http\Middleware\FilamentAuthenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -19,19 +19,19 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Webtechsolutions\ContentEngine\Filament\Resources\ContentCategoryResource;
+use Webtechsolutions\ContentEngine\Filament\Resources\ContentResource;
+use Webtechsolutions\ContentEngine\Filament\Resources\ContentTagResource;
+use Webtechsolutions\Mailer\Filament\Pages\ComposeEmail;
+use Webtechsolutions\Mailer\Filament\Resources\EmailTemplateResource;
+use Webtechsolutions\Mailer\Filament\Resources\SentEmailResource;
 use Webtechsolutions\QueueManager\Filament\Resources\CompletedJobResource;
 use Webtechsolutions\QueueManager\Filament\Resources\FailedJobResource;
 use Webtechsolutions\QueueManager\Filament\Resources\PendingJobResource;
 use Webtechsolutions\Sessions\Filament\Resources\SessionResource;
-use Webtechsolutions\Mailer\Filament\Resources\EmailTemplateResource;
-use Webtechsolutions\Mailer\Filament\Resources\SentEmailResource;
-use Webtechsolutions\Mailer\Filament\Pages\ComposeEmail;
-use Webtechsolutions\UserManager\Filament\Resources\UserResource;
 use Webtechsolutions\UserManager\Filament\Resources\RoleResource;
 use Webtechsolutions\UserManager\Filament\Resources\UserActivityLogResource;
-use Webtechsolutions\ContentEngine\Filament\Resources\ContentResource;
-use Webtechsolutions\ContentEngine\Filament\Resources\ContentCategoryResource;
-use Webtechsolutions\ContentEngine\Filament\Resources\ContentTagResource;
+use Webtechsolutions\UserManager\Filament\Resources\UserResource;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -95,7 +95,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
+                FilamentAuthenticate::class,
             ])
             ->renderHook(
                 'panels::body.end',

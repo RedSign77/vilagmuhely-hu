@@ -47,6 +47,7 @@ class FailedJob extends Model
     public function getJobClassAttribute(): string
     {
         $payload = $this->unserializePayload();
+
         return $payload['displayName'] ?? 'Unknown Job';
     }
 
@@ -56,6 +57,7 @@ class FailedJob extends Model
     public function getJobDataAttribute(): ?array
     {
         $payload = $this->unserializePayload();
+
         return $payload['data'] ?? null;
     }
 
@@ -65,6 +67,7 @@ class FailedJob extends Model
     public function getExceptionSummaryAttribute(): string
     {
         $lines = explode("\n", $this->exception);
+
         return $lines[0] ?? 'No exception message';
     }
 
@@ -108,7 +111,7 @@ class FailedJob extends Model
         try {
             $data = json_decode($this->payload, true);
 
-            if (!$data) {
+            if (! $data) {
                 return ['displayName' => 'Invalid Payload', 'data' => null];
             }
 
@@ -131,6 +134,7 @@ class FailedJob extends Model
     {
         try {
             Artisan::call('queue:retry', ['id' => [$this->uuid]]);
+
             return true;
         } catch (\Exception $e) {
             return false;
@@ -144,6 +148,7 @@ class FailedJob extends Model
     {
         try {
             Artisan::call('queue:retry', ['id' => $uuids]);
+
             return count($uuids);
         } catch (\Exception $e) {
             return 0;

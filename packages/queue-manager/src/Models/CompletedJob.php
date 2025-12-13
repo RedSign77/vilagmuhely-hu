@@ -2,8 +2,8 @@
 
 namespace Webtechsolutions\QueueManager\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class CompletedJob extends Model
 {
@@ -52,6 +52,7 @@ class CompletedJob extends Model
     public function getJobClassAttribute(): string
     {
         $payload = $this->unserializePayload();
+
         return $payload['displayName'] ?? 'Unknown Job';
     }
 
@@ -61,6 +62,7 @@ class CompletedJob extends Model
     public function getJobDataAttribute(): ?array
     {
         $payload = $this->unserializePayload();
+
         return $payload['data'] ?? null;
     }
 
@@ -93,11 +95,12 @@ class CompletedJob extends Model
      */
     public function getExecutionTimeAttribute(): ?float
     {
-        if (!$this->reserved_at) {
+        if (! $this->reserved_at) {
             return null;
         }
 
         $completedTimestamp = $this->completed_at->timestamp;
+
         return round($completedTimestamp - $this->reserved_at, 2);
     }
 
@@ -109,7 +112,7 @@ class CompletedJob extends Model
         try {
             $data = json_decode($this->payload, true);
 
-            if (!$data) {
+            if (! $data) {
                 return ['displayName' => 'Invalid Payload', 'data' => null];
             }
 

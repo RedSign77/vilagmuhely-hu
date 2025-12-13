@@ -2,9 +2,9 @@
 
 namespace Webtechsolutions\Sessions\Filament\Resources\SessionResource\Pages;
 
-use Webtechsolutions\Sessions\Filament\Resources\SessionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Webtechsolutions\Sessions\Filament\Resources\SessionResource;
 
 class ListSessions extends ListRecords
 {

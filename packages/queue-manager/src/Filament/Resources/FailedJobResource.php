@@ -2,16 +2,16 @@
 
 namespace Webtechsolutions\QueueManager\Filament\Resources;
 
-use Webtechsolutions\QueueManager\Filament\Resources\FailedJobResource\Pages;
-use Webtechsolutions\QueueManager\Models\FailedJob;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Infolists;
-use Filament\Infolists\Infolist;
 use Illuminate\Database\Eloquent\Builder;
+use Webtechsolutions\QueueManager\Filament\Resources\FailedJobResource\Pages;
+use Webtechsolutions\QueueManager\Models\FailedJob;
 
 class FailedJobResource extends Resource
 {
@@ -33,6 +33,7 @@ class FailedJobResource extends Resource
     public static function getNavigationBadgeColor(): ?string
     {
         $count = static::getModel()::count();
+
         return $count > 0 ? 'danger' : 'gray';
     }
 
@@ -140,6 +141,7 @@ class FailedJobResource extends Resource
                         if ($success) {
                             $record->delete();
                         }
+
                         return $success;
                     })
                     ->successNotification(
@@ -286,6 +288,7 @@ class FailedJobResource extends Resource
                                 if ($decoded === null) {
                                     return 'Unable to decode payload';
                                 }
+
                                 return json_encode($decoded, JSON_PRETTY_PRINT);
                             })
                             ->markdown()

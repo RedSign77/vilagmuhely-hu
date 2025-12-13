@@ -23,8 +23,11 @@ class WorldActivityLog extends Model
 
     // Activity type constants
     public const TYPE_STRUCTURE_PLACED = 'structure_placed';
+
     public const TYPE_STRUCTURE_UPGRADED = 'structure_upgraded';
+
     public const TYPE_RESOURCE_EARNED = 'resource_earned';
+
     public const TYPE_STRUCTURE_REMOVED = 'structure_removed';
 
     /**

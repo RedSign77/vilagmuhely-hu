@@ -5,13 +5,11 @@ namespace Webtechsolutions\ContentEngine\Filament\Resources;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Support\Enums\FontWeight;
 use Webtechsolutions\ContentEngine\Filament\Resources\ContentResource\Pages;
 use Webtechsolutions\ContentEngine\Models\Content;
-use Webtechsolutions\ContentEngine\Models\ContentCategory;
-use Webtechsolutions\ContentEngine\Models\ContentTag;
 
 class ContentResource extends Resource
 {

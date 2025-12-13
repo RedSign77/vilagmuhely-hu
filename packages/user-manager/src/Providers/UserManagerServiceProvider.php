@@ -3,18 +3,18 @@
 namespace Webtechsolutions\UserManager\Providers;
 
 use App\Models\User;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
-use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\PasswordReset;
-use Webtechsolutions\UserManager\Listeners\LogSuccessfulLogin;
-use Webtechsolutions\UserManager\Listeners\LogSuccessfulLogout;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\ServiceProvider;
+use Webtechsolutions\UserManager\Console\Commands\CleanupActivityLogsCommand;
 use Webtechsolutions\UserManager\Listeners\LogFailedLogin;
 use Webtechsolutions\UserManager\Listeners\LogPasswordChange;
+use Webtechsolutions\UserManager\Listeners\LogSuccessfulLogin;
+use Webtechsolutions\UserManager\Listeners\LogSuccessfulLogout;
 use Webtechsolutions\UserManager\Observers\UserObserver;
-use Webtechsolutions\UserManager\Console\Commands\CleanupActivityLogsCommand;
 
 class UserManagerServiceProvider extends ServiceProvider
 {
@@ -32,7 +32,7 @@ class UserManagerServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
         // Register event listeners
         Event::listen(Login::class, LogSuccessfulLogin::class);

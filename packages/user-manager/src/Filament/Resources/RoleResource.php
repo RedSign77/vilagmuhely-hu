@@ -79,7 +79,7 @@ class RoleResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('avatar')
                     ->circular()
-                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=F59E0B&background=FEF3C7'),
+                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name='.urlencode($record->name).'&color=F59E0B&background=FEF3C7'),
 
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()

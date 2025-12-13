@@ -65,7 +65,7 @@ class ZoneService
             ->orderBy('unlock_at')
             ->first();
 
-        if (!$nextZone) {
+        if (! $nextZone) {
             return [
                 'all_unlocked' => true,
                 'total_structures' => $totalStructures,

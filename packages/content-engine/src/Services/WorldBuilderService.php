@@ -10,7 +10,9 @@ use Webtechsolutions\ContentEngine\Models\WorldStructure;
 class WorldBuilderService
 {
     protected WorldResourceService $resourceService;
+
     protected AdjacencyService $adjacencyService;
+
     protected ZoneService $zoneService;
 
     public function __construct(
@@ -35,7 +37,7 @@ class WorldBuilderService
         ?array $customization = null
     ): WorldStructure {
         // Validate position
-        if (!$this->adjacencyService->isValidPosition($x, $y)) {
+        if (! $this->adjacencyService->isValidPosition($x, $y)) {
             throw new \InvalidArgumentException('Invalid position for building');
         }
 
@@ -43,12 +45,12 @@ class WorldBuilderService
         $costs = WorldStructure::getStructureCosts($type);
 
         // Check if user can afford
-        if (!$this->resourceService->canAfford($user, $type)) {
+        if (! $this->resourceService->canAfford($user, $type)) {
             throw new \InvalidArgumentException('Insufficient resources');
         }
 
         // Spend resources
-        if (!$this->resourceService->spendResources($user, $costs)) {
+        if (! $this->resourceService->spendResources($user, $costs)) {
             throw new \RuntimeException('Failed to spend resources');
         }
 
@@ -108,12 +110,12 @@ class WorldBuilderService
         $user = $structure->user;
         $userResources = $this->resourceService->getResources($user);
 
-        if (!$userResources->canAfford($upgradeCosts)) {
+        if (! $userResources->canAfford($upgradeCosts)) {
             throw new \InvalidArgumentException('Insufficient resources for upgrade');
         }
 
         // Spend resources
-        if (!$userResources->spendResources($upgradeCosts)) {
+        if (! $userResources->spendResources($upgradeCosts)) {
             throw new \RuntimeException('Failed to spend resources');
         }
 
@@ -184,7 +186,7 @@ class WorldBuilderService
         // Same type cluster bonus
         foreach ($typeCount as $type => $count) {
             if ($count >= 3) {
-                $bonuses['cluster_' . $type] = ucfirst($type) . ' district forming';
+                $bonuses['cluster_'.$type] = ucfirst($type).' district forming';
             }
         }
 

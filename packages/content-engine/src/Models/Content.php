@@ -48,17 +48,24 @@ class Content extends Model
      * Content type constants
      */
     public const TYPE_DIGITAL_FILE = 'digital_file';
+
     public const TYPE_IMAGE_GALLERY = 'image_gallery';
+
     public const TYPE_MARKDOWN_POST = 'markdown_post';
+
     public const TYPE_ARTICLE = 'article';
+
     public const TYPE_RPG_MODULE = 'rpg_module';
 
     /**
      * Content status constants
      */
     public const STATUS_DRAFT = 'draft';
+
     public const STATUS_PREVIEW = 'preview';
+
     public const STATUS_MEMBERS_ONLY = 'members_only';
+
     public const STATUS_PUBLIC = 'public';
 
     /**
@@ -135,7 +142,6 @@ class Content extends Model
         return $this->belongsToMany(ContentTag::class, 'content_tag', 'content_id', 'content_tag_id')
             ->withTimestamps();
     }
-
 
     /**
      * Scope to filter by type
@@ -229,7 +235,7 @@ class Content extends Model
      */
     public function getFormattedFileSizeAttribute(): ?string
     {
-        if (!$this->file_size) {
+        if (! $this->file_size) {
             return null;
         }
 
@@ -242,7 +248,7 @@ class Content extends Model
             $unit++;
         }
 
-        return round($size, 2) . ' ' . $units[$unit];
+        return round($size, 2).' '.$units[$unit];
     }
 
     /**

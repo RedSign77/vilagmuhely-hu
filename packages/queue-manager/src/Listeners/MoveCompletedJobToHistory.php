@@ -3,7 +3,6 @@
 namespace Webtechsolutions\QueueManager\Listeners;
 
 use Illuminate\Queue\Events\JobProcessed;
-use Illuminate\Support\Facades\DB;
 use Webtechsolutions\QueueManager\Models\CompletedJob;
 
 class MoveCompletedJobToHistory
@@ -46,7 +45,7 @@ class MoveCompletedJobToHistory
             }
         } catch (\Exception $e) {
             // Silently fail - don't break the queue process
-            \Log::error('Failed to move completed job to history: ' . $e->getMessage());
+            \Log::error('Failed to move completed job to history: '.$e->getMessage());
         }
     }
 

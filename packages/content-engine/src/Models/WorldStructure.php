@@ -38,19 +38,30 @@ class WorldStructure extends Model
 
     // Structure type constants
     public const TYPE_COTTAGE = 'cottage';
+
     public const TYPE_WORKSHOP = 'workshop';
+
     public const TYPE_GALLERY = 'gallery';
+
     public const TYPE_LIBRARY = 'library';
+
     public const TYPE_ACADEMY = 'academy';
+
     public const TYPE_TOWER = 'tower';
+
     public const TYPE_MONUMENT = 'monument';
+
     public const TYPE_GARDEN = 'garden';
+
     public const TYPE_ORIGIN = 'origin_monument';
+
     public const TYPE_LEGACY_CRYSTAL = 'legacy_crystal';
 
     // Decay state constants
     public const DECAY_ACTIVE = 'active';
+
     public const DECAY_FADING = 'fading';
+
     public const DECAY_RUINED = 'ruined';
 
     /**
@@ -153,7 +164,7 @@ class WorldStructure extends Model
     public function scopeInArea($query, int $minX, int $maxX, int $minY, int $maxY)
     {
         return $query->whereBetween('grid_x', [$minX, $maxX])
-                     ->whereBetween('grid_y', [$minY, $maxY]);
+            ->whereBetween('grid_y', [$minY, $maxY]);
     }
 
     /**
@@ -261,6 +272,7 @@ class WorldStructure extends Model
     public function getDisplayNameAttribute(): string
     {
         $customization = $this->getCustomizationWithDefaults();
+
         return $customization['name'] ?? $this->type_name;
     }
 
@@ -270,6 +282,7 @@ class WorldStructure extends Model
     public function getDisplayDescriptionAttribute(): string
     {
         $customization = $this->getCustomizationWithDefaults();
+
         return $customization['description'] ?? '';
     }
 
@@ -279,6 +292,7 @@ class WorldStructure extends Model
     public function getPrimaryColorAttribute(): string
     {
         $customization = $this->getCustomizationWithDefaults();
+
         return $customization['colors']['primary'] ?? $this->color;
     }
 }

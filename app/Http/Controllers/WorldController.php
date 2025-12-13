@@ -2,52 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\WorldElementInstance;
+use App\Models\WorldMapConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Webtechsolutions\ContentEngine\Models\WorldStructure;
+use Webtechsolutions\ContentEngine\Models\WorldActivityLog;
 use Webtechsolutions\ContentEngine\Services\WorldResourceService;
-use Webtechsolutions\ContentEngine\Services\ZoneService;
 
 class WorldController extends Controller
 {
     protected WorldResourceService $resourceService;
-    protected ZoneService $zoneService;
 
-    public function __construct(WorldResourceService $resourceService, ZoneService $zoneService)
+    public function __construct(WorldResourceService $resourceService)
     {
         $this->resourceService = $resourceService;
-        $this->zoneService = $zoneService;
     }
 
     /**
-     * Show the world map
+     * Show the world map (2D top-down view)
      */
     public function index()
     {
-        $totalStructures = WorldStructure::active()->count();
-        $zoneProgress = $this->zoneService->getNextZoneProgress();
+        // Get map configuration
+        $mapConfig = WorldMapConfig::getInstance();
 
+        // Get total elements count
+        $totalElements = WorldElementInstance::count();
+
+        // Get user resources and discoveries (if authenticated)
         $userResources = null;
+        $userDiscoveries = 0;
+
         if (Auth::check()) {
             $userResources = $this->resourceService->getResourceSummary(Auth::user());
+
+            // Count unique elements user has discovered
+            $userDiscoveries = WorldActivityLog::query()
+                ->where('user_id', Auth::id())
+                ->whereIn('activity_type', ['element_discovered', 'element_harvested'])
+                ->whereNotNull('structure_id') // reusing structure_id column for element_id
+                ->distinct('structure_id')
+                ->count('structure_id');
         }
 
-        return view('world.index', compact('totalStructures', 'zoneProgress', 'userResources'));
-    }
-
-    /**
-     * Show user's structures
-     */
-    public function myStructures(Request $request)
-    {
-        $user = $request->user();
-
-        $structures = WorldStructure::where('user_id', $user->id)
-            ->orderBy('placed_at', 'desc')
-            ->paginate(20);
-
-        $userResources = $this->resourceService->getResourceSummary($user);
-
-        return view('world.my-structures', compact('structures', 'userResources'));
+        return view('world.index', compact('mapConfig', 'totalElements', 'userResources', 'userDiscoveries'));
     }
 }

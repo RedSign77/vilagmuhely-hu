@@ -87,12 +87,13 @@ class WorldSeeder extends Seeder
         $this->command->info('Created 5 world zones');
 
         // Create Origin Monument if it doesn't exist
-        if (!WorldStructure::ofType(WorldStructure::TYPE_ORIGIN)->exists()) {
+        if (! WorldStructure::ofType(WorldStructure::TYPE_ORIGIN)->exists()) {
             // Get the first user or create a system user
             $user = \App\Models\User::first();
 
-            if (!$user) {
+            if (! $user) {
                 $this->command->warn('No users found. Please create a user first.');
+
                 return;
             }
 

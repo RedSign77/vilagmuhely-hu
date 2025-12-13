@@ -42,10 +42,15 @@ class UserActivityLog extends Model
      * Activity type constants
      */
     public const TYPE_LOGIN = 'login';
+
     public const TYPE_LOGOUT = 'logout';
+
     public const TYPE_FAILED_LOGIN = 'failed_login';
+
     public const TYPE_PROFILE_CHANGE = 'profile_change';
+
     public const TYPE_PASSWORD_CHANGE = 'password_change';
+
     public const TYPE_ROLE_CHANGE = 'role_change';
 
     /**
@@ -135,7 +140,7 @@ class UserActivityLog extends Model
      */
     public function getBrowserAttribute(): ?string
     {
-        if (!$this->user_agent) {
+        if (! $this->user_agent) {
             return null;
         }
 
@@ -159,7 +164,7 @@ class UserActivityLog extends Model
      */
     public function getPlatformAttribute(): ?string
     {
-        if (!$this->user_agent) {
+        if (! $this->user_agent) {
             return null;
         }
 

@@ -3,8 +3,8 @@
 namespace Webtechsolutions\UserManager\Filament\Resources\UserActivityLogResource\Pages;
 
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Components\Tab;
+use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use Webtechsolutions\UserManager\Filament\Resources\UserActivityLogResource;
 use Webtechsolutions\UserManager\Models\UserActivityLog;

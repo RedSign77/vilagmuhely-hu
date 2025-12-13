@@ -2,9 +2,9 @@
 
 namespace Webtechsolutions\QueueManager\Filament\Resources\PendingJobResource\Pages;
 
-use Webtechsolutions\QueueManager\Filament\Resources\PendingJobResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Webtechsolutions\QueueManager\Filament\Resources\PendingJobResource;
 use Webtechsolutions\QueueManager\Models\Job;
 
 class ListPendingJobs extends ListRecords

@@ -2,9 +2,9 @@
 
 namespace Webtechsolutions\QueueManager\Filament\Resources\CompletedJobResource\Pages;
 
-use Webtechsolutions\QueueManager\Filament\Resources\CompletedJobResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Webtechsolutions\QueueManager\Filament\Resources\CompletedJobResource;
 use Webtechsolutions\QueueManager\Models\CompletedJob;
 
 class ListCompletedJobs extends ListRecords
@@ -29,7 +29,7 @@ class ListCompletedJobs extends ListRecords
                     fn ($data) => \Filament\Notifications\Notification::make()
                         ->success()
                         ->title('Old jobs cleared')
-                        ->body("Completed jobs older than 7 days have been removed.")
+                        ->body('Completed jobs older than 7 days have been removed.')
                 )
                 ->visible(fn () => CompletedJob::olderThanDays(7)->exists()),
 

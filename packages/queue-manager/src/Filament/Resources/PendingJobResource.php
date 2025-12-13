@@ -2,17 +2,16 @@
 
 namespace Webtechsolutions\QueueManager\Filament\Resources;
 
-use Webtechsolutions\QueueManager\Filament\Resources\PendingJobResource\Pages;
-use Webtechsolutions\QueueManager\Models\Job;
-use Filament\Forms;
+use Carbon\Carbon;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Infolists;
-use Filament\Infolists\Infolist;
 use Illuminate\Database\Eloquent\Builder;
-use Carbon\Carbon;
+use Webtechsolutions\QueueManager\Filament\Resources\PendingJobResource\Pages;
+use Webtechsolutions\QueueManager\Models\Job;
 
 class PendingJobResource extends Resource
 {
@@ -34,6 +33,7 @@ class PendingJobResource extends Resource
     public static function getNavigationBadgeColor(): ?string
     {
         $count = static::getModel()::count();
+
         return $count > 0 ? 'warning' : 'gray';
     }
 
@@ -123,6 +123,7 @@ class PendingJobResource extends Resource
                         if ($data['value'] === 'processing') {
                             return $query->processing();
                         }
+
                         return $query;
                     }),
             ])
@@ -174,6 +175,7 @@ class PendingJobResource extends Resource
                                 $record->update(['available_at' => now()->timestamp]);
                                 $count++;
                             }
+
                             return $count;
                         })
                         ->successNotification(
@@ -237,15 +239,15 @@ class PendingJobResource extends Resource
 
                         Infolists\Components\TextEntry::make('created_at')
                             ->label('Created At')
-                            ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state)->format('Y-m-d H:i:s') . ' (' . Carbon::createFromTimestamp($state)->diffForHumans() . ')'),
+                            ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state)->format('Y-m-d H:i:s').' ('.Carbon::createFromTimestamp($state)->diffForHumans().')'),
 
                         Infolists\Components\TextEntry::make('available_at')
                             ->label('Available At')
-                            ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state)->format('Y-m-d H:i:s') . ' (' . Carbon::createFromTimestamp($state)->diffForHumans() . ')'),
+                            ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state)->format('Y-m-d H:i:s').' ('.Carbon::createFromTimestamp($state)->diffForHumans().')'),
 
                         Infolists\Components\TextEntry::make('reserved_at')
                             ->label('Reserved At')
-                            ->formatStateUsing(fn ($state) => $state ? Carbon::createFromTimestamp($state)->format('Y-m-d H:i:s') . ' (' . Carbon::createFromTimestamp($state)->diffForHumans() . ')' : 'Not reserved')
+                            ->formatStateUsing(fn ($state) => $state ? Carbon::createFromTimestamp($state)->format('Y-m-d H:i:s').' ('.Carbon::createFromTimestamp($state)->diffForHumans().')' : 'Not reserved')
                             ->visible(fn ($record) => $record->reserved_at),
 
                         Infolists\Components\TextEntry::make('payload')
@@ -256,6 +258,7 @@ class PendingJobResource extends Resource
                                 if ($decoded === null) {
                                     return 'Unable to decode payload';
                                 }
+
                                 return json_encode($decoded, JSON_PRETTY_PRINT);
                             })
                             ->markdown()

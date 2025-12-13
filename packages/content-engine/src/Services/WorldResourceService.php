@@ -42,7 +42,7 @@ class WorldResourceService
             default => [],
         };
 
-        if (!empty($resources)) {
+        if (! empty($resources)) {
             $this->addResources($user, $resources);
         }
 

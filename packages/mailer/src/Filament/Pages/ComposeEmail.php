@@ -97,8 +97,8 @@ class ComposeEmail extends Page
             ];
 
             foreach ($variables as $key => $value) {
-                $body = str_replace('{' . $key . '}', $value, $body);
-                $subject = str_replace('{' . $key . '}', $value, $subject);
+                $body = str_replace('{'.$key.'}', $value, $body);
+                $subject = str_replace('{'.$key.'}', $value, $subject);
             }
 
             // Create sent email record
@@ -135,7 +135,7 @@ class ComposeEmail extends Page
 
         // Replace variables
         $body = $data['body'];
-        $subject = '[TEST] ' . $data['subject'];
+        $subject = '[TEST] '.$data['subject'];
 
         $variables = [
             'name' => $currentUser->name,
@@ -143,7 +143,7 @@ class ComposeEmail extends Page
         ];
 
         foreach ($variables as $key => $value) {
-            $body = str_replace('{' . $key . '}', $value, $body);
+            $body = str_replace('{'.$key.'}', $value, $body);
         }
 
         // Create sent email record

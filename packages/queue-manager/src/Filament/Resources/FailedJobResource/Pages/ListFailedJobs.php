@@ -2,11 +2,11 @@
 
 namespace Webtechsolutions\QueueManager\Filament\Resources\FailedJobResource\Pages;
 
-use Webtechsolutions\QueueManager\Filament\Resources\FailedJobResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Webtechsolutions\QueueManager\Models\FailedJob;
 use Illuminate\Support\Facades\Artisan;
+use Webtechsolutions\QueueManager\Filament\Resources\FailedJobResource;
+use Webtechsolutions\QueueManager\Models\FailedJob;
 
 class ListFailedJobs extends ListRecords
 {
@@ -45,6 +45,7 @@ class ListFailedJobs extends ListRecords
     public function getTitle(): string
     {
         $total = FailedJob::count();
+
         return "Failed Jobs ({$total} total)";
     }
 }

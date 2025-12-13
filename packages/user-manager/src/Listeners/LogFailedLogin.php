@@ -15,7 +15,7 @@ class LogFailedLogin
         UserActivityLog::log(
             userId: $event->user?->id,
             activityType: UserActivityLog::TYPE_FAILED_LOGIN,
-            description: 'Failed login attempt for ' . ($event->credentials['email'] ?? 'unknown'),
+            description: 'Failed login attempt for '.($event->credentials['email'] ?? 'unknown'),
             properties: [
                 'email' => $event->credentials['email'] ?? null,
             ]

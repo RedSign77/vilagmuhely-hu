@@ -2,14 +2,14 @@
 
 namespace Webtechsolutions\QueueManager\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
-use Illuminate\Console\Scheduling\Schedule;
-use Webtechsolutions\QueueManager\Listeners\MoveCompletedJobToHistory;
-use Webtechsolutions\QueueManager\Listeners\CaptureJobBeforeProcessing;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\ServiceProvider;
 use Webtechsolutions\QueueManager\Console\Commands\CleanupCompletedJobsCommand;
+use Webtechsolutions\QueueManager\Listeners\CaptureJobBeforeProcessing;
+use Webtechsolutions\QueueManager\Listeners\MoveCompletedJobToHistory;
 
 class QueueManagerServiceProvider extends ServiceProvider
 {
@@ -30,7 +30,7 @@ class QueueManagerServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
         // Register event listeners
         Event::listen(JobProcessing::class, CaptureJobBeforeProcessing::class);
@@ -47,4 +47,3 @@ class QueueManagerServiceProvider extends ServiceProvider
         // Resources are registered in AdminPanelProvider
     }
 }
-

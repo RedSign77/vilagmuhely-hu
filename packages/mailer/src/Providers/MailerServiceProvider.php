@@ -21,14 +21,14 @@ class MailerServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
         // Load views
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'mailer');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'mailer');
 
         // Publish views (optional, for customization)
         $this->publishes([
-            __DIR__ . '/../../resources/views' => resource_path('views/vendor/mailer'),
+            __DIR__.'/../../resources/views' => resource_path('views/vendor/mailer'),
         ], 'mailer-views');
 
         // Register commands

@@ -1,26 +1,21 @@
 <?php
 
 use App\Http\Controllers\WorldController;
+use App\Models\WorldElementInstance;
+use App\Models\WorldMapConfig;
 use Illuminate\Support\Facades\Route;
-use Webtechsolutions\ContentEngine\Models\WorldStructure;
-use Webtechsolutions\ContentEngine\Services\ZoneService;
 
 Route::get('/', function () {
-    $zoneService = app(ZoneService::class);
+    $mapConfig = WorldMapConfig::getInstance();
 
     $worldStats = [
-        'total_structures' => WorldStructure::count(),
-        'total_builders' => WorldStructure::distinct('user_id')->count(),
-        'unlocked_zones' => $zoneService->getUnlockedZones()->count(),
+        'total_elements' => WorldElementInstance::count(),
+        'map_size' => "{$mapConfig->map_width}×{$mapConfig->map_height}",
+        'biomes' => 5, // forest, meadow, desert, tundra, swamp
     ];
 
-    $zoneProgress = $zoneService->getNextZoneProgress();
-
-    return view('welcome', compact('worldStats', 'zoneProgress'));
+    return view('welcome', compact('worldStats'));
 });
 
 // World Routes
 Route::get('/world', [WorldController::class, 'index'])->name('world.index');
-Route::middleware(['auth'])->group(function () {
-    Route::get('/my-structures', [WorldController::class, 'myStructures'])->name('world.my-structures');
-});

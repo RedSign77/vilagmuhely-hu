@@ -58,7 +58,7 @@ class UserWorldResource extends Model
     {
         // Check if user has enough resources
         foreach ($costs as $type => $amount) {
-            if ($this->$type < $amount) {
+            if ($amount > $this->$type) {
                 return false;
             }
         }
@@ -77,7 +77,7 @@ class UserWorldResource extends Model
     public function canAfford(array $costs): bool
     {
         foreach ($costs as $type => $amount) {
-            if (!isset($this->$type) || $this->$type < $amount) {
+            if (! isset($this->$type) || $amount > $this->$type) {
                 return false;
             }
         }

@@ -2,17 +2,17 @@
 
 namespace Webtechsolutions\QueueManager\Filament\Resources;
 
-use Webtechsolutions\QueueManager\Filament\Resources\CompletedJobResource\Pages;
-use Webtechsolutions\QueueManager\Models\CompletedJob;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Infolists;
-use Filament\Infolists\Infolist;
 use Illuminate\Database\Eloquent\Builder;
-use Carbon\Carbon;
+use Webtechsolutions\QueueManager\Filament\Resources\CompletedJobResource\Pages;
+use Webtechsolutions\QueueManager\Models\CompletedJob;
 
 class CompletedJobResource extends Resource
 {
@@ -77,7 +77,7 @@ class CompletedJobResource extends Resource
 
                 Tables\Columns\TextColumn::make('execution_time')
                     ->label('Execution Time')
-                    ->formatStateUsing(fn ($state) => $state ? $state . 's' : 'N/A')
+                    ->formatStateUsing(fn ($state) => $state ? $state.'s' : 'N/A')
                     ->sortable()
                     ->toggleable(),
 
@@ -196,11 +196,11 @@ class CompletedJobResource extends Resource
 
                         Infolists\Components\TextEntry::make('execution_time')
                             ->label('Execution Time')
-                            ->formatStateUsing(fn ($state) => $state ? $state . ' seconds' : 'Not available'),
+                            ->formatStateUsing(fn ($state) => $state ? $state.' seconds' : 'Not available'),
 
                         Infolists\Components\TextEntry::make('created_at')
                             ->label('Created At')
-                            ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state)->format('Y-m-d H:i:s') . ' (' . Carbon::createFromTimestamp($state)->diffForHumans() . ')'),
+                            ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state)->format('Y-m-d H:i:s').' ('.Carbon::createFromTimestamp($state)->diffForHumans().')'),
 
                         Infolists\Components\TextEntry::make('available_at')
                             ->label('Available At')
@@ -224,6 +224,7 @@ class CompletedJobResource extends Resource
                                 if ($decoded === null) {
                                     return 'Unable to decode payload';
                                 }
+
                                 return json_encode($decoded, JSON_PRETTY_PRINT);
                             })
                             ->markdown()

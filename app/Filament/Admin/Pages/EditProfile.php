@@ -5,10 +5,10 @@ namespace App\Filament\Admin\Pages;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Pages\Page;
 use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\Hash;
+use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class EditProfile extends Page
 {

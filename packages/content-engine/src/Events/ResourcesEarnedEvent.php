@@ -11,7 +11,9 @@ class ResourcesEarnedEvent
     use Dispatchable, SerializesModels;
 
     public User $user;
+
     public array $resources;
+
     public string $source;
 
     public function __construct(User $user, array $resources, string $source)

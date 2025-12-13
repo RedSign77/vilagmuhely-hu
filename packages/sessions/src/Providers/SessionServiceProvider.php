@@ -3,8 +3,6 @@
 namespace Webtechsolutions\Sessions\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Filament\Support\Facades\FilamentAsset;
-use Filament\Support\Assets\Css;
 
 class SessionServiceProvider extends ServiceProvider
 {

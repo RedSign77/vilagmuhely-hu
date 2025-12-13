@@ -15,8 +15,11 @@ use Webtechsolutions\ContentEngine\Services\ZoneService;
 class WorldApiController extends Controller
 {
     protected WorldResourceService $resourceService;
+
     protected WorldBuilderService $builderService;
+
     protected AdjacencyService $adjacencyService;
+
     protected ZoneService $zoneService;
 
     public function __construct(
@@ -139,7 +142,7 @@ class WorldApiController extends Controller
     {
         $structure = WorldStructure::with('user:id,name,avatar')->find($id);
 
-        if (!$structure) {
+        if (! $structure) {
             return response()->json([
                 'success' => false,
                 'message' => 'Structure not found',
@@ -286,7 +289,7 @@ class WorldApiController extends Controller
     {
         $structure = WorldStructure::find($structureId);
 
-        if (!$structure) {
+        if (! $structure) {
             return response()->json([
                 'success' => false,
                 'message' => 'Structure not found',

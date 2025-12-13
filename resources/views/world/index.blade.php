@@ -2,104 +2,121 @@
 
 @section('title', 'Műhely Világ - Workshop World')
 
-@section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Header -->
-    <div class="mb-6">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            Műhely Világ
-        </h1>
-        <p class="text-gray-600 dark:text-gray-400">
-            A collaborative world built by our community of creators
-        </p>
-    </div>
+@push('head')
+<meta name="user-authenticated" content="{{ auth()->check() ? 'true' : 'false' }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="stylesheet" href="{{ asset('css/world-map.css') }}">
+@endpush
 
-    <!-- Zone Progress -->
-    @if(!$zoneProgress['all_unlocked'])
-    <div class="zone-progress mb-6">
-        <div class="zone-progress-header">
-            <span class="zone-progress-label">
-                Next zone: {{ $zoneProgress['next_zone']['name'] }}
-            </span>
-            <span class="zone-progress-percentage">
-                {{ number_format($zoneProgress['progress_percentage'], 1) }}%
-            </span>
+@section('content')
+<div class="world-page">
+    <!-- Header -->
+    <div class="world-header">
+        <div class="container mx-auto px-4">
+            <h1 class="world-title">Műhely Világ</h1>
+            <p class="world-subtitle">
+                Explore a vast world filled with natural wonders and hidden treasures
+            </p>
         </div>
-        <div class="zone-progress-bar">
-            <div class="zone-progress-fill" style="width: {{ $zoneProgress['progress_percentage'] }}%"></div>
-        </div>
-        <p class="text-xs text-gray-400 mt-1">
-            {{ $zoneProgress['remaining'] }} more structures needed
-        </p>
     </div>
-    @endif
 
     <!-- Resource Bar (if authenticated) -->
     @auth
-    @include('world.partials.resource-bar', ['resources' => $userResources])
+    <div class="resource-bar-container">
+        @include('world.partials.resource-bar', ['resources' => $userResources])
+    </div>
     @endauth
 
     <!-- World Stats -->
-    <div class="world-stats mb-6">
-        <div class="stat-card">
-            <div class="stat-label">Total Structures</div>
-            <div class="stat-value">{{ number_format($totalStructures) }}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Unlocked Zones</div>
-            <div class="stat-value">{{ $zoneProgress['all_unlocked'] ? 'All' : 'Central' }}</div>
+    <div class="world-stats">
+        <div class="container mx-auto px-4">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Elements</div>
+                    <div class="stat-value">{{ number_format($totalElements) }}</div>
+                </div>
+                @auth
+                <div class="stat-card">
+                    <div class="stat-label">Your Discoveries</div>
+                    <div class="stat-value">{{ number_format($userDiscoveries ?? 0) }}</div>
+                </div>
+                @endauth
+                <div class="stat-card">
+                    <div class="stat-label">Map Size</div>
+                    <div class="stat-value">{{ $mapConfig->map_width }}×{{ $mapConfig->map_height }}</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- World Viewer -->
-    <div id="world-viewer"
-         class="world-viewer-container"
-         data-world-viewer
-         data-chunk-size="30"
-         data-enable-building="{{ auth()->check() ? 'true' : 'false' }}"
-         data-show-mini-map="true"
-         data-api-base="/api/v1/world"
-         data-csrf-token="{{ csrf_token() }}">
-    </div>
+    <!-- World Viewer (2D Top-Down Map) -->
+    <div class="map-container">
+        <div id="world-viewer"
+             data-world-viewer
+             data-tile-size="{{ $mapConfig->tile_size }}"
+             data-enable-interaction="{{ auth()->check() ? 'true' : 'false' }}"
+             data-show-grid="false">
+        </div>
 
-    <!-- Build Panel (outside world-viewer) -->
-    @if(auth()->check())
-    <div id="build-panel" class="build-panel" style="display: none;">
-        <div class="build-panel-loading">
-            <div class="loading-spinner"></div>
-            <span>Loading build options...</span>
+        <!-- Map Controls -->
+        <div class="map-controls">
+            <div class="control-hint">
+                <span class="hint-icon">🖱️</span>
+                <span class="hint-text">Drag to pan • Scroll to zoom • Click elements for details</span>
+            </div>
         </div>
     </div>
-    @endif
 
     <!-- Instructions -->
-    <div class="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            How to Build
-        </h3>
-        <div class="grid md:grid-cols-3 gap-6 text-sm">
-            <div>
-                <h4 class="font-semibold text-indigo-600 dark:text-indigo-400 mb-2">1. Earn Resources</h4>
-                <p class="text-gray-600 dark:text-gray-400">
-                    Create content to earn Stone, Wood, Crystal Shards, and Magic Essence.
-                    Different content types award different resources.
-                </p>
-            </div>
-            <div>
-                <h4 class="font-semibold text-indigo-600 dark:text-indigo-400 mb-2">2. Place Structures</h4>
-                <p class="text-gray-600 dark:text-gray-400">
-                    Use your resources to build structures. You must build adjacent to existing structures
-                    to help the world grow organically.
-                </p>
-            </div>
-            <div>
-                <h4 class="font-semibold text-indigo-600 dark:text-indigo-400 mb-2">3. Unlock Zones</h4>
-                <p class="text-gray-600 dark:text-gray-400">
-                    As the community builds more structures, new zones unlock with unique themes
-                    and opportunities.
-                </p>
+    <div class="world-instructions">
+        <div class="container mx-auto px-4">
+            <h3 class="instructions-title">How to Explore</h3>
+            <div class="instructions-grid">
+                <div class="instruction-card">
+                    <h4 class="instruction-title">1. Earn Resources</h4>
+                    <p class="instruction-text">
+                        Create and publish content to earn Stone, Wood, Crystal Shards, and Magic Essence.
+                        Different content types award different resources.
+                    </p>
+                </div>
+                <div class="instruction-card">
+                    <h4 class="instruction-title">2. Explore the Map</h4>
+                    <p class="instruction-text">
+                        Pan and zoom around the map to discover elements across different biomes.
+                        Click on trees, rocks, water features, and more to learn about them.
+                    </p>
+                </div>
+                <div class="instruction-card">
+                    <h4 class="instruction-title">3. Claim Bonuses</h4>
+                    <p class="instruction-text">
+                        Interact with elements to claim resource bonuses. Some bonuses are one-time,
+                        while others can be claimed repeatedly after a cooldown period.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script type="module">
+    import { TopDownMapViewer } from '/js/components/TopDownMapViewer.js';
+    import { ElementDetailModal } from '/js/components/ElementDetailModal.js';
+
+    // Initialize map viewer
+    const viewer = new TopDownMapViewer('world-viewer', {
+        tileSize: {{ $mapConfig->tile_size }},
+        enableInteraction: {{ auth()->check() ? 'true' : 'false' }},
+        showGrid: false
+    });
+
+    // Initialize detail modal
+    const modal = new ElementDetailModal();
+
+    // Listen for element selection
+    document.getElementById('world-viewer').addEventListener('element-selected', (e) => {
+        modal.open(e.detail.element);
+    });
+</script>
+@endpush

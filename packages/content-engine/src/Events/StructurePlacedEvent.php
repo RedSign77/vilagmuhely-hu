@@ -12,6 +12,7 @@ class StructurePlacedEvent
     use Dispatchable, SerializesModels;
 
     public User $user;
+
     public WorldStructure $structure;
 
     public function __construct(User $user, WorldStructure $structure)

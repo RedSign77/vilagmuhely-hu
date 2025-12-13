@@ -2,16 +2,15 @@
 
 namespace Webtechsolutions\Sessions\Filament\Resources;
 
-use Webtechsolutions\Sessions\Filament\Resources\SessionResource\Pages;
-use Webtechsolutions\Sessions\Models\Session;
-use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Infolists;
-use Filament\Infolists\Infolist;
 use Illuminate\Support\Facades\DB;
+use Webtechsolutions\Sessions\Filament\Resources\SessionResource\Pages;
+use Webtechsolutions\Sessions\Models\Session;
 
 class SessionResource extends Resource
 {
@@ -164,7 +163,7 @@ class SessionResource extends Resource
 
                         Infolists\Components\TextEntry::make('last_activity')
                             ->label('Last Activity')
-                            ->formatStateUsing(fn ($state) => \Carbon\Carbon::createFromTimestamp($state)->format('Y-m-d H:i:s') . ' (' . \Carbon\Carbon::createFromTimestamp($state)->diffForHumans() . ')'),
+                            ->formatStateUsing(fn ($state) => \Carbon\Carbon::createFromTimestamp($state)->format('Y-m-d H:i:s').' ('.\Carbon\Carbon::createFromTimestamp($state)->diffForHumans().')'),
 
                         Infolists\Components\TextEntry::make('payload')
                             ->label('Session Payload')
@@ -179,7 +178,7 @@ class SessionResource extends Resource
                                 // Try to unserialize
                                 $unserialized = @unserialize($decoded);
                                 if ($unserialized === false) {
-                                    return substr($decoded, 0, 500) . (strlen($decoded) > 500 ? '...' : '');
+                                    return substr($decoded, 0, 500).(strlen($decoded) > 500 ? '...' : '');
                                 }
 
                                 return json_encode($unserialized, JSON_PRETTY_PRINT);
