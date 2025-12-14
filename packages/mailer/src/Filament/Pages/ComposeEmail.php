@@ -25,6 +25,11 @@ class ComposeEmail extends Page
 
     public ?array $data = [];
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->isSupervisor() ?? false;
+    }
+
     public function mount(): void
     {
         $this->form->fill();

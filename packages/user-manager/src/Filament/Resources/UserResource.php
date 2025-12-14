@@ -193,6 +193,11 @@ class UserResource extends Resource
             ]);
     }
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->isSupervisor() ?? false;
+    }
+
     public static function getPages(): array
     {
         return [

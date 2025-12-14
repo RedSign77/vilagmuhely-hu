@@ -17,11 +17,11 @@ class ContentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationLabel = 'Contents';
+    protected static ?string $navigationLabel = 'My Contents';
 
-    protected static ?string $navigationGroup = 'Content Engine';
+    protected static ?string $navigationGroup = null;
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationBadge(): ?string
     {

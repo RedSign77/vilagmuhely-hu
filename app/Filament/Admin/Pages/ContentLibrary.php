@@ -26,9 +26,9 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
-    protected static ?string $navigationGroup = 'Content Engine';
+    protected static ?string $navigationGroup = null;
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
 
     protected static string $view = 'filament.pages.content-library';
 

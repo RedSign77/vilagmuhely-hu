@@ -124,6 +124,11 @@ class ContentCategoryResource extends Resource
             ->reorderable('sort_order');
     }
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->isSupervisor() ?? false;
+    }
+
     public static function getPages(): array
     {
         return [
