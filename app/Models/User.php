@@ -96,6 +96,32 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     }
 
     /**
+     * Get content downloads by this user
+     */
+    public function downloads(): BelongsToMany
+    {
+        return $this->belongsToMany(Content::class, 'content_user_downloads')
+            ->withPivot(['downloaded_at', 'ip_address'])
+            ->using(ContentDownload::class);
+    }
+
+    /**
+     * Get ratings given by this user
+     */
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(ContentRating::class);
+    }
+
+    /**
+     * Get reviews written by this user
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ContentReview::class);
+    }
+
+    /**
      * Check if user has a specific role
      */
     public function hasRole(string $roleSlug): bool

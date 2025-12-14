@@ -35,6 +35,7 @@ class CrystalActivityQueue extends Model
     public const TYPE_CONTENT_VIEWED = 'content_viewed';
     public const TYPE_CONTENT_DOWNLOADED = 'content_downloaded';
     public const TYPE_CONTENT_RATED = 'content_rated';
+    public const TYPE_CONTENT_REVIEWED = 'content_reviewed';
     public const TYPE_ACHIEVEMENT_UNLOCKED = 'achievement_unlocked';
 
     /**

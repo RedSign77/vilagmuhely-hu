@@ -329,17 +329,68 @@ class CrystalCalculatorService
     }
 
     /**
+     * Calculate profile completeness (0-1)
+     * Based on user profile fields being filled
+     */
+    public function calculateProfileCompleteness(User $user): float
+    {
+        $fields = [
+            'avatar' => !empty($user->avatar) ? 1 : 0,
+            'about' => !empty($user->about) ? 1 : 0,
+            'mobile' => !empty($user->mobile) ? 1 : 0,
+            'city' => !empty($user->city) ? 1 : 0,
+            'address' => !empty($user->address) ? 1 : 0,
+            'social_media_links' => (!empty($user->social_media_links) && count($user->social_media_links) > 0) ? 1 : 0,
+        ];
+
+        $totalFields = count($fields);
+        $filledFields = array_sum($fields);
+
+        return round($filledFields / $totalFields, 2);
+    }
+
+    /**
+     * Calculate the initial modifier multiplier (1.0 - 1.5x)
+     * Based on profile completeness
+     */
+    public function calculateInitialModifier(float $completeness): float
+    {
+        // 0% complete = 1.0x (no bonus)
+        // 100% complete = 1.5x (50% bonus)
+        return round(1.0 + ($completeness * 0.5), 2);
+    }
+
+    /**
      * Full recalculation of all metrics for a user
      */
     public function recalculateMetrics(User $user): UserCrystalMetric
     {
         $metric = UserCrystalMetric::firstOrCreate(['user_id' => $user->id]);
 
+        // Detect if this is first-time creation
+        $isFirstCreation = !$metric->initial_modifier_applied;
+
         // Calculate base metrics
         $contentCount = $user->contents()->published()->count();
         $diversityIndex = $this->calculateDiversityIndex($user);
         $interactionScore = $this->calculateInteractionScore($user);
         $engagementScore = $this->calculateEngagementScore($user);
+
+        // Apply initial modifier on first creation only
+        $modifier = 1.0;
+        if ($isFirstCreation) {
+            $completeness = $this->calculateProfileCompleteness($user);
+            $modifier = $this->calculateInitialModifier($completeness);
+            $metric->profile_completeness_modifier = $modifier;
+            $metric->initial_modifier_applied = true;
+        } else {
+            // Use stored modifier for subsequent calculations
+            $modifier = $metric->profile_completeness_modifier ?? 1.0;
+        }
+
+        // Apply modifier to interaction and engagement scores
+        $interactionScore = $interactionScore * $modifier;
+        $engagementScore = $engagementScore * $modifier;
 
         // Calculate crystal dimensions
         $facetCount = $this->calculateFacetCount($contentCount, $diversityIndex);

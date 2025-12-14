@@ -20,6 +20,14 @@
                     </a>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <a href="{{ route('crystals.gallery') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        Crystal Gallery
+                    </a>
+                    @auth
+                        <a href="{{ route('crystals.show', auth()->user()) }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                            My Crystal
+                        </a>
+                    @endauth
                     <a href="/admin" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                         Admin
                     </a>

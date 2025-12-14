@@ -42,6 +42,7 @@ class ContentEngineServiceProvider extends ServiceProvider
         Content::observe(ContentObserver::class);
 
         // Register event listeners
-        Event::listen(ContentPublishedEvent::class, AwardResourcesOnContentPublished::class);
+        // Note: Disabled because World Building feature was removed
+        // Event::listen(ContentPublishedEvent::class, AwardResourcesOnContentPublished::class);
     }
 }

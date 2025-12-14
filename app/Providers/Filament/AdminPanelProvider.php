@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\ContentLibrary;
 use App\Filament\Admin\Pages\EditProfile;
 use App\Http\Middleware\FilamentAuthenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -53,6 +54,18 @@ class AdminPanelProvider extends PanelProvider
                     ->label('Edit Profile')
                     ->url(fn (): string => EditProfile::getUrl())
                     ->icon('heroicon-o-user-circle'),
+
+                'my-crystal' => MenuItem::make()
+                    ->label('My Crystal')
+                    ->url(fn (): string => route('crystals.show', auth()->user()))
+                    ->icon('heroicon-o-sparkles')
+                    ->sort(10),
+
+                'crystal-gallery' => MenuItem::make()
+                    ->label('Crystal Gallery')
+                    ->url(fn (): string => route('crystals.gallery'))
+                    ->icon('heroicon-o-squares-2x2')
+                    ->sort(20),
             ])
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->resources([
@@ -74,6 +87,7 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
                 ComposeEmail::class,
                 EditProfile::class,
+                ContentLibrary::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([

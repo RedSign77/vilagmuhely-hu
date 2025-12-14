@@ -45,6 +45,14 @@ class Content extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     */
+    protected $appends = [
+        'average_rating',
+        'reviews_count',
+    ];
+
+    /**
      * Content type constants
      */
     public const TYPE_DIGITAL_FILE = 'digital_file';
@@ -265,5 +273,79 @@ class Content extends Model
     public function getStatusLabelAttribute(): string
     {
         return self::getStatuses()[$this->status] ?? $this->status;
+    }
+
+    /**
+     * Get the users who have downloaded this content.
+     */
+    public function downloads(): BelongsToMany
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'content_user_downloads')
+            ->withPivot(['downloaded_at', 'ip_address'])
+            ->using(\App\Models\ContentDownload::class);
+    }
+
+    /**
+     * Get the ratings for this content.
+     */
+    public function ratings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\ContentRating::class);
+    }
+
+    /**
+     * Get the reviews for this content.
+     */
+    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\ContentReview::class);
+    }
+
+    /**
+     * Get approved reviews only.
+     */
+    public function approvedReviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->reviews()->where('status', \App\Models\ContentReview::STATUS_APPROVED);
+    }
+
+    /**
+     * Get average rating.
+     */
+    public function getAverageRatingAttribute(): float
+    {
+        return (float) $this->ratings()->avg('rating') ?? 0.0;
+    }
+
+    /**
+     * Get reviews count.
+     */
+    public function getReviewsCountAttribute(): int
+    {
+        return $this->reviews()->approved()->count();
+    }
+
+    /**
+     * Check if user has downloaded this content.
+     */
+    public function hasBeenDownloadedBy(int $userId): bool
+    {
+        return \App\Models\ContentDownload::hasUserDownloaded($this->id, $userId);
+    }
+
+    /**
+     * Check if user has rated this content.
+     */
+    public function hasBeenRatedBy(int $userId): bool
+    {
+        return $this->ratings()->where('user_id', $userId)->exists();
+    }
+
+    /**
+     * Check if user has reviewed this content.
+     */
+    public function hasBeenReviewedBy(int $userId): bool
+    {
+        return $this->reviews()->where('user_id', $userId)->exists();
     }
 }

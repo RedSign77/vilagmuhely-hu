@@ -86,9 +86,9 @@
                     @endif
                     <div class="bg-gradient-to-br from-purple-900/50 to-cyan-900/50 rounded-2xl p-6 border border-white/10 shadow-2xl h-full">
                         <div class="text-center mb-4">
-                            <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center">
+                            <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center overflow-hidden">
                                 @if($metric->user->avatar)
-                                <img src="{{ $metric->user->avatar }}" alt="{{ $metric->user->name }}" class="w-full h-full rounded-full object-cover">
+                                <img src="{{ asset('storage/' . $metric->user->avatar) }}" alt="{{ $metric->user->name }}" class="w-full h-full rounded-full object-cover">
                                 @else
                                 <span class="text-3xl">💎</span>
                                 @endif

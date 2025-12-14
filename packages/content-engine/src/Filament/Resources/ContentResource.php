@@ -25,7 +25,13 @@ class ContentResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        // Supervisors see total count
+        if (auth()->user()?->isSupervisor()) {
+            return static::getModel()::count();
+        }
+
+        // Regular users see their own content count
+        return static::getModel()::where('creator_id', auth()->id())->count();
     }
 
     public static function form(Form $form): Form
@@ -76,10 +82,16 @@ class ContentResource extends Resource
 
                 Forms\Components\Section::make('Content')
                     ->schema([
-                        Forms\Components\Textarea::make('excerpt')
-                            ->rows(3)
+                        Forms\Components\MarkdownEditor::make('excerpt')
+                            ->label('Excerpt')
+                            ->toolbarButtons([
+                                'bold',
+                                'italic',
+                                'link',
+                            ])
                             ->maxLength(500)
-                            ->helperText('Short summary or preview text')
+                            ->helperText(fn ($state) => (strlen($state ?? '') . ' / 500 characters'))
+                            ->live(onBlur: true)
                             ->columnSpanFull(),
 
                         Forms\Components\MarkdownEditor::make('body')
@@ -318,6 +330,19 @@ class ContentResource extends Resource
                     Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Supervisors can see all content
+        if (auth()->user()?->isSupervisor()) {
+            return $query;
+        }
+
+        // Regular users only see their own content
+        return $query->where('creator_id', auth()->id());
     }
 
     public static function getPages(): array
