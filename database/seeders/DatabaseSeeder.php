@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
         // Seed roles first
         $this->call(RolesTableSeeder::class);
 
+        // Seed content categories and tags
+        $this->call(ContentCategorySeeder::class);
+        $this->call(ContentTagSeeder::class);
+
         // User::factory(10)->create();
 
         User::factory()->create([
