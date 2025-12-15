@@ -80,8 +80,28 @@
                 @foreach($topCrystals as $index => $metric)
                 <div class="relative">
                     @if($index === 0)
-                    <div class="absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-2xl shadow-lg">
-                        🏆
+                    <div class="absolute -top-4 -right-4 w-14 h-14 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg shadow-yellow-500/50 border-2 border-yellow-300">
+                        <svg class="w-8 h-8 text-yellow-900" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                            <path d="M6 21H18V22C18 22.5523 17.5523 23 17 23H7C6.44772 23 6 22.5523 6 22V21Z"/>
+                            <path d="M7 21V19H17V21H7Z"/>
+                        </svg>
+                    </div>
+                    @elseif($index === 1)
+                    <div class="absolute -top-4 -right-4 w-14 h-14 bg-gradient-to-br from-gray-300 to-gray-500 rounded-full flex items-center justify-center shadow-lg shadow-gray-400/50 border-2 border-gray-200">
+                        <svg class="w-8 h-8 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                            <path d="M6 21H18V22C18 22.5523 17.5523 23 17 23H7C6.44772 23 6 22.5523 6 22V21Z"/>
+                            <path d="M7 21V19H17V21H7Z"/>
+                        </svg>
+                    </div>
+                    @elseif($index === 2)
+                    <div class="absolute -top-4 -right-4 w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center shadow-lg shadow-orange-500/50 border-2 border-orange-300">
+                        <svg class="w-8 h-8 text-orange-900" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                            <path d="M6 21H18V22C18 22.5523 17.5523 23 17 23H7C6.44772 23 6 22.5523 6 22V21Z"/>
+                            <path d="M7 21V19H17V21H7Z"/>
+                        </svg>
                     </div>
                     @endif
                     <div class="bg-gradient-to-br from-purple-900/50 to-cyan-900/50 rounded-2xl p-6 border border-white/10 shadow-2xl h-full">
@@ -98,9 +118,13 @@
                         </div>
 
                         <!-- Crystal Preview Container -->
-                        <div class="crystal-preview-container mb-4"
+                        <div id="crystal-viewer-{{ $metric->user->id }}"
+                             class="crystal-preview-container mb-4"
                              data-crystal-viewer
                              data-user-id="{{ $metric->user->id }}"
+                             data-size="small"
+                             data-auto-rotate="true"
+                             data-rotation-speed="0.005"
                              style="height: 200px; border-radius: 0.5rem; background: rgba(0,0,0,0.2);">
                         </div>
 
@@ -162,11 +186,11 @@
 
             <div class="grid md:grid-cols-3 gap-8">
                 <!-- Facets -->
-                <div class="relative">
-                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
+                <div class="relative pt-8">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg z-10">
                         ◆
                     </div>
-                    <div class="bg-white/5 backdrop-blur-lg rounded-lg p-8 pt-12 border border-white/10 h-full">
+                    <div class="bg-white/5 backdrop-blur-lg rounded-lg p-8 pt-12 border border-white/10 h-full relative z-0">
                         <h3 class="text-2xl font-bold mb-3 text-center">Facets (Complexity)</h3>
                         <p class="text-gray-400 text-center mb-4">
                             More content = more facets. Diversity across content types adds extra facets.
@@ -191,11 +215,11 @@
                 </div>
 
                 <!-- Glow -->
-                <div class="relative">
-                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
+                <div class="relative pt-8">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg z-10">
                         ✨
                     </div>
-                    <div class="bg-white/5 backdrop-blur-lg rounded-lg p-8 pt-12 border border-white/10 h-full">
+                    <div class="bg-white/5 backdrop-blur-lg rounded-lg p-8 pt-12 border border-white/10 h-full relative z-0">
                         <h3 class="text-2xl font-bold mb-3 text-center">Glow (Popularity)</h3>
                         <p class="text-gray-400 text-center mb-4">
                             Views, downloads, and helpful ratings make your crystal shine brighter.
@@ -222,11 +246,11 @@
                 </div>
 
                 <!-- Colors -->
-                <div class="relative">
-                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-pink-500 to-orange-500 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
+                <div class="relative pt-8">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-pink-500 to-orange-500 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg z-10">
                         🎨
                     </div>
-                    <div class="bg-white/5 backdrop-blur-lg rounded-lg p-8 pt-12 border border-white/10 h-full">
+                    <div class="bg-white/5 backdrop-blur-lg rounded-lg p-8 pt-12 border border-white/10 h-full relative z-0">
                         <h3 class="text-2xl font-bold mb-3 text-center">Colors (Categories)</h3>
                         <p class="text-gray-400 text-center mb-4">
                             Your crystal shows colors based on your top 3 content categories.
@@ -321,39 +345,39 @@
                 </div>
 
                 <div class="relative">
-                    <div class="bg-gradient-to-br from-purple-600/20 to-cyan-600/20 rounded-2xl p-8 border border-white/10 backdrop-blur-lg">
-                        <h3 class="text-2xl font-bold mb-6 text-center">Crystal Metrics Breakdown</h3>
-                        <div class="space-y-4">
-                            <div class="bg-white/5 rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm text-gray-400">Complexity (Facets)</span>
-                                    <span class="text-sm text-purple-400">4-50</span>
+                    <div class="bg-gradient-to-br from-purple-600/30 to-cyan-600/30 rounded-2xl p-8 border border-white/20 backdrop-blur-lg">
+                        <h3 class="text-2xl font-bold mb-6 text-center text-white">Crystal Metrics Breakdown</h3>
+                        <div class="space-y-3">
+                            <div class="bg-white/10 rounded-lg p-3">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-xs font-semibold text-gray-200">Complexity (Facets)</span>
+                                    <span class="text-xs font-bold text-purple-300">4-50</span>
                                 </div>
-                                <div class="text-xs text-gray-500">Based on content count + diversity</div>
+                                <div class="text-[10px] text-gray-300">Based on content count + diversity</div>
                             </div>
 
-                            <div class="bg-white/5 rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm text-gray-400">Brightness (Glow)</span>
-                                    <span class="text-sm text-cyan-400">0.00-1.00</span>
+                            <div class="bg-white/10 rounded-lg p-3">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-xs font-semibold text-gray-200">Brightness (Glow)</span>
+                                    <span class="text-xs font-bold text-cyan-300">0.00-1.00</span>
                                 </div>
-                                <div class="text-xs text-gray-500">Based on views, downloads, ratings</div>
+                                <div class="text-[10px] text-gray-300">Based on views, downloads, ratings</div>
                             </div>
 
-                            <div class="bg-white/5 rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm text-gray-400">Clarity (Purity)</span>
-                                    <span class="text-sm text-pink-400">0.30-1.00</span>
+                            <div class="bg-white/10 rounded-lg p-3">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-xs font-semibold text-gray-200">Clarity (Purity)</span>
+                                    <span class="text-xs font-bold text-pink-300">0.30-1.00</span>
                                 </div>
-                                <div class="text-xs text-gray-500">Based on engagement score</div>
+                                <div class="text-[10px] text-gray-300">Based on engagement score</div>
                             </div>
 
-                            <div class="bg-white/5 rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm text-gray-400">Colors</span>
-                                    <span class="text-sm text-orange-400">Up to 3</span>
+                            <div class="bg-white/10 rounded-lg p-3">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-xs font-semibold text-gray-200">Colors</span>
+                                    <span class="text-xs font-bold text-orange-300">Up to 3</span>
                                 </div>
-                                <div class="text-xs text-gray-500">Top 3 content categories</div>
+                                <div class="text-[10px] text-gray-300">Top 3 content categories</div>
                             </div>
                         </div>
 

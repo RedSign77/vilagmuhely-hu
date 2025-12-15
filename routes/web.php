@@ -6,9 +6,9 @@ use App\Models\UserCrystalMetric;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    // Get top 3 crystals by interaction score
+    // Get top 6 crystals by interaction score
     $topCrystals = UserCrystalMetric::with('user')
-        ->topInteraction(3)
+        ->topInteraction(6)
         ->get();
 
     // Get total users count

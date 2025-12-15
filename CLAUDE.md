@@ -27,6 +27,7 @@ Starts all development services concurrently:
 - Laravel server (http://localhost:8000)
 - Queue worker
 - Pail logs (real-time log viewer)
+- Laravel scheduler (for crystal calculations)
 - Vite dev server
 
 Alternatively, run services individually:
@@ -34,6 +35,7 @@ Alternatively, run services individually:
 docker exec vilagmuhely-php-fpm-1 php artisan serve                    # Start Laravel server
 docker exec vilagmuhely-php-fpm-1 php artisan queue:listen --tries=1   # Start queue worker
 docker exec vilagmuhely-php-fpm-1 php artisan pail --timeout=0         # Start log viewer
+docker exec vilagmuhely-php-fpm-1 php artisan schedule:work            # Start scheduler
 docker exec vilagmuhely-php-fpm-1 npm run dev                          # Start Vite dev server
 ```
 
@@ -64,6 +66,21 @@ docker exec vilagmuhely-php-fpm-1 php artisan migrate:fresh            # Drop al
 docker exec vilagmuhely-php-fpm-1 php artisan migrate:fresh --seed     # Re-migrate and seed
 docker exec vilagmuhely-php-fpm-1 php artisan db:seed                  # Run seeders
 ```
+
+### Crystal Calculations
+```bash
+docker exec vilagmuhely-php-fpm-1 php artisan crystal:process-updates  # Manually process crystal updates
+docker exec vilagmuhely-php-fpm-1 php artisan schedule:list            # View all scheduled tasks
+```
+
+**Automatic Processing**: Crystal metrics are automatically recalculated every 30 minutes via the Laravel scheduler.
+The scheduler runs automatically when using `composer dev`, or can be started manually with `php artisan schedule:work`.
+
+**How it works**:
+1. User creates/updates content → Activity is queued in `crystal_activity_queue` table
+2. Every 30 minutes → `crystal:process-updates` command runs
+3. Command finds users with pending activities → Dispatches `RecalculateCrystalMetricsJob` for each user
+4. Job recalculates all crystal metrics (facets, glow, colors, geometry) and caches the result
 
 ## Architecture
 
