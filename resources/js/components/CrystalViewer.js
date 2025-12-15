@@ -351,21 +351,3 @@ export class CrystalViewer {
         window.removeEventListener('resize', () => this.onResize());
     }
 }
-
-// Auto-initialize crystals with data-crystal-viewer attribute
-document.addEventListener('DOMContentLoaded', () => {
-    const crystalElements = document.querySelectorAll('[data-crystal-viewer]');
-
-    crystalElements.forEach(element => {
-        const userId = element.dataset.userId;
-        const options = {
-            autoRotate: element.dataset.autoRotate !== 'false',
-            rotationSpeed: parseFloat(element.dataset.rotationSpeed) || 0.005,
-            cameraDistance: parseFloat(element.dataset.cameraDistance) || 3,
-            showStats: element.dataset.showStats === 'true',
-            size: element.dataset.size || 'large',
-        };
-
-        new CrystalViewer(element.id, userId, options);
-    });
-});

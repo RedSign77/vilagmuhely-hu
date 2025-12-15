@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-CPaJuEHH.css",
+    "file": "assets/app-DeJG00Qr.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -9,9 +9,18 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-COZYNHqH.js",
+    "file": "assets/app-CHjc8tvx.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/components/CrystalViewer.js"
+    ]
+  },
+  "resources/js/components/CrystalViewer.js": {
+    "file": "assets/CrystalViewer-DkmaNtyh.js",
+    "name": "CrystalViewer",
+    "src": "resources/js/components/CrystalViewer.js",
+    "isDynamicEntry": true
   }
 }

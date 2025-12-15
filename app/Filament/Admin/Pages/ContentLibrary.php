@@ -49,125 +49,109 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                 Content::query()
                     ->whereIn('status', [Content::STATUS_PUBLIC, Content::STATUS_MEMBERS_ONLY])
                     ->published()
-                    ->with(['creator', 'category', 'ratings', 'reviews'])
+                    ->with(['creator', 'category', 'ratings', 'reviews', 'tags'])
             )
             ->columns([
-                Tables\Columns\ImageColumn::make('featured_image')
-                    ->label('Image')
-                    ->circular()
-                    ->defaultImageUrl('https://ui-avatars.com/api/?name=Content&color=7F9CF5&background=EBF4FF'),
-
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
-                    ->sortable()
-                    ->weight(FontWeight::SemiBold)
-                    ->limit(40),
-
-                Tables\Columns\TextColumn::make('type_label')
-                    ->label('Type')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'Digital File (PDF, ZIP)' => 'info',
-                        'Image Gallery' => 'success',
-                        'Markdown Post' => 'warning',
-                        'Long Article / Tutorial' => 'primary',
-                        'RPG Module / Card Pack / Worldbuilding' => 'danger',
-                        default => 'gray',
-                    }),
-
-                Tables\Columns\TextColumn::make('creator.name')
-                    ->label('Creator')
+                    ->hidden(),
+                Tables\Columns\TextColumn::make('excerpt')
                     ->searchable()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('category.name')
-                    ->label('Category')
-                    ->sortable()
-                    ->badge(),
-
-                Tables\Columns\TextColumn::make('average_rating')
-                    ->label('Rating')
-                    ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state, 1) . ' ★' : 'No ratings')
-                    ->sortable()
-                    ->alignCenter(),
-
-                Tables\Columns\TextColumn::make('downloads_count')
-                    ->label('Downloads')
-                    ->sortable()
-                    ->alignCenter(),
-
-                Tables\Columns\IconColumn::make('downloaded')
-                    ->label('✓')
-                    ->boolean()
-                    ->getStateUsing(fn (Content $record) => ContentDownload::hasUserDownloaded($record->id, auth()->id()))
-                    ->alignCenter()
-                    ->tooltip('Downloaded'),
+                    ->hidden(),
+                Tables\Columns\TextColumn::make('creator.name')
+                    ->searchable()
+                    ->hidden(),
+                Tables\Columns\ViewColumn::make('content_card')
+                    ->view('filament.tables.columns.content-card')
+                    ->label(''),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('type')
-                    ->options(Content::getTypes())
-                    ->multiple(),
 
                 Tables\Filters\SelectFilter::make('category')
                     ->relationship('category', 'name')
                     ->multiple()
-                    ->preload(),
+                    ->preload()
+                    ->label('Categories'),
 
-                Tables\Filters\Filter::make('has_file')
-                    ->label('Has File')
-                    ->query(fn (Builder $query) => $query->whereNotNull('file_path')),
+                Tables\Filters\SelectFilter::make('tags')
+                    ->relationship('tags', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->label('Tags'),
 
-                Tables\Filters\Filter::make('downloaded_by_me')
-                    ->label('Downloaded by Me')
-                    ->query(fn (Builder $query) => $query->whereHas('downloads', fn ($q) => $q->where('user_id', auth()->id()))),
+                Tables\Filters\SelectFilter::make('creator')
+                    ->relationship('creator', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->label('Creator'),
 
-                Tables\Filters\Filter::make('high_rated')
-                    ->label('High Rated (4+ Stars)')
-                    ->query(function (Builder $query) {
-                        return $query->whereHas('ratings', function ($q) {
-                            $q->havingRaw('AVG(rating) >= 4');
-                        });
+                Tables\Filters\SelectFilter::make('rating')
+                    ->label('Rating')
+                    ->options([
+                        '5' => '5 Stars',
+                        '4' => '4+ Stars',
+                        '3' => '3+ Stars',
+                        '2' => '2+ Stars',
+                        '1' => '1+ Stars',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if (!empty($data['value'])) {
+                            $rating = (int) $data['value'];
+                            return $query->whereHas('ratings', function ($q) use ($rating) {
+                                $q->select('content_id')
+                                    ->groupBy('content_id')
+                                    ->havingRaw('AVG(rating) >= ?', [$rating]);
+                            });
+                        }
+                        return $query;
                     }),
+
+                Tables\Filters\SelectFilter::make('type')
+                    ->options(Content::getTypes())
+                    ->multiple()
+                    ->label('Type'),
             ])
             ->actions([
-                ViewAction::make()
-                    ->slideOver()
-                    ->infolist([
-                        \Filament\Infolists\Components\Section::make('Content Details')
-                            ->schema([
-                                \Filament\Infolists\Components\ImageEntry::make('featured_image')
-                                    ->label('Featured Image')
-                                    ->hiddenLabel()
-                                    ->height(200),
-                                \Filament\Infolists\Components\TextEntry::make('title')
-                                    ->weight(FontWeight::Bold)
-                                    ->columnSpanFull(),
-                                \Filament\Infolists\Components\TextEntry::make('excerpt')
-                                    ->markdown()
-                                    ->columnSpanFull(),
-                                \Filament\Infolists\Components\TextEntry::make('type_label')
-                                    ->label('Type')
-                                    ->badge(),
-                                \Filament\Infolists\Components\TextEntry::make('creator.name')
-                                    ->label('Creator'),
-                                \Filament\Infolists\Components\TextEntry::make('category.name')
-                                    ->label('Category')
-                                    ->badge(),
-                                \Filament\Infolists\Components\TextEntry::make('average_rating')
-                                    ->label('Average Rating')
-                                    ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state, 1) . ' ★' : 'No ratings'),
-                                \Filament\Infolists\Components\TextEntry::make('views_count')
-                                    ->label('Views'),
-                                \Filament\Infolists\Components\TextEntry::make('downloads_count')
-                                    ->label('Downloads'),
-                                \Filament\Infolists\Components\TextEntry::make('published_at')
-                                    ->label('Published')
-                                    ->dateTime('M d, Y'),
-                            ])
-                            ->columns(2),
-                    ]),
+                Tables\Actions\ActionGroup::make([
+                    ViewAction::make()
+                        ->slideOver()
+                        ->infolist([
+                            \Filament\Infolists\Components\Section::make('Content Details')
+                                ->schema([
+                                    \Filament\Infolists\Components\ImageEntry::make('featured_image')
+                                        ->label('Featured Image')
+                                        ->hiddenLabel()
+                                        ->height(200),
+                                    \Filament\Infolists\Components\TextEntry::make('title')
+                                        ->weight(FontWeight::Bold)
+                                        ->columnSpanFull(),
+                                    \Filament\Infolists\Components\TextEntry::make('excerpt')
+                                        ->markdown()
+                                        ->columnSpanFull(),
+                                    \Filament\Infolists\Components\TextEntry::make('type_label')
+                                        ->label('Type')
+                                        ->badge(),
+                                    \Filament\Infolists\Components\TextEntry::make('creator.name')
+                                        ->label('Creator'),
+                                    \Filament\Infolists\Components\TextEntry::make('category.name')
+                                        ->label('Category')
+                                        ->badge(),
+                                    \Filament\Infolists\Components\TextEntry::make('average_rating')
+                                        ->label('Average Rating')
+                                        ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state, 1) . ' ★' : 'No ratings'),
+                                    \Filament\Infolists\Components\TextEntry::make('views_count')
+                                        ->label('Views'),
+                                    \Filament\Infolists\Components\TextEntry::make('downloads_count')
+                                        ->label('Downloads'),
+                                    \Filament\Infolists\Components\TextEntry::make('published_at')
+                                        ->label('Published')
+                                        ->dateTime('M d, Y'),
+                                ])
+                                ->columns(2),
+                        ]),
 
-                Tables\Actions\Action::make('download')
+                    Tables\Actions\Action::make('download')
                     ->label('Download')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
@@ -297,8 +281,22 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                             ->success()
                             ->send();
                     }),
+                ])
+                    ->button()
+                    ->label('Actions'),
             ])
             ->defaultSort('created_at', 'desc')
-            ->poll('30s');
+            ->poll('30s')
+            ->contentGrid([
+                'md' => 2,
+                'lg' => 3,
+                'xl' => 4,
+            ])
+            ->paginated([12, 24, 48, 96]);
+    }
+
+    public function getTableRecordKey($record): string
+    {
+        return (string) $record->getKey();
     }
 }
