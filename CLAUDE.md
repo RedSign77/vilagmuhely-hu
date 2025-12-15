@@ -82,6 +82,45 @@ The scheduler runs automatically when using `composer dev`, or can be started ma
 3. Command finds users with pending activities → Dispatches `RecalculateCrystalMetricsJob` for each user
 4. Job recalculates all crystal metrics (facets, glow, colors, geometry) and caches the result
 
+### Deployment
+
+**Automated Deployment Script**:
+```bash
+./deploy.sh
+```
+
+This script handles complete production deployment including:
+- Git pull latest changes
+- Composer install dependencies (optimized for production)
+- Database migrations
+- Cache clearing (application, config, routes, views)
+- Cache rebuilding for performance
+- Filament component refresh and upgrade
+- Queue worker restart
+- PHP-FPM container restart
+
+**Manual Deployment Steps** (if not using script):
+```bash
+cd /home/unreality1/projects/vilagmuhely
+git pull
+docker exec vilagmuhely-php-fpm-1 composer install --no-dev --optimize-autoloader
+docker exec vilagmuhely-php-fpm-1 php artisan migrate --force
+docker exec vilagmuhely-php-fpm-1 php artisan cache:clear
+docker exec vilagmuhely-php-fpm-1 php artisan config:cache
+docker exec vilagmuhely-php-fpm-1 php artisan route:cache
+docker exec vilagmuhely-php-fpm-1 php artisan view:cache
+docker exec vilagmuhely-php-fpm-1 php artisan filament:cache-components
+docker exec vilagmuhely-php-fpm-1 php artisan optimize:clear
+docker restart vilagmuhely-php-fpm-1
+```
+
+**Critical for Filament Changes**: After deploying changes to admin panel pages, resources, or navigation:
+```bash
+docker exec vilagmuhely-php-fpm-1 php artisan filament:cache-components
+docker exec vilagmuhely-php-fpm-1 php artisan config:clear
+docker restart vilagmuhely-php-fpm-1
+```
+
 ## Architecture
 
 ### Filament Admin Panel
