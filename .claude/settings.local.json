@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(php:*)",
+      "Bash(docker exec:*)",
+      "Bash(test:*)",
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(composer update:*)",
+      "Bash(xargs basename:*)",
+      "Bash(docker restart:*)",
+      "Bash(xargs cat:*)",
+      "Bash(git -C /home/unreality1/projects/vilagmuhely log --oneline --all -- \"*ContentLibrary*\" --since=\"2024-12-01\")",
+      "Bash(git -C /home/unreality1/projects/vilagmuhely diff HEAD~5..HEAD -- app/Filament/Admin/Pages/ContentLibrary.php)",
+      "Bash(grep:*)",
+      "Bash(git -C /home/unreality1/projects/vilagmuhely log --all --oneline --grep=\"Content Library\\|navigation\\|menu\")",
+      "Bash(git -C /home/unreality1/projects/vilagmuhely log --all --oneline -- \"*AdminPanelProvider*\")",
+      "Bash(git -C /home/unreality1/projects/vilagmuhely show HEAD:app/Providers/Filament/AdminPanelProvider.php)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "spinnerTipsEnabled": false,
+  "model": "sonnet",
+  "outputStyle": "ultra-concise"
+}
