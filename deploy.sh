@@ -13,7 +13,7 @@ git pull
 
 # Install/update PHP dependencies
 echo "📦 Installing Composer dependencies..."
-composer install --no-dev --optimize-autoloader --no-interaction
+php composer.phar install --no-dev --optimize-autoloader --no-interaction
 
 # Run database migrations
 echo "🗄️  Running database migrations..."
@@ -42,7 +42,7 @@ php artisan filament:upgrade
 
 # Optimize autoloader
 echo "🔧 Optimizing autoloader..."
-composer dump-autoload --optimize --no-dev
+php composer.phar dump-autoload --optimize --no-dev
 
 # Restart queue workers (if running)
 echo "🔄 Restarting queue workers..."
