@@ -7,10 +7,6 @@ set -e  # Exit on any error
 
 echo "🚀 Starting deployment..."
 
-# Navigate to project directory
-cd /home/unreality1/projects/vilagmuhely || exit 1
-echo "📁 Changed to project directory"
-
 # Pull latest code from git
 echo "📥 Pulling latest code from git..."
 git pull
