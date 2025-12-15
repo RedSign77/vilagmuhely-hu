@@ -89,8 +89,8 @@ class ContentResource extends Resource
                                 'italic',
                                 'link',
                             ])
-                            ->maxLength(500)
-                            ->helperText(fn ($state) => (strlen($state ?? '') . ' / 500 characters'))
+                            ->maxLength(2048)
+                            ->helperText(fn ($state) => (strlen($state ?? '') . ' / 2048 characters'))
                             ->live(onBlur: true)
                             ->columnSpanFull(),
 

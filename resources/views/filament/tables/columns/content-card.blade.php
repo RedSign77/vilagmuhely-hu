@@ -4,9 +4,47 @@
 @endphp
 
 <div class="w-full">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
-        {{-- Image --}}
-        <div class="aspect-video bg-gray-100 dark:bg-gray-700 relative flex-shrink-0">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-200 h-full flex flex-col relative group hover:ring-2 hover:ring-amber-400">
+        {{-- Action Icons (Top Right) --}}
+        <div class="absolute top-2 right-2 z-20 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" wire:click.stop>
+            @if(!empty($getRecord()->file_path))
+                <button
+                    wire:click="mountTableAction('download', '{{ $getRecord()->getKey() }}')"
+                    class="p-1.5 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-colors"
+                    title="Download"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                </button>
+            @endif
+            <button
+                wire:click="mountTableAction('rate', '{{ $getRecord()->getKey() }}')"
+                class="p-1.5 bg-yellow-600 hover:bg-yellow-700 text-white rounded-full shadow-lg transition-colors"
+                title="Rate"
+            >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+            </button>
+            <button
+                wire:click="mountTableAction('review', '{{ $getRecord()->getKey() }}')"
+                class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-colors"
+                title="Review"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+            </button>
+        </div>
+
+        {{-- Clickable Card Area --}}
+        <div
+            class="cursor-pointer flex-1 flex flex-col"
+            wire:click="mountTableAction('view', '{{ $getRecord()->getKey() }}')"
+        >
+            {{-- Image --}}
+            <div class="aspect-video bg-gray-100 dark:bg-gray-700 relative flex-shrink-0">
             @if($getRecord()->featured_image)
                 <img src="{{ Storage::url($getRecord()->featured_image) }}"
                      alt="{{ $getRecord()->title }}"
@@ -23,7 +61,7 @@
         {{-- Content --}}
         <div class="p-4 flex-grow flex flex-col">
             {{-- Title --}}
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 break-words">
                 {{ $getRecord()->title }}
             </h3>
 
@@ -45,28 +83,45 @@
             <div class="flex-grow"></div>
 
             {{-- Creator --}}
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
+            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-3">
                 <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
                 <span class="truncate">{{ $getRecord()->creator->name }}</span>
             </div>
 
-            {{-- Rating --}}
-            <div class="flex items-center text-sm mb-3">
-                @if($getRecord()->average_rating > 0)
-                    <div class="flex items-center text-yellow-500">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                        <span class="ml-1 font-medium">{{ number_format($getRecord()->average_rating, 1) }}</span>
-                        <span class="ml-1 text-gray-500 dark:text-gray-400">({{ $getRecord()->ratings->count() }})</span>
-                    </div>
-                @else
-                    <span class="text-gray-500 dark:text-gray-400 text-xs">No ratings yet</span>
-                @endif
+            {{-- Stats Row --}}
+            <div class="flex items-center justify-between gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
+                {{-- Rating --}}
+                <div class="flex items-center gap-1" title="Average Rating">
+                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    @if($getRecord()->average_rating > 0)
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($getRecord()->average_rating, 1) }}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">({{ $getRecord()->ratings->count() }})</span>
+                    @else
+                        <span class="text-xs text-gray-500 dark:text-gray-400">0</span>
+                    @endif
+                </div>
+
+                {{-- Downloads --}}
+                <div class="flex items-center gap-1" title="Downloads">
+                    <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($getRecord()->downloads_count) }}</span>
+                </div>
+
+                {{-- Reviews --}}
+                <div class="flex items-center gap-1" title="Reviews">
+                    <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $getRecord()->reviews->count() }}</span>
+                </div>
             </div>
         </div>
-
+        </div>
     </div>
 </div>

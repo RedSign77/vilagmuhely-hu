@@ -113,51 +113,179 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                     ->label('Type'),
             ])
             ->actions([
-                Tables\Actions\ActionGroup::make([
-                    ViewAction::make()
-                        ->slideOver()
-                        ->infolist([
-                            \Filament\Infolists\Components\Section::make('Content Details')
-                                ->schema([
-                                    \Filament\Infolists\Components\ImageEntry::make('featured_image')
-                                        ->label('Featured Image')
-                                        ->hiddenLabel()
-                                        ->height(200),
-                                    \Filament\Infolists\Components\TextEntry::make('title')
-                                        ->weight(FontWeight::Bold)
-                                        ->columnSpanFull(),
-                                    \Filament\Infolists\Components\TextEntry::make('excerpt')
-                                        ->markdown()
-                                        ->columnSpanFull(),
-                                    \Filament\Infolists\Components\TextEntry::make('type_label')
-                                        ->label('Type')
-                                        ->badge(),
-                                    \Filament\Infolists\Components\TextEntry::make('creator.name')
-                                        ->label('Creator'),
-                                    \Filament\Infolists\Components\TextEntry::make('category.name')
-                                        ->label('Category')
-                                        ->badge(),
-                                    \Filament\Infolists\Components\TextEntry::make('average_rating')
-                                        ->label('Average Rating')
-                                        ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state, 1) . ' ★' : 'No ratings'),
-                                    \Filament\Infolists\Components\TextEntry::make('views_count')
-                                        ->label('Views'),
-                                    \Filament\Infolists\Components\TextEntry::make('downloads_count')
-                                        ->label('Downloads'),
-                                    \Filament\Infolists\Components\TextEntry::make('published_at')
-                                        ->label('Published')
-                                        ->dateTime('M d, Y'),
-                                ])
-                                ->columns(2),
-                        ]),
+                ViewAction::make()
+                    ->slideOver()
+                    ->hiddenLabel()
+                    ->modalFooterActions(fn (Content $record): array => [
+                        Tables\Actions\Action::make('download')
+                            ->label('Download')
+                            ->icon('heroicon-o-arrow-down-tray')
+                            ->color('success')
+                            ->disabled(fn () => ! Gate::allows('download', $record))
+                            ->tooltip(fn () => Gate::allows('download', $record) ? null : 'Download first to access this content')
+                            ->visible(fn () => ! empty($record->file_path))
+                            ->requiresConfirmation()
+                            ->action(function () use ($record) {
+                                // Record the download
+                                ContentDownload::recordDownload($record->id, auth()->id());
 
-                    Tables\Actions\Action::make('download')
-                    ->label('Download')
+                                // Increment download counter
+                                $record->incrementDownloads();
+
+                                // Fire event
+                                event(new ContentDownloadedEvent($record));
+
+                                Notification::make()
+                                    ->title('Download recorded')
+                                    ->success()
+                                    ->send();
+
+                                // Trigger download
+                                return response()->download(storage_path('app/public/' . $record->file_path));
+                            }),
+                        Tables\Actions\Action::make('rate')
+                            ->label('Rate')
+                            ->icon('heroicon-o-star')
+                            ->color('warning')
+                            ->disabled(fn () => ! Gate::allows('rate', $record))
+                            ->tooltip(function () use ($record) {
+                                if (! Gate::allows('rate', $record)) {
+                                    if (! ContentDownload::hasUserDownloaded($record->id, auth()->id())) {
+                                        return 'Download first to rate';
+                                    }
+                                    if ($record->creator_id === auth()->id()) {
+                                        return 'Cannot rate own content';
+                                    }
+                                    if ($record->hasBeenRatedBy(auth()->id())) {
+                                        return 'Already rated';
+                                    }
+                                }
+                                return null;
+                            })
+                            ->form([
+                                Forms\Components\Select::make('rating')
+                                    ->label('Your Rating')
+                                    ->options([
+                                        1 => '1 Star - Poor',
+                                        2 => '2 Stars - Fair',
+                                        3 => '3 Stars - Good',
+                                        4 => '4 Stars - Very Good',
+                                        5 => '5 Stars - Excellent',
+                                    ])
+                                    ->required()
+                                    ->native(false),
+                                Forms\Components\Textarea::make('critique_text')
+                                    ->label('Feedback (Optional)')
+                                    ->rows(3)
+                                    ->maxLength(500),
+                            ])
+                            ->action(function (array $data) use ($record) {
+                                ContentRating::create([
+                                    'content_id' => $record->id,
+                                    'user_id' => auth()->id(),
+                                    'rating' => $data['rating'],
+                                    'critique_text' => $data['critique_text'] ?? null,
+                                ]);
+
+                                Notification::make()
+                                    ->title('Rating submitted')
+                                    ->success()
+                                    ->send();
+                            }),
+                        Tables\Actions\Action::make('review')
+                            ->label('Review')
+                            ->icon('heroicon-o-chat-bubble-left-right')
+                            ->color('info')
+                            ->disabled(fn () => ! Gate::allows('review', $record))
+                            ->tooltip(function () use ($record) {
+                                if (! Gate::allows('review', $record)) {
+                                    if (! ContentDownload::hasUserDownloaded($record->id, auth()->id())) {
+                                        return 'Download first to review';
+                                    }
+                                    if ($record->creator_id === auth()->id()) {
+                                        return 'Cannot review own content';
+                                    }
+                                    if ($record->hasBeenReviewedBy(auth()->id())) {
+                                        return 'Already reviewed';
+                                    }
+                                }
+                                return null;
+                            })
+                            ->form([
+                                Forms\Components\TextInput::make('title')
+                                    ->label('Review Title (Optional)')
+                                    ->maxLength(255),
+                                Forms\Components\MarkdownEditor::make('review_text')
+                                    ->label('Your Review')
+                                    ->required()
+                                    ->toolbarButtons([
+                                        'bold',
+                                        'italic',
+                                        'bulletList',
+                                        'orderedList',
+                                    ])
+                                    ->minLength(50)
+                                    ->maxLength(2000)
+                                    ->helperText('Minimum 50 characters'),
+                            ])
+                            ->action(function (array $data) use ($record) {
+                                $review = ContentReview::create([
+                                    'content_id' => $record->id,
+                                    'user_id' => auth()->id(),
+                                    'title' => $data['title'] ?? null,
+                                    'review_text' => $data['review_text'],
+                                    'status' => ContentReview::STATUS_APPROVED,
+                                ]);
+
+                                // Fire event
+                                event(new ContentReviewedEvent($record, $review));
+
+                                Notification::make()
+                                    ->title('Review submitted')
+                                    ->success()
+                                    ->send();
+                            }),
+                    ])
+                    ->infolist([
+                        \Filament\Infolists\Components\Section::make('Content Details')
+                            ->schema([
+                                \Filament\Infolists\Components\ImageEntry::make('featured_image')
+                                    ->label('Featured Image')
+                                    ->hiddenLabel()
+                                    ->height(200),
+                                \Filament\Infolists\Components\TextEntry::make('title')
+                                    ->weight(FontWeight::Bold)
+                                    ->columnSpanFull(),
+                                \Filament\Infolists\Components\TextEntry::make('excerpt')
+                                    ->markdown()
+                                    ->columnSpanFull(),
+                                \Filament\Infolists\Components\TextEntry::make('type_label')
+                                    ->label('Type')
+                                    ->badge(),
+                                \Filament\Infolists\Components\TextEntry::make('creator.name')
+                                    ->label('Creator'),
+                                \Filament\Infolists\Components\TextEntry::make('category.name')
+                                    ->label('Category')
+                                    ->badge(),
+                                \Filament\Infolists\Components\TextEntry::make('average_rating')
+                                    ->label('Average Rating')
+                                    ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state, 1) . ' ★' : 'No ratings'),
+                                \Filament\Infolists\Components\TextEntry::make('views_count')
+                                    ->label('Views'),
+                                \Filament\Infolists\Components\TextEntry::make('downloads_count')
+                                    ->label('Downloads'),
+                                \Filament\Infolists\Components\TextEntry::make('published_at')
+                                    ->label('Published')
+                                    ->dateTime('M d, Y'),
+                            ])
+                            ->columns(2),
+                    ]),
+
+                Tables\Actions\Action::make('download')
+                    ->hiddenLabel()
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
                     ->disabled(fn (Content $record) => ! Gate::allows('download', $record))
-                    ->tooltip(fn (Content $record) => Gate::allows('download', $record) ? null : 'Download first to access this content')
-                    ->visible(fn (Content $record) => ! empty($record->file_path))
                     ->requiresConfirmation()
                     ->action(function (Content $record) {
                         // Record the download
@@ -179,24 +307,10 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                     }),
 
                 Tables\Actions\Action::make('rate')
-                    ->label('Rate')
+                    ->hiddenLabel()
                     ->icon('heroicon-o-star')
                     ->color('warning')
                     ->disabled(fn (Content $record) => ! Gate::allows('rate', $record))
-                    ->tooltip(function (Content $record) {
-                        if (! Gate::allows('rate', $record)) {
-                            if (! ContentDownload::hasUserDownloaded($record->id, auth()->id())) {
-                                return 'Download first to rate';
-                            }
-                            if ($record->creator_id === auth()->id()) {
-                                return 'Cannot rate own content';
-                            }
-                            if ($record->hasBeenRatedBy(auth()->id())) {
-                                return 'Already rated';
-                            }
-                        }
-                        return null;
-                    })
                     ->form([
                         Forms\Components\Select::make('rating')
                             ->label('Your Rating')
@@ -229,24 +343,10 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                     }),
 
                 Tables\Actions\Action::make('review')
-                    ->label('Review')
+                    ->hiddenLabel()
                     ->icon('heroicon-o-chat-bubble-left-right')
                     ->color('info')
                     ->disabled(fn (Content $record) => ! Gate::allows('review', $record))
-                    ->tooltip(function (Content $record) {
-                        if (! Gate::allows('review', $record)) {
-                            if (! ContentDownload::hasUserDownloaded($record->id, auth()->id())) {
-                                return 'Download first to review';
-                            }
-                            if ($record->creator_id === auth()->id()) {
-                                return 'Cannot review own content';
-                            }
-                            if ($record->hasBeenReviewedBy(auth()->id())) {
-                                return 'Already reviewed';
-                            }
-                        }
-                        return null;
-                    })
                     ->form([
                         Forms\Components\TextInput::make('title')
                             ->label('Review Title (Optional)')
@@ -281,9 +381,6 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                             ->success()
                             ->send();
                     }),
-                ])
-                    ->button()
-                    ->label('Actions'),
             ])
             ->defaultSort('created_at', 'desc')
             ->poll('30s')
