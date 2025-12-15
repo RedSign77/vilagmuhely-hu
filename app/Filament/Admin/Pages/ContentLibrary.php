@@ -47,7 +47,7 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
         return $table
             ->query(
                 Content::query()
-                    ->whereIn('status', [Content::STATUS_PUBLIC, Content::STATUS_MEMBERS_ONLY])
+                    ->where('status', '!=', Content::STATUS_DRAFT)
                     ->published()
                     ->with(['creator', 'category', 'ratings', 'reviews', 'tags'])
             )
@@ -113,9 +113,45 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                     ->label('Type'),
             ])
             ->actions([
-                ViewAction::make()
-                    ->slideOver()
+                Tables\Actions\Action::make('view')
                     ->hiddenLabel()
+                    ->icon('heroicon-o-eye')
+                    ->color('gray')
+                    ->slideOver()
+                    ->infolist([
+                        \Filament\Infolists\Components\Section::make('Content Details')
+                            ->schema([
+                                \Filament\Infolists\Components\ImageEntry::make('featured_image')
+                                    ->label('Featured Image')
+                                    ->hiddenLabel()
+                                    ->height(200),
+                                \Filament\Infolists\Components\TextEntry::make('title')
+                                    ->weight(FontWeight::Bold)
+                                    ->columnSpanFull(),
+                                \Filament\Infolists\Components\TextEntry::make('excerpt')
+                                    ->markdown()
+                                    ->columnSpanFull(),
+                                \Filament\Infolists\Components\TextEntry::make('type_label')
+                                    ->label('Type')
+                                    ->badge(),
+                                \Filament\Infolists\Components\TextEntry::make('creator.name')
+                                    ->label('Creator'),
+                                \Filament\Infolists\Components\TextEntry::make('category.name')
+                                    ->label('Category')
+                                    ->badge(),
+                                \Filament\Infolists\Components\TextEntry::make('average_rating')
+                                    ->label('Average Rating')
+                                    ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state, 1) . ' ★' : 'No ratings'),
+                                \Filament\Infolists\Components\TextEntry::make('views_count')
+                                    ->label('Views'),
+                                \Filament\Infolists\Components\TextEntry::make('downloads_count')
+                                    ->label('Downloads'),
+                                \Filament\Infolists\Components\TextEntry::make('published_at')
+                                    ->label('Published')
+                                    ->dateTime('M d, Y'),
+                            ])
+                            ->columns(2),
+                    ])
                     ->modalFooterActions(fn (Content $record): array => [
                         Tables\Actions\Action::make('download')
                             ->label('Download')
@@ -123,25 +159,10 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                             ->color('success')
                             ->disabled(fn () => ! Gate::allows('download', $record))
                             ->tooltip(fn () => Gate::allows('download', $record) ? null : 'Download first to access this content')
-                            ->visible(fn () => ! empty($record->file_path))
                             ->requiresConfirmation()
                             ->action(function () use ($record) {
-                                // Record the download
-                                ContentDownload::recordDownload($record->id, auth()->id());
-
-                                // Increment download counter
-                                $record->incrementDownloads();
-
-                                // Fire event
-                                event(new ContentDownloadedEvent($record));
-
-                                Notification::make()
-                                    ->title('Download recorded')
-                                    ->success()
-                                    ->send();
-
-                                // Trigger download
-                                return response()->download(storage_path('app/public/' . $record->file_path));
+                                // Redirect to download controller
+                                return redirect()->route('content.download', $record);
                             }),
                         Tables\Actions\Action::make('rate')
                             ->label('Rate')
@@ -288,22 +309,8 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                     ->disabled(fn (Content $record) => ! Gate::allows('download', $record))
                     ->requiresConfirmation()
                     ->action(function (Content $record) {
-                        // Record the download
-                        ContentDownload::recordDownload($record->id, auth()->id());
-
-                        // Increment download counter
-                        $record->incrementDownloads();
-
-                        // Fire event
-                        event(new ContentDownloadedEvent($record));
-
-                        Notification::make()
-                            ->title('Download recorded')
-                            ->success()
-                            ->send();
-
-                        // Trigger download
-                        return response()->download(storage_path('app/public/' . $record->file_path));
+                        // Redirect to download controller
+                        return redirect()->route('content.download', $record);
                     }),
 
                 Tables\Actions\Action::make('rate')
@@ -395,5 +402,13 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
     public function getTableRecordKey($record): string
     {
         return (string) $record->getKey();
+    }
+
+    public function incrementContentView($recordId): void
+    {
+        $content = Content::find($recordId);
+        if ($content) {
+            $content->incrementViews();
+        }
     }
 }

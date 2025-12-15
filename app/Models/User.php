@@ -138,6 +138,14 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     }
 
     /**
+     * Check if user is a creator
+     */
+    public function isCreator(): bool
+    {
+        return $this->hasRole('creators');
+    }
+
+    /**
      * Determine if the user can access the Filament panel
      */
     public function canAccessPanel(Panel $panel): bool

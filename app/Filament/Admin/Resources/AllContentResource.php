@@ -1,32 +1,38 @@
 <?php
 
-namespace Webtechsolutions\ContentEngine\Filament\Resources;
+namespace App\Filament\Admin\Resources;
 
+use App\Filament\Admin\Resources\AllContentResource\Pages;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Webtechsolutions\ContentEngine\Filament\Resources\ContentResource\Pages;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Webtechsolutions\ContentEngine\Models\Content;
 
-class ContentResource extends Resource
+class AllContentResource extends Resource
 {
     protected static ?string $model = Content::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';
 
-    protected static ?string $navigationLabel = 'My Content';
+    protected static ?string $navigationLabel = 'Contents';
 
-    protected static ?string $navigationGroup = null;
+    protected static ?string $navigationGroup = 'Content Engine';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->isSupervisor() ?? false;
+    }
 
     public static function getNavigationBadge(): ?string
     {
-        // All users see only their own content count
-        return static::getModel()::where('creator_id', auth()->id())->count();
+        return static::getModel()::count();
     }
 
     public static function form(Form $form): Form
@@ -85,7 +91,7 @@ class ContentResource extends Resource
                                 'link',
                             ])
                             ->maxLength(2048)
-                            ->helperText(fn ($state) => (strlen($state ?? '') . ' / 2048 characters'))
+                            ->helperText(fn ($state) => (strlen($state ?? '').' / 2048 characters'))
                             ->live(onBlur: true)
                             ->columnSpanFull(),
 
@@ -156,25 +162,25 @@ class ContentResource extends Resource
                             ->relationship('category', 'name')
                             ->searchable()
                             ->preload()
-                            ->createOptionForm(fn () => auth()->user()?->isCreator() || auth()->user()?->isSupervisor() ? [
+                            ->createOptionForm([
                                 Forms\Components\TextInput::make('name')
                                     ->required(),
                                 Forms\Components\Textarea::make('description'),
                                 Forms\Components\ColorPicker::make('color')
                                     ->default('#6366f1'),
-                            ] : null),
+                            ]),
 
                         Forms\Components\Select::make('tags')
                             ->relationship('tags', 'name')
                             ->multiple()
                             ->searchable()
                             ->preload()
-                            ->createOptionForm(fn () => auth()->user()?->isCreator() || auth()->user()?->isSupervisor() ? [
+                            ->createOptionForm([
                                 Forms\Components\TextInput::make('name')
                                     ->required(),
                                 Forms\Components\ColorPicker::make('color')
                                     ->default('#94a3b8'),
-                            ] : null),
+                            ]),
 
                         Forms\Components\Select::make('creator_id')
                             ->label('Creator')
@@ -182,9 +188,7 @@ class ContentResource extends Resource
                             ->searchable()
                             ->preload()
                             ->default(auth()->id())
-                            ->required()
-                            ->disabled(fn () => ! auth()->user()?->isSupervisor())
-                            ->dehydrated(true),
+                            ->required(),
                     ])
                     ->columns(2),
             ]);
@@ -309,18 +313,20 @@ class ContentResource extends Resource
             ]);
     }
 
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    public static function getEloquentQuery(): Builder
     {
-        // All users (including supervisors) only see their own content in "My Content"
-        return parent::getEloquentQuery()->where('creator_id', auth()->id());
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListContents::route('/'),
-            'create' => Pages\CreateContent::route('/create'),
-            'edit' => Pages\EditContent::route('/{record}/edit'),
+            'index' => Pages\ListAllContents::route('/'),
+            'create' => Pages\CreateAllContent::route('/create'),
+            'edit' => Pages\EditAllContent::route('/{record}/edit'),
         ];
     }
 }

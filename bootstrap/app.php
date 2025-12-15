@@ -44,5 +44,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('crystal:process-updates')
             ->everyThirtyMinutes()
             ->onOneServer();
+
+        // Clean up unused custom content categories and tags - runs daily at 5:00 AM
+        $schedule->command('content:cleanup-unused-metadata')
+            ->dailyAt('05:00')
+            ->onOneServer();
     })
     ->create();

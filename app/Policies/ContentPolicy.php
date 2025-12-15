@@ -29,11 +29,6 @@ class ContentPolicy
             return false;
         }
 
-        // Content must have a file
-        if (empty($content->file_path)) {
-            return false;
-        }
-
         return true;
     }
 

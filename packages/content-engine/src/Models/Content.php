@@ -26,9 +26,6 @@ class Content extends Model
         'file_type',
         'file_size',
         'gallery_images',
-        'metadata',
-        'meta_title',
-        'meta_description',
         'featured_image',
         'views_count',
         'downloads_count',
@@ -37,7 +34,6 @@ class Content extends Model
 
     protected $casts = [
         'gallery_images' => 'array',
-        'metadata' => 'array',
         'views_count' => 'integer',
         'downloads_count' => 'integer',
         'file_size' => 'integer',
