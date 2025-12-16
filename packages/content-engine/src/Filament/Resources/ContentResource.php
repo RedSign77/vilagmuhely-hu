@@ -54,13 +54,23 @@ class ContentResource extends Resource
                             ->native(false),
 
                         Forms\Components\Select::make('status')
-                            ->options(Content::getStatuses())
+                            ->options(function () {
+                                $statuses = Content::getStatuses();
+
+                                // Only administrators can set Public (Full) status
+                                if (! auth()->user()?->isSupervisor()) {
+                                    unset($statuses[Content::STATUS_PUBLIC]);
+                                }
+
+                                return $statuses;
+                            })
                             ->required()
                             ->default(Content::STATUS_DRAFT)
                             ->native(false),
 
                         Forms\Components\DateTimePicker::make('published_at')
                             ->label('Publish Date')
+                            ->default(now())
                             ->native(false),
                     ])
                     ->columns(2),
