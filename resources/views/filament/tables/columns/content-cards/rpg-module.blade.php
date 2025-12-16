@@ -11,7 +11,7 @@
         {{-- Clickable Card Area --}}
         <div
             class="cursor-pointer flex-1 flex flex-col"
-            wire:click="incrementContentView('{{ $record->getKey() }}'); mountTableAction('view', '{{ $record->getKey() }}')"
+             wire:click="incrementContentView('{{ $record->getKey() }}'); $wire.mountTableAction('view', '{{ $record->getKey() }}')"
         >
             {{-- Featured Image with RPG themed fallback --}}
             <div class="aspect-[3/4] bg-gradient-to-br from-red-900 to-purple-900 relative flex-shrink-0">
@@ -49,6 +49,16 @@
                         </span>
                     </div>
                 @endif
+                
+                <div class="flex-grow"></div>
+
+                {{-- Creator --}}
+                <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span class="truncate">{{ $record->creator->name }}</span>
+                </div>
 
                 {{-- Tags (first 3) --}}
                 @if($record->tags && $record->tags->count() > 0)
@@ -65,23 +75,6 @@
                         @endif
                     </div>
                 @endif
-
-                {{-- Excerpt if available --}}
-                @if($record->excerpt)
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                        {{ $record->excerpt }}
-                    </p>
-                @endif
-
-                <div class="flex-grow"></div>
-
-                {{-- Creator --}}
-                <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    <span class="truncate">{{ $record->creator->name }}</span>
-                </div>
 
                 {{-- Stats Footer --}}
                 @include('filament.tables.columns.content-cards._shared.stats-footer', ['record' => $record])

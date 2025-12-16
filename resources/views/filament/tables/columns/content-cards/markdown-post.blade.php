@@ -12,7 +12,7 @@
         {{-- Clickable Card Area --}}
         <div
             class="cursor-pointer flex-1 flex flex-col"
-            wire:click="incrementContentView('{{ $record->getKey() }}'); mountTableAction('view', '{{ $record->getKey() }}')"
+             wire:click="incrementContentView('{{ $record->getKey() }}'); $wire.mountTableAction('view', '{{ $record->getKey() }}')"
         >
             {{-- Featured Image --}}
             <div class="aspect-[3/4] bg-gray-100 dark:bg-gray-700 relative flex-shrink-0">

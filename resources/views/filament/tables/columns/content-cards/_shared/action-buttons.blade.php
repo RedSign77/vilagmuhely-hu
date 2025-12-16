@@ -1,7 +1,7 @@
 {{-- Action Icons (Top Right) --}}
 <div class="absolute top-2 right-2 z-20 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" wire:click.stop>
     <button
-        wire:click="mountTableAction('download', '{{ $record->getKey() }}')"
+        wire:click="$wire.mountTableAction('download', '{{ $record->getKey() }}')"
         class="p-1.5 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-colors"
         title="Download"
     >
@@ -10,7 +10,7 @@
         </svg>
     </button>
     <button
-        wire:click="mountTableAction('rate', '{{ $record->getKey() }}')"
+        wire:click="$wire.mountTableAction('rate', '{{ $record->getKey() }}')"
         class="p-1.5 bg-yellow-600 hover:bg-yellow-700 text-white rounded-full shadow-lg transition-colors"
         title="Rate"
     >
@@ -19,7 +19,7 @@
         </svg>
     </button>
     <button
-        wire:click="mountTableAction('review', '{{ $record->getKey() }}')"
+        wire:click="$wire.mountTableAction('review', '{{ $record->getKey() }}')"
         class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-colors"
         title="Review"
     >
