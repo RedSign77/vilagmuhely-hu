@@ -173,11 +173,11 @@ class CrystalCalculatorService
         $facetCount = $metric->facet_count;
         $colors = $metric->dominant_colors ?? ['#94a3b8'];
 
-        // Generate Fibonacci sphere vertices
-        $vertices = $this->generateFibonacciSphere($facetCount);
+        // Generate base crystal shape based on facet count
+        [$vertices, $faces] = $this->generateCrystalBase($facetCount);
 
-        // Generate faces using convex hull approximation
-        $faces = $this->generateConvexHullFaces($vertices);
+        // Apply distortions based on user metrics
+        $vertices = $this->applyCrystalDistortions($vertices, $metric);
 
         // Calculate normals
         $normals = $this->calculateNormals($vertices, $faces);
@@ -194,55 +194,276 @@ class CrystalCalculatorService
     }
 
     /**
-     * Generate Fibonacci sphere points
+     * Generate base crystal geometry
+     * Uses platonic/archimedean solids as foundation
      */
-    protected function generateFibonacciSphere(int $pointCount): array
+    protected function generateCrystalBase(int $facetCount): array
     {
-        $points = [];
-        $phi = (1 + sqrt(5)) / 2; // Golden ratio
-
-        for ($i = 0; $i < $pointCount; $i++) {
-            $y = 1 - (2 * $i / ($pointCount - 1));
-            $radius = sqrt(1 - $y * $y);
-            $theta = 2 * pi() * $i / $phi;
-
-            $x = cos($theta) * $radius;
-            $z = sin($theta) * $radius;
-
-            $points[] = [
-                round($x, 4),
-                round($y, 4),
-                round($z, 4),
-            ];
+        // Select base shape based on facet count
+        if ($facetCount <= 8) {
+            return $this->generateOctahedron();
+        } elseif ($facetCount <= 12) {
+            return $this->generateDodecahedron();
+        } elseif ($facetCount <= 20) {
+            return $this->generateIcosahedron();
+        } else {
+            // For higher facet counts, use crystal cluster
+            $crystalCount = min(12, floor($facetCount / 8));
+            return $this->generateCrystalCluster($crystalCount);
         }
-
-        return $points;
     }
 
     /**
-     * Generate faces using simplified convex hull
+     * Generate octahedron (8 faces, simple crystal)
      */
-    protected function generateConvexHullFaces(array $vertices): array
+    protected function generateOctahedron(): array
     {
+        $vertices = [
+            [1, 0, 0],
+            [-1, 0, 0],
+            [0, 1, 0],
+            [0, -1, 0],
+            [0, 0, 1],
+            [0, 0, -1],
+        ];
+
+        $faces = [
+            [0, 2, 4], [0, 4, 3], [0, 3, 5], [0, 5, 2],
+            [1, 4, 2], [1, 3, 4], [1, 5, 3], [1, 2, 5],
+        ];
+
+        return [$vertices, $faces];
+    }
+
+    /**
+     * Generate dodecahedron (12 pentagonal faces)
+     */
+    protected function generateDodecahedron(): array
+    {
+        $phi = (1 + sqrt(5)) / 2; // Golden ratio
+        $invPhi = 1 / $phi;
+
+        $vertices = [
+            [1, 1, 1], [1, 1, -1], [1, -1, 1], [1, -1, -1],
+            [-1, 1, 1], [-1, 1, -1], [-1, -1, 1], [-1, -1, -1],
+            [0, $invPhi, $phi], [0, $invPhi, -$phi], [0, -$invPhi, $phi], [0, -$invPhi, -$phi],
+            [$invPhi, $phi, 0], [$invPhi, -$phi, 0], [-$invPhi, $phi, 0], [-$invPhi, -$phi, 0],
+            [$phi, 0, $invPhi], [$phi, 0, -$invPhi], [-$phi, 0, $invPhi], [-$phi, 0, -$invPhi],
+        ];
+
+        // Normalize vertices to unit sphere
+        $vertices = array_map(function($v) {
+            $len = sqrt($v[0]**2 + $v[1]**2 + $v[2]**2);
+            return [$v[0]/$len, $v[1]/$len, $v[2]/$len];
+        }, $vertices);
+
+        $faces = [
+            [0, 8, 10, 2, 16], [0, 16, 17, 1, 12], [1, 17, 3, 11, 9], [1, 9, 5, 14, 12],
+            [2, 10, 6, 15, 13], [2, 13, 3, 17, 16], [3, 13, 15, 7, 11], [4, 14, 5, 19, 18],
+            [4, 18, 6, 10, 8], [4, 8, 0, 12, 14], [5, 9, 11, 7, 19], [6, 18, 19, 7, 15],
+        ];
+
+        // Triangulate pentagons for Three.js
+        $triangulatedFaces = [];
+        foreach ($faces as $face) {
+            $center = $face[0];
+            for ($i = 1; $i < count($face) - 1; $i++) {
+                $triangulatedFaces[] = [$center, $face[$i], $face[$i + 1]];
+            }
+        }
+
+        return [$vertices, $triangulatedFaces];
+    }
+
+    /**
+     * Generate icosahedron (20 faces)
+     */
+    protected function generateIcosahedron(): array
+    {
+        $phi = (1 + sqrt(5)) / 2; // Golden ratio
+
+        $vertices = [
+            [-1, $phi, 0], [1, $phi, 0], [-1, -$phi, 0], [1, -$phi, 0],
+            [0, -1, $phi], [0, 1, $phi], [0, -1, -$phi], [0, 1, -$phi],
+            [$phi, 0, -1], [$phi, 0, 1], [-$phi, 0, -1], [-$phi, 0, 1],
+        ];
+
+        // Normalize vertices
+        $vertices = array_map(function($v) {
+            $len = sqrt($v[0]**2 + $v[1]**2 + $v[2]**2);
+            return [
+                round($v[0]/$len, 4),
+                round($v[1]/$len, 4),
+                round($v[2]/$len, 4)
+            ];
+        }, $vertices);
+
+        $faces = [
+            [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11],
+            [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8],
+            [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9],
+            [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1],
+        ];
+
+        return [$vertices, $faces];
+    }
+
+    /**
+     * Generate crystal cluster (multiple hexagonal prisms)
+     */
+    protected function generateCrystalCluster(int $crystalCount): array
+    {
+        $vertices = [];
         $faces = [];
-        $vertexCount = count($vertices);
+        $vertexOffset = 0;
 
-        // Simple triangulation - connect each point to its neighbors
-        for ($i = 0; $i < $vertexCount; $i++) {
-            $next = ($i + 1) % $vertexCount;
-            $nextnext = ($i + 2) % $vertexCount;
+        // Generate central crystal (tallest)
+        [$centralVerts, $centralFaces] = $this->generateHexagonalCrystal(1.2, 0, 0, 0, 0);
+        $vertices = array_merge($vertices, $centralVerts);
+        $faces = array_merge($faces, $centralFaces);
+        $vertexOffset += count($centralVerts);
 
-            $faces[] = [$i, $next, $nextnext];
+        // Generate surrounding crystals in a ring
+        $ringCrystals = $crystalCount - 1;
+        for ($i = 0; $i < $ringCrystals; $i++) {
+            $angle = (2 * pi() * $i) / $ringCrystals;
+            $radius = 0.6;
+
+            // Position on circle
+            $x = cos($angle) * $radius;
+            $z = sin($angle) * $radius;
+
+            // Vary height (0.7 to 1.0)
+            $height = 0.7 + (($i % 3) * 0.15);
+
+            // Slight tilt outward
+            $tiltAngle = 0.2;
+
+            [$crystalVerts, $crystalFaces] = $this->generateHexagonalCrystal(
+                $height, $x, 0, $z, $angle + $tiltAngle
+            );
+
+            // Offset face indices
+            $offsetFaces = array_map(function($face) use ($vertexOffset) {
+                return [$face[0] + $vertexOffset, $face[1] + $vertexOffset, $face[2] + $vertexOffset];
+            }, $crystalFaces);
+
+            $vertices = array_merge($vertices, $crystalVerts);
+            $faces = array_merge($faces, $offsetFaces);
+            $vertexOffset += count($crystalVerts);
         }
 
-        // Add center connections for more complex geometry
-        $centerIndex = 0; // Use first vertex as center reference
-        for ($i = 1; $i < min($vertexCount, 20); $i += 2) {
-            $next = ($i + 1) % $vertexCount;
-            $faces[] = [$centerIndex, $i, $next];
+        return [$vertices, $faces];
+    }
+
+    /**
+     * Generate single hexagonal crystal prism with pointed top
+     */
+    protected function generateHexagonalCrystal(float $height, float $x, float $y, float $z, float $tilt): array
+    {
+        $vertices = [];
+        $faces = [];
+        $radius = 0.2;
+        $pointHeight = $height + 0.3; // Pointed termination
+
+        // Generate hexagonal base vertices (bottom)
+        for ($i = 0; $i < 6; $i++) {
+            $angle = (pi() / 3) * $i;
+            $vx = cos($angle) * $radius;
+            $vz = sin($angle) * $radius;
+
+            // Apply tilt rotation
+            $rotX = $vx * cos($tilt) - $vz * sin($tilt);
+            $rotZ = $vx * sin($tilt) + $vz * cos($tilt);
+
+            $vertices[] = [
+                round($x + $rotX, 4),
+                round($y, 4),
+                round($z + $rotZ, 4)
+            ];
         }
 
-        return $faces;
+        // Generate hexagonal top vertices (before point)
+        for ($i = 0; $i < 6; $i++) {
+            $angle = (pi() / 3) * $i;
+            $vx = cos($angle) * $radius * 0.9; // Slightly smaller
+            $vz = sin($angle) * $radius * 0.9;
+
+            // Apply tilt rotation
+            $rotX = $vx * cos($tilt) - $vz * sin($tilt);
+            $rotZ = $vx * sin($tilt) + $vz * cos($tilt);
+
+            $vertices[] = [
+                round($x + $rotX, 4),
+                round($y + $height, 4),
+                round($z + $rotZ, 4)
+            ];
+        }
+
+        // Top point vertex
+        $vertices[] = [
+            round($x, 4),
+            round($y + $pointHeight, 4),
+            round($z, 4)
+        ];
+
+        // Generate faces for hexagonal sides
+        for ($i = 0; $i < 6; $i++) {
+            $next = ($i + 1) % 6;
+
+            // Two triangles per rectangular face
+            $faces[] = [$i, $next, $i + 6];
+            $faces[] = [$next, $next + 6, $i + 6];
+        }
+
+        // Generate faces for pointed top
+        for ($i = 0; $i < 6; $i++) {
+            $next = ($i + 1) % 6;
+            $faces[] = [$i + 6, $next + 6, 12]; // Point is vertex 12
+        }
+
+        // Bottom face (hexagon triangulated from center)
+        for ($i = 0; $i < 6; $i++) {
+            $next = ($i + 1) % 6;
+            $faces[] = [0, $next, $i]; // Use vertex 0 as center
+        }
+
+        return [$vertices, $faces];
+    }
+
+    /**
+     * Apply distortions to crystal vertices based on user metrics
+     */
+    protected function applyCrystalDistortions(array $vertices, UserCrystalMetric $metric): array
+    {
+        $diversity = $metric->diversity_index;
+        $engagement = $metric->engagement_score;
+
+        $distorted = [];
+        foreach ($vertices as $index => $vertex) {
+            // Calculate spherical coordinates
+            $r = sqrt($vertex[0]**2 + $vertex[1]**2 + $vertex[2]**2);
+            $theta = atan2($vertex[1], $vertex[0]);
+            $phi = acos($vertex[2] / $r);
+
+            // Apply subtle radial distortion based on diversity
+            // Less diversity = more elongated, more diversity = more spherical
+            $radialFactor = 1.0 + (sin($theta * 3 + $phi * 2) * 0.15 * (1 - $diversity));
+
+            // Apply engagement-based scaling
+            $scale = 1.0 + ($engagement / 100 * 0.2);
+
+            $newR = $r * $radialFactor * $scale;
+
+            // Convert back to Cartesian
+            $distorted[] = [
+                round($newR * sin($phi) * cos($theta), 4),
+                round($newR * sin($phi) * sin($theta), 4),
+                round($newR * cos($phi), 4),
+            ];
+        }
+
+        return $distorted;
     }
 
     /**

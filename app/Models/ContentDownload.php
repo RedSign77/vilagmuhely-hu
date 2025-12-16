@@ -64,8 +64,13 @@ class ContentDownload extends Model
     /**
      * Record a new download.
      */
-    public static function recordDownload(int $contentId, int $userId, ?string $ipAddress = null): self
+    public static function recordDownload(int $contentId, int $userId, ?string $ipAddress = null): ?self
     {
+        // Only record if user hasn't downloaded this content before
+        if (static::hasUserDownloaded($contentId, $userId)) {
+            return null;
+        }
+
         return static::create([
             'content_id' => $contentId,
             'user_id' => $userId,

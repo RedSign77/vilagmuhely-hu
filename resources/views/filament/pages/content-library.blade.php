@@ -15,6 +15,7 @@
             grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
             gap: 1.5rem !important;
             width: 100% !important;
+            white-space: normal !important;
         }
 
         @media (min-width: 768px) {

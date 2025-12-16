@@ -18,14 +18,17 @@ class ContentDownloadController extends Controller
             abort(403, 'You must be logged in to download content.');
         }
 
-        // Record the download
-        ContentDownload::recordDownload($content->id, auth()->id());
+        // Only record download and increment counter if not the creator
+        if ($content->creator_id !== auth()->id()) {
+            // Record the download (only if first time)
+            $downloadRecord = ContentDownload::recordDownload($content->id, auth()->id());
 
-        // Increment download counter
-        $content->incrementDownloads();
-
-        // Fire event
-        event(new ContentDownloadedEvent($content));
+            // Only increment counter and fire event on first download
+            if ($downloadRecord) {
+                $content->incrementDownloads();
+                event(new ContentDownloadedEvent($content));
+            }
+        }
 
         // Handle different content types
         return match ($content->type) {
@@ -137,8 +140,8 @@ class ContentDownloadController extends Controller
 
     protected function createZip(Content $content, array $files)
     {
-        $zipFileName = \Illuminate\Support\Str::slug($content->title).'.zip';
-        $zipPath = storage_path('app/temp/'.$zipFileName);
+        $zipFileName = $content->title.'.zip';
+        $zipPath = storage_path('app/temp/'.\Illuminate\Support\Str::slug($content->title).'.zip');
 
         // Ensure temp directory exists
         if (! file_exists(storage_path('app/temp'))) {
@@ -160,6 +163,6 @@ class ContentDownloadController extends Controller
             abort(500, 'Failed to create ZIP file');
         }
 
-        return response()->download($zipPath)->deleteFileAfterSend(true);
+        return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
     }
 }

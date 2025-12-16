@@ -139,12 +139,17 @@ export class CrystalViewer {
     createCrystal(data) {
         const geometry = this.createGeometryFromData(data.geometry);
 
+        // Use dominant color for emissive glow if available
+        const dominantColor = data.crystal.colors && data.crystal.colors.length > 0
+            ? new THREE.Color(data.crystal.colors[0])
+            : new THREE.Color(0x94a3b8);
+
         const material = new THREE.MeshPhongMaterial({
             vertexColors: true,
             transparent: true,
             opacity: data.crystal.purity,
-            emissive: new THREE.Color(0xffffff),
-            emissiveIntensity: data.crystal.glow_intensity,
+            emissive: dominantColor,
+            emissiveIntensity: data.crystal.glow_intensity * 0.3, // Reduced to not overpower vertex colors
             shininess: 100,
             specular: new THREE.Color(0x888888),
             flatShading: false,

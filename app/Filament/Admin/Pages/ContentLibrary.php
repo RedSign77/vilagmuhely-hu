@@ -158,11 +158,9 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                             ->icon('heroicon-o-arrow-down-tray')
                             ->color('success')
                             ->disabled(fn () => ! Gate::allows('download', $record))
-                            ->tooltip(fn () => Gate::allows('download', $record) ? null : 'Download first to access this content')
                             ->requiresConfirmation()
                             ->action(function () use ($record) {
-                                // Redirect to download controller
-                                return redirect()->route('content.download', $record);
+                                $this->js('window.location.href = "' . route('content.download', $record) . '"');
                             }),
                         Tables\Actions\Action::make('rate')
                             ->label('Rate')
@@ -309,8 +307,7 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                     ->disabled(fn (Content $record) => ! Gate::allows('download', $record))
                     ->requiresConfirmation()
                     ->action(function (Content $record) {
-                        // Redirect to download controller
-                        return redirect()->route('content.download', $record);
+                        $this->js('window.location.href = "' . route('content.download', $record) . '"');
                     }),
 
                 Tables\Actions\Action::make('rate')

@@ -24,11 +24,6 @@ class ContentPolicy
             return false;
         }
 
-        // User must not have already downloaded it
-        if (ContentDownload::hasUserDownloaded($content->id, $user->id)) {
-            return false;
-        }
-
         return true;
     }
 
