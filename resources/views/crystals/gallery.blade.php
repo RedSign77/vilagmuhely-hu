@@ -5,10 +5,10 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-400 bg-clip-text text-transparent mb-2">
             Workshop Crystal Gallery
         </h1>
-        <p class="text-gray-600 dark:text-gray-400">
+        <p class="text-gray-300">
             Explore the unique crystals of our creators, each representing their creative journey
         </p>
     </div>
@@ -16,15 +16,15 @@
     <!-- Sort Controls -->
     <div class="mb-6 flex flex-wrap gap-2">
         <a href="{{ route('crystals.gallery', ['sort' => 'interaction']) }}"
-           class="px-4 py-2 rounded-lg {{ $sortBy === 'interaction' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300' }} hover:bg-indigo-500 hover:text-white transition">
+           class="px-4 py-2 rounded-lg {{ $sortBy === 'interaction' ? 'bg-purple-600 text-white' : 'bg-white/10 backdrop-blur-sm text-gray-300 border border-white/20' }} hover:bg-purple-500 hover:text-white transition">
             Most Interactive
         </a>
         <a href="{{ route('crystals.gallery', ['sort' => 'diversity']) }}"
-           class="px-4 py-2 rounded-lg {{ $sortBy === 'diversity' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300' }} hover:bg-indigo-500 hover:text-white transition">
+           class="px-4 py-2 rounded-lg {{ $sortBy === 'diversity' ? 'bg-purple-600 text-white' : 'bg-white/10 backdrop-blur-sm text-gray-300 border border-white/20' }} hover:bg-purple-500 hover:text-white transition">
             Most Diverse
         </a>
         <a href="{{ route('crystals.gallery', ['sort' => 'engagement']) }}"
-           class="px-4 py-2 rounded-lg {{ $sortBy === 'engagement' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300' }} hover:bg-indigo-500 hover:text-white transition">
+           class="px-4 py-2 rounded-lg {{ $sortBy === 'engagement' ? 'bg-purple-600 text-white' : 'bg-white/10 backdrop-blur-sm text-gray-300 border border-white/20' }} hover:bg-purple-500 hover:text-white transition">
             Most Engaged
         </a>
     </div>

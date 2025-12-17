@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContentDownloadController;
+use App\Http\Controllers\ContentLibraryController;
 use App\Http\Controllers\CrystalGalleryController;
 use App\Models\User;
 use App\Models\UserCrystalMetric;
@@ -26,6 +27,9 @@ Route::get('/', function () {
 // Crystal Gallery Routes
 Route::get('/crystals', [CrystalGalleryController::class, 'index'])->name('crystals.gallery');
 Route::get('/crystals/{user}', [CrystalGalleryController::class, 'show'])->name('crystals.show');
+
+// Content Library Route
+Route::get('/library', [ContentLibraryController::class, 'index'])->name('library.index');
 
 // Content Download Route
 Route::get('/content/{content}/download', [ContentDownloadController::class, 'download'])

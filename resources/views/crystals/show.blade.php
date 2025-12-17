@@ -7,7 +7,7 @@
     <!-- Back Button -->
     <div class="mb-6">
         <a href="{{ route('crystals.gallery') }}"
-           class="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
+           class="inline-flex items-center text-gray-300 hover:text-purple-300 transition">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
@@ -16,22 +16,22 @@
     </div>
 
     <!-- Profile Header -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+    <div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg p-6 mb-6">
         <div class="flex items-center gap-4">
             @if($user->avatar)
                 <img src="{{ asset('storage/' . $user->avatar) }}"
                      alt="{{ $user->name }}"
                      class="w-20 h-20 rounded-full">
             @else
-                <div class="w-20 h-20 rounded-full bg-indigo-600 flex items-center justify-center text-white text-2xl font-bold">
+                <div class="w-20 h-20 rounded-full bg-purple-600 flex items-center justify-center text-white text-2xl font-bold">
                     {{ substr($user->name, 0, 1) }}
                 </div>
             @endif
             <div>
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-400 bg-clip-text text-transparent">
                     {{ $user->name }}'s Crystal
                 </h1>
-                <p class="text-gray-600 dark:text-gray-400">
+                <p class="text-gray-300">
                     A visual representation of their creative journey
                 </p>
             </div>

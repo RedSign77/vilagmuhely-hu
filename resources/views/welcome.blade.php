@@ -16,6 +16,7 @@
                     <span class="text-xl font-bold">Világműhely</span>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <a href="/library" class="hover:text-purple-300 transition">Content Library</a>
                     <a href="/crystals" class="hover:text-purple-300 transition">Crystal Gallery</a>
                     @auth
                         <a href="/admin" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition">Dashboard</a>
