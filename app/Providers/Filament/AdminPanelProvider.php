@@ -110,6 +110,10 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 'panels::body.end',
                 fn (): string => view('filament.footer.custom-footer')->render()
+            )
+            ->renderHook(
+                'panels::topbar.end',
+                fn (): string => \Livewire\Livewire::mount(\App\Filament\Admin\Pages\InviteUserAction::class)
             );
     }
 }

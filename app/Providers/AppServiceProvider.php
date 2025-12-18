@@ -3,12 +3,16 @@
 namespace App\Providers;
 
 use App\Http\Responses\RegistrationResponse;
+use App\Listeners\HandleInvitationAcceptance;
 use App\Listeners\QueueCrystalUpdateListener;
+use App\Models\Invitation;
 use App\Models\User;
 use App\Observers\UserObserver;
 use App\Policies\ContentPolicy;
+use App\Policies\InvitationPolicy;
 use App\Services\CrystalCalculatorService;
 use Filament\Http\Responses\Auth\Contracts\RegistrationResponse as RegistrationResponseContract;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -43,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register policies
         Gate::policy(Content::class, ContentPolicy::class);
+        Gate::policy(Invitation::class, InvitationPolicy::class);
 
         // Register observers
         User::observe(UserObserver::class);
@@ -53,5 +58,8 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ContentDownloadedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentDownloaded']);
         Event::listen(ContentRatedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentRated']);
         Event::listen(ContentReviewedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentReviewed']);
+
+        // Register invitation acceptance listener
+        Event::listen(Registered::class, HandleInvitationAcceptance::class);
     }
 }

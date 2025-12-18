@@ -49,5 +49,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('content:cleanup-unused-metadata')
             ->dailyAt('05:00')
             ->onOneServer();
+
+        // Clean up expired invitations - runs daily at 1:00 AM
+        $schedule->command('invitations:cleanup')
+            ->dailyAt('01:00')
+            ->onOneServer();
     })
     ->create();

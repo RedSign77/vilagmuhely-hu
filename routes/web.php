@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContentDownloadController;
 use App\Http\Controllers\ContentLibraryController;
 use App\Http\Controllers\CrystalGalleryController;
+use App\Http\Controllers\InvitationController;
 use App\Models\User;
 use App\Models\UserCrystalMetric;
 use Illuminate\Support\Facades\Route;
@@ -35,3 +36,7 @@ Route::get('/library', [ContentLibraryController::class, 'index'])->name('librar
 Route::get('/content/{content}/download', [ContentDownloadController::class, 'download'])
     ->middleware('auth')
     ->name('content.download');
+
+// Invitation Routes
+Route::get('/invitations/{token}/accept', [InvitationController::class, 'accept'])
+    ->name('invitations.accept');
