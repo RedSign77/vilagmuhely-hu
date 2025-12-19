@@ -20,18 +20,6 @@ class Dashboard extends BaseDashboard
 {
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
-    public static function getNavigationIcon(): ?string
-    {
-        $user = auth()->user();
-
-        // If user has an avatar, return a custom icon view
-        if ($user && $user->avatar) {
-            return 'filament.components.navigation.dashboard-avatar-icon';
-        }
-
-        return static::$navigationIcon;
-    }
-
     public function getWidgets(): array
     {
         return [
