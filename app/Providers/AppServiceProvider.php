@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Responses\EmailVerificationResponse;
 use App\Http\Responses\RegistrationResponse;
 use App\Listeners\HandleInvitationAcceptance;
 use App\Listeners\QueueCrystalUpdateListener;
@@ -11,6 +12,7 @@ use App\Observers\UserObserver;
 use App\Policies\ContentPolicy;
 use App\Policies\InvitationPolicy;
 use App\Services\CrystalCalculatorService;
+use Filament\Http\Responses\Auth\Contracts\EmailVerificationResponse as EmailVerificationResponseContract;
 use Filament\Http\Responses\Auth\Contracts\RegistrationResponse as RegistrationResponseContract;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Event;
@@ -36,6 +38,12 @@ class AppServiceProvider extends ServiceProvider
             RegistrationResponse::class
         );
 
+        // Register custom email verification response
+        $this->app->singleton(
+            EmailVerificationResponseContract::class,
+            EmailVerificationResponse::class
+        );
+
         // Register Crystal Calculator Service
         $this->app->singleton(CrystalCalculatorService::class);
     }
@@ -59,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ContentRatedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentRated']);
         Event::listen(ContentReviewedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentReviewed']);
 
-        // Register invitation acceptance listener
-        Event::listen(Registered::class, HandleInvitationAcceptance::class);
+        // Invitation acceptance is now handled in Register page
+        // Event::listen(Registered::class, HandleInvitationAcceptance::class);
     }
 }

@@ -45,7 +45,6 @@ class InvitationResource extends Resource
                         Forms\Components\TextInput::make('email')
                             ->email()
                             ->required()
-                            ->unique(ignoreRecord: true)
                             ->maxLength(255),
 
                         Forms\Components\Textarea::make('message')
@@ -183,14 +182,22 @@ class InvitationResource extends Resource
                     ->color('info')
                     ->visible(fn (Invitation $record) => $record->status === 'pending' && ! $record->isExpired()
                     )
-                    ->url(fn (Invitation $record) => route('invitations.accept', $record->token))
-                    ->openUrlInNewTab()
-                    ->extraAttributes(['onclick' => 'navigator.clipboard.writeText(this.href); return false;'])
-                    ->successNotification(
+                    ->action(function (Invitation $record) {
+                        $url = route('invitations.accept', $record->token);
+
+                        // Copy to clipboard using JavaScript
+                        $this->js("
+                            navigator.clipboard.writeText('$url').then(function() {
+                                console.log('Copied to clipboard');
+                            });
+                        ");
+
                         FilamentNotification::make()
-                            ->title('Invitation link copied!')
+                            ->title('Link copied to clipboard!')
+                            ->body('The invitation link has been copied and is ready to share.')
                             ->success()
-                    ),
+                            ->send();
+                    }),
 
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

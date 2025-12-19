@@ -219,3 +219,4 @@ Located in `packages/queue-manager/`, this package provides queue management thr
 **Requirements**: Database queue driver (`QUEUE_CONNECTION=database`)
 
 See `packages/queue-manager/README.md` for detailed documentation.
+- Implementing a feature needs an md file under the dps/features directory contains the neccessary description for the next coding. Updating a feature needs updating the relevant dps/features md files with the changes. These md files length not more than 500 lines and just technical information placed here.

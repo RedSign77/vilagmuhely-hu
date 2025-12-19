@@ -3,6 +3,7 @@
 namespace Webtechsolutions\UserManager\Filament\Resources\UserActivityLogResource\Pages;
 
 use Filament\Actions;
+use Filament\Notifications\Notification;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,7 +26,11 @@ class ListUserActivityLogs extends ListRecords
                 ->modalDescription('This will delete activity logs older than 90 days. This action cannot be undone.')
                 ->action(function () {
                     $count = UserActivityLog::deleteOlderThan(90);
-                    $this->notify('success', "Successfully deleted {$count} old activity log(s).");
+                    Notification::make()
+                        ->title('Logs cleaned up successfully')
+                        ->body("Successfully deleted {$count} old activity log(s).")
+                        ->success()
+                        ->send();
                 }),
         ];
     }
