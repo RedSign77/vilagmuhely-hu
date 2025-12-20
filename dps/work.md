@@ -1,23 +1,19 @@
-## Email Verification Bug - FIXED ✅
+Feature: Email headers and footers redesign
 
-**Issue:** Users register and click verification link, but `email_verified_at` stays NULL, preventing login.
+## Objective
+Redesign email headers and footers to match the homepage's modern gradient design and crystal theme branding for consistent brand identity across all user touchpoints.
 
-**Root Cause:** Catch-22 situation where:
-- Verification route requires authentication (`vendor/filament/filament/routes/web.php:71-81`)
-- But users get logged out if email not verified (`app/Http/Middleware/FilamentAuthenticate.php:33-48`)
-- Users can't verify email without being logged in, but can't stay logged in without verified email
+## Requirements
+1. **Header**: Crystal logo (💎) + "Világműhely" brand name with purple/cyan gradient background
+2. **Footer**: Multi-column layout with navigation links, social links, and copyright - matching homepage footer
+3. **Theme**: Update CSS with gradient backgrounds, modern color palette, and glassmorphism effects
+4. **Responsive**: Mobile-first design that works across all email clients
+5. **UX/UI**: High contrast, readable text, proper spacing, accessible design
 
-**Solution:** Created custom unauthenticated verification route with signed URL security.
+## Files
+- `resources/views/vendor/mail/html/header.blade.php`
+- `resources/views/vendor/mail/html/footer.blade.php`
+- `resources/views/vendor/mail/html/themes/default.css`
 
-**Files Modified:**
-1. `app/Http/Controllers/Auth/EmailVerificationController.php` - NEW custom controller
-2. `routes/web.php:45-47` - Added custom route `custom.email-verification.verify`
-3. `app/Notifications/CustomVerifyEmail.php:20` - Updated to use custom route name
-
-**How It Works:**
-- Verification link uses signed URLs (secure, tamper-proof)
-- Route accessible without authentication
-- Controller verifies hash, marks email verified, auto-logins user
-- Redirects to admin panel
-
-**Testing:** Ready for manual testing or use `./registration-invitation-test.sh`
+## Reference
+See detailed spec: `dps/features/email-header-footer-redesign.md`
