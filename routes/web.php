@@ -40,3 +40,8 @@ Route::get('/content/{content}/download', [ContentDownloadController::class, 'do
 // Invitation Routes
 Route::get('/invitations/{token}/accept', [InvitationController::class, 'accept'])
     ->name('invitations.accept');
+
+// Custom Email Verification Route (unauthenticated)
+Route::get('/email-verification/{id}/{hash}', \App\Http\Controllers\Auth\EmailVerificationController::class)
+    ->middleware(['throttle:6,1'])
+    ->name('custom.email-verification.verify');

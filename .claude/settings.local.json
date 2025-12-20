@@ -16,12 +16,15 @@
       "Bash(grep:*)",
       "Bash(git -C /home/unreality1/projects/vilagmuhely log --all --oneline --grep=\"Content Library\\|navigation\\|menu\")",
       "Bash(git -C /home/unreality1/projects/vilagmuhely log --all --oneline -- \"*AdminPanelProvider*\")",
-      "Bash(git -C /home/unreality1/projects/vilagmuhely show HEAD:app/Providers/Filament/AdminPanelProvider.php)"
+      "Bash(git -C /home/unreality1/projects/vilagmuhely show HEAD:app/Providers/Filament/AdminPanelProvider.php)",
+      "Bash(chmod:*)",
+      "Bash(ls:*)",
+      "Bash(git -C /home/unreality1/projects/vilagmuhely log --oneline --all)"
     ],
     "deny": [],
     "ask": []
   },
-  "spinnerTipsEnabled": false,
   "model": "sonnet",
-  "outputStyle": "ultra-concise"
+  "outputStyle": "ultra-concise",
+  "spinnerTipsEnabled": false
 }

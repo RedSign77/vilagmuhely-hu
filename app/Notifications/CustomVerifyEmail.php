@@ -17,8 +17,8 @@ class CustomVerifyEmail extends BaseVerifyEmail
     protected function verificationUrl($notifiable)
     {
         return URL::temporarySignedRoute(
-            'filament.admin.auth.email-verification.verify',
-            now()->addMinutes(60),
+            'custom.email-verification.verify',
+            now()->addMinutes(180),
             [
                 'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification()),

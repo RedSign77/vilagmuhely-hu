@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Admin\Pages\ContentLibrary;
 use App\Filament\Admin\Pages\EditProfile;
+use App\Filament\Admin\Pages\InviteUserAction;
 use App\Http\Middleware\FilamentAuthenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -113,7 +114,7 @@ class AdminPanelProvider extends PanelProvider
             )
             ->renderHook(
                 'panels::topbar.end',
-                fn (): string => \Livewire\Livewire::mount(\App\Filament\Admin\Pages\InviteUserAction::class)
+                fn (): string => \Livewire\Livewire::mount(InviteUserAction::class)
             );
     }
 }
