@@ -457,17 +457,17 @@
                     <h4 class="font-bold mb-4">Resources</h4>
                     <ul class="space-y-2 text-sm text-gray-400">
                         <li><a href="/changelog" class="hover:text-white transition">Change Log</a></li>
-                        <li><a href="#" class="hover:text-white transition">Documentation</a></li>
-                        <li><a href="#" class="hover:text-white transition">Help Center</a></li>
-                        <li><a href="#" class="hover:text-white transition">Community</a></li>
+                        <li><a href="mailto:info@webtech-solutions.hu" class="hover:text-white transition">Help Center</a></li>
+                        <li><a href="https://discord.gg/QJAcDyjA" target="_blank" class="hover:text-white transition">Community</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-bold mb-4">Connect</h4>
                     <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">GitHub</a></li>
-                        <li><a href="#" class="hover:text-white transition">Discord</a></li>
-                        <li><a href="#" class="hover:text-white transition">Twitter</a></li>
+                        <li><a href="https://www.facebook.com/profile.php?id=61575724097365" target="_blank" class="hover:text-white transition">Facebook</a></li>
+                        <li><a href="https://discord.gg/QJAcDyjA" target="_blank" class="hover:text-white transition">Discord</a></li>
+                        <li><a href="https://www.tiktok.com/@vilagmuhely" target="_blank" class="hover:text-white transition">TikTok</a></li>
+                        <li><a href="https://www.instagram.com/vilagmuhely/" target="_blank" class="hover:text-white transition">Instagram</a></li>
                     </ul>
                 </div>
             </div>
