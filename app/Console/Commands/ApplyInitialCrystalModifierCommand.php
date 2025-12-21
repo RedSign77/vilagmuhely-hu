@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use App\Models\UserCrystalMetric;
 use App\Services\CrystalCalculatorService;
 use Illuminate\Console\Command;
 
@@ -49,11 +48,12 @@ class ApplyInitialCrystalModifierCommand extends Command
         // Get all users with crystal metrics that haven't had the modifier applied
         $users = User::whereHas('crystalMetric', function ($query) {
             $query->where('initial_modifier_applied', false)
-                  ->orWhereNull('initial_modifier_applied');
+                ->orWhereNull('initial_modifier_applied');
         })->with('crystalMetric')->get();
 
         if ($users->isEmpty()) {
             $this->info('No users found that need modifier application.');
+
             return Command::SUCCESS;
         }
 
@@ -78,10 +78,10 @@ class ApplyInitialCrystalModifierCommand extends Command
                 $bonusPercent = round(($modifier - 1.0) * 100, 0);
 
                 // Display user info
-                if (!$isDryRun) {
+                if (! $isDryRun) {
                     $this->newLine();
                     $this->line("User: {$user->name} (ID: {$user->id})");
-                    $this->line("  Profile Completeness: " . round($completeness * 100, 0) . "%");
+                    $this->line('  Profile Completeness: '.round($completeness * 100, 0).'%');
                     $this->line("  Modifier: {$modifier}x (Bonus: +{$bonusPercent}%)");
 
                     // Apply modifier and recalculate
@@ -110,12 +110,12 @@ class ApplyInitialCrystalModifierCommand extends Command
                         $this->newLine();
                     }
                     $this->line("Would update: {$user->name} (ID: {$user->id})");
-                    $this->line("  Completeness: " . round($completeness * 100, 0) . "% | Modifier: {$modifier}x | Bonus: +{$bonusPercent}%");
+                    $this->line('  Completeness: '.round($completeness * 100, 0)."% | Modifier: {$modifier}x | Bonus: +{$bonusPercent}%");
                 }
 
                 $results['processed']++;
             } catch (\Exception $e) {
-                $this->error("\nError processing user {$user->id}: " . $e->getMessage());
+                $this->error("\nError processing user {$user->id}: ".$e->getMessage());
                 $results['errors']++;
             }
 

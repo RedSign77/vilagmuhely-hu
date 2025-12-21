@@ -20,7 +20,7 @@ class CrystalApiController extends Controller
     {
         $user = User::find($userId);
 
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'success' => false,
                 'message' => 'User not found',
@@ -29,7 +29,7 @@ class CrystalApiController extends Controller
 
         $metric = UserCrystalMetric::where('user_id', $userId)->first();
 
-        if (!$metric) {
+        if (! $metric) {
             return response()->json([
                 'success' => false,
                 'message' => 'Crystal metrics not yet calculated for this user',
@@ -100,7 +100,7 @@ class CrystalApiController extends Controller
         $topInteraction = UserCrystalMetric::with('user')
             ->topInteraction(10)
             ->get()
-            ->map(fn($m) => [
+            ->map(fn ($m) => [
                 'user' => ['id' => $m->user->id, 'name' => $m->user->name],
                 'score' => $m->interaction_score,
             ]);
@@ -108,7 +108,7 @@ class CrystalApiController extends Controller
         $topDiversity = UserCrystalMetric::with('user')
             ->topDiversity(10)
             ->get()
-            ->map(fn($m) => [
+            ->map(fn ($m) => [
                 'user' => ['id' => $m->user->id, 'name' => $m->user->name],
                 'score' => $m->diversity_index,
             ]);
@@ -117,7 +117,7 @@ class CrystalApiController extends Controller
             ->orderByDesc('engagement_score')
             ->limit(10)
             ->get()
-            ->map(fn($m) => [
+            ->map(fn ($m) => [
                 'user' => ['id' => $m->user->id, 'name' => $m->user->name],
                 'score' => $m->engagement_score,
             ]);
@@ -144,7 +144,7 @@ class CrystalApiController extends Controller
 
         $content = Content::find($contentId);
 
-        if (!$content) {
+        if (! $content) {
             return response()->json([
                 'success' => false,
                 'message' => 'Content not found',
@@ -201,7 +201,7 @@ class CrystalApiController extends Controller
         $content = Content::find($contentId);
         $rating = ContentRating::find($ratingId);
 
-        if (!$content || !$rating) {
+        if (! $content || ! $rating) {
             return response()->json([
                 'success' => false,
                 'message' => 'Content or rating not found',

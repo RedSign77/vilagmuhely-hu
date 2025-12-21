@@ -29,7 +29,7 @@ class RecalculateCrystalMetricsJob implements ShouldQueue
     {
         $user = User::find($this->userId);
 
-        if (!$user) {
+        if (! $user) {
             return;
         }
 

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -53,7 +52,7 @@ class UserCrystalMetric extends Model
      */
     public function needsUpdate(int $thresholdMinutes = 30): bool
     {
-        if (!$this->last_calculated_at) {
+        if (! $this->last_calculated_at) {
             return true;
         }
 
@@ -94,7 +93,7 @@ class UserCrystalMetric extends Model
     {
         return $query->where(function ($q) use ($thresholdMinutes) {
             $q->whereNull('last_calculated_at')
-              ->orWhere('last_calculated_at', '<=', now()->subMinutes($thresholdMinutes));
+                ->orWhere('last_calculated_at', '<=', now()->subMinutes($thresholdMinutes));
         });
     }
 

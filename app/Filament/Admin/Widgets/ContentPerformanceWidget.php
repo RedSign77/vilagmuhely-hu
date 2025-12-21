@@ -5,7 +5,6 @@ namespace App\Filament\Admin\Widgets;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Webtechsolutions\ContentEngine\Models\Content;
-use Illuminate\Support\Facades\DB;
 
 class ContentPerformanceWidget extends BaseWidget
 {
@@ -18,7 +17,7 @@ class ContentPerformanceWidget extends BaseWidget
         // Check if user has any content
         $hasContent = Content::where('creator_id', $user->id)->exists();
 
-        if (!$hasContent) {
+        if (! $hasContent) {
             return [];
         }
 
@@ -55,7 +54,7 @@ class ContentPerformanceWidget extends BaseWidget
                 ->descriptionIcon('heroicon-m-arrow-down-tray')
                 ->color('success'),
 
-            Stat::make('Average Rating', number_format($stats->avg_rating ?? 0, 1) . ' / 5')
+            Stat::make('Average Rating', number_format($stats->avg_rating ?? 0, 1).' / 5')
                 ->description('Community feedback')
                 ->descriptionIcon('heroicon-m-star')
                 ->color('warning'),

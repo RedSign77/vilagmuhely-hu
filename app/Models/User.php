@@ -156,8 +156,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     /**
      * Send the email verification notification.
-     *
-     * @return void
      */
     public function sendEmailVerificationNotification(): void
     {
@@ -166,11 +164,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     /**
      * Get the URL to the user's avatar for Filament.
-     *
-     * @return string|null
      */
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar ? asset('storage/' . $this->avatar) : null;
+        return $this->avatar ? asset('storage/'.$this->avatar) : null;
     }
 }

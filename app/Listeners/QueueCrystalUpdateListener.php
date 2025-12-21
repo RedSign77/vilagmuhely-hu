@@ -15,8 +15,8 @@ class QueueCrystalUpdateListener
 {
     public function __construct(
         protected MilestoneTrackerService $milestoneTracker
-    ) {
-    }
+    ) {}
+
     /**
      * Handle content published event
      */

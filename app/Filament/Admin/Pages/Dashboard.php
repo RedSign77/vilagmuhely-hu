@@ -2,10 +2,8 @@
 
 namespace App\Filament\Admin\Pages;
 
-use App\Filament\Admin\Widgets\ContentByCategoryWidget;
 use App\Filament\Admin\Widgets\ContentPerformanceWidget;
 use App\Filament\Admin\Widgets\CreatorSectionHeaderWidget;
-use App\Filament\Admin\Widgets\MyContentOverviewWidget;
 use App\Filament\Admin\Widgets\MyCrystalStatsWidget;
 use App\Filament\Admin\Widgets\PlatformStatsWidget;
 use App\Filament\Admin\Widgets\PopularContentWidget;
@@ -41,7 +39,7 @@ class Dashboard extends BaseDashboard
         ];
     }
 
-    public function getColumns(): int | string | array
+    public function getColumns(): int|string|array
     {
         return 2;
     }

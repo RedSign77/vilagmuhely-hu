@@ -95,7 +95,7 @@ class ContentResource extends Resource
                                 'link',
                             ])
                             ->maxLength(2048)
-                            ->helperText(fn ($state) => (strlen($state ?? '') . ' / 2048 characters'))
+                            ->helperText(fn ($state) => (strlen($state ?? '').' / 2048 characters'))
                             ->live(onBlur: true)
                             ->columnSpanFull(),
 

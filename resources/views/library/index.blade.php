@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('title', 'Content Library')
+@section('meta_description', 'Explore public content from our creative community. Browse articles, RPG modules, digital files, and image galleries.')
+@section('meta_keywords', 'content library, RPG modules, digital files, articles, creative content, community contributions')
+@section('og_title', 'Világműhely - Content Library')
+@section('og_description', 'Explore public content from our creative community. Browse articles, RPG modules, digital files, and image galleries.')
+@section('twitter_title', 'Világműhely - Content Library')
+@section('twitter_description', 'Explore public content from our creative community. Browse articles, RPG modules, digital files, and image galleries.')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

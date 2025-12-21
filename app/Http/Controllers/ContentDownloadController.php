@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\ContentDownload;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Webtechsolutions\ContentEngine\Events\ContentDownloadedEvent;
 use Webtechsolutions\ContentEngine\Models\Content;
 use ZipArchive;

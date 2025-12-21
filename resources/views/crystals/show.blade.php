@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('title', $user->name . ' - Crystal Profile')
+@section('meta_description', 'View ' . $user->name . '\'s unique 3D crystal grown through creative content. Explore their crystal\'s geometry, colors, and glow intensity.')
+@section('meta_keywords', '3D crystal, ' . $user->name . ', creator profile, content visualization, gamification')
+@section('og_title', $user->name . '\'s Crystal - Világműhely')
+@section('og_description', 'View ' . $user->name . '\'s unique 3D crystal. Facets: ' . ($crystalMetrics->facet_count ?? '0') . ' | Glow: ' . number_format(($crystalMetrics->glow_intensity ?? 0) * 100, 1) . '%')
+@section('twitter_title', $user->name . '\'s Crystal')
+@section('twitter_description', 'View ' . $user->name . '\'s unique 3D crystal grown through creative content.')
 
 @section('content')
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

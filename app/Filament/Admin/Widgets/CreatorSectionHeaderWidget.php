@@ -8,8 +8,10 @@ use Webtechsolutions\ContentEngine\Models\Content;
 class CreatorSectionHeaderWidget extends Widget
 {
     protected static string $view = 'filament.widgets.section-header';
+
     protected static ?int $sort = 3;
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
 
     public function getHeading(): string
     {

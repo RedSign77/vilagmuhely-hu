@@ -32,6 +32,7 @@ class CrystalCalculatorService
 
         // Normalize to 0-1 range (max entropy for 5 types is log2(5) ≈ 2.32)
         $maxEntropy = log(5, 2);
+
         return min(1, $entropy / $maxEntropy);
     }
 
@@ -147,7 +148,7 @@ class CrystalCalculatorService
 
         // Get top 3 categories by content count
         $categoryColors = $contents
-            ->filter(fn($c) => $c->category)
+            ->filter(fn ($c) => $c->category)
             ->groupBy('category_id')
             ->map(function ($group) {
                 return [
@@ -161,7 +162,7 @@ class CrystalCalculatorService
             ->values()
             ->toArray();
 
-        return !empty($categoryColors) ? $categoryColors : ['#94a3b8'];
+        return ! empty($categoryColors) ? $categoryColors : ['#94a3b8'];
     }
 
     /**
@@ -209,6 +210,7 @@ class CrystalCalculatorService
         } else {
             // For higher facet counts, use crystal cluster
             $crystalCount = min(12, floor($facetCount / 8));
+
             return $this->generateCrystalCluster($crystalCount);
         }
     }
@@ -252,9 +254,10 @@ class CrystalCalculatorService
         ];
 
         // Normalize vertices to unit sphere
-        $vertices = array_map(function($v) {
-            $len = sqrt($v[0]**2 + $v[1]**2 + $v[2]**2);
-            return [$v[0]/$len, $v[1]/$len, $v[2]/$len];
+        $vertices = array_map(function ($v) {
+            $len = sqrt($v[0] ** 2 + $v[1] ** 2 + $v[2] ** 2);
+
+            return [$v[0] / $len, $v[1] / $len, $v[2] / $len];
         }, $vertices);
 
         $faces = [
@@ -289,12 +292,13 @@ class CrystalCalculatorService
         ];
 
         // Normalize vertices
-        $vertices = array_map(function($v) {
-            $len = sqrt($v[0]**2 + $v[1]**2 + $v[2]**2);
+        $vertices = array_map(function ($v) {
+            $len = sqrt($v[0] ** 2 + $v[1] ** 2 + $v[2] ** 2);
+
             return [
-                round($v[0]/$len, 4),
-                round($v[1]/$len, 4),
-                round($v[2]/$len, 4)
+                round($v[0] / $len, 4),
+                round($v[1] / $len, 4),
+                round($v[2] / $len, 4),
             ];
         }, $vertices);
 
@@ -344,7 +348,7 @@ class CrystalCalculatorService
             );
 
             // Offset face indices
-            $offsetFaces = array_map(function($face) use ($vertexOffset) {
+            $offsetFaces = array_map(function ($face) use ($vertexOffset) {
                 return [$face[0] + $vertexOffset, $face[1] + $vertexOffset, $face[2] + $vertexOffset];
             }, $crystalFaces);
 
@@ -379,7 +383,7 @@ class CrystalCalculatorService
             $vertices[] = [
                 round($x + $rotX, 4),
                 round($y, 4),
-                round($z + $rotZ, 4)
+                round($z + $rotZ, 4),
             ];
         }
 
@@ -396,7 +400,7 @@ class CrystalCalculatorService
             $vertices[] = [
                 round($x + $rotX, 4),
                 round($y + $height, 4),
-                round($z + $rotZ, 4)
+                round($z + $rotZ, 4),
             ];
         }
 
@@ -404,7 +408,7 @@ class CrystalCalculatorService
         $vertices[] = [
             round($x, 4),
             round($y + $pointHeight, 4),
-            round($z, 4)
+            round($z, 4),
         ];
 
         // Generate faces for hexagonal sides
@@ -442,7 +446,7 @@ class CrystalCalculatorService
         $distorted = [];
         foreach ($vertices as $index => $vertex) {
             // Calculate spherical coordinates
-            $r = sqrt($vertex[0]**2 + $vertex[1]**2 + $vertex[2]**2);
+            $r = sqrt($vertex[0] ** 2 + $vertex[1] ** 2 + $vertex[2] ** 2);
             $theta = atan2($vertex[1], $vertex[0]);
             $phi = acos($vertex[2] / $r);
 
@@ -518,7 +522,7 @@ class CrystalCalculatorService
      */
     protected function assignColorsToVertices(array $vertices, array $hexColors): array
     {
-        $rgbColors = array_map(fn($hex) => $this->hexToRgb($hex), $hexColors);
+        $rgbColors = array_map(fn ($hex) => $this->hexToRgb($hex), $hexColors);
         $vertexColors = [];
         $colorCount = count($rgbColors);
 
@@ -556,12 +560,12 @@ class CrystalCalculatorService
     public function calculateProfileCompleteness(User $user): float
     {
         $fields = [
-            'avatar' => !empty($user->avatar) ? 1 : 0,
-            'about' => !empty($user->about) ? 1 : 0,
-            'mobile' => !empty($user->mobile) ? 1 : 0,
-            'city' => !empty($user->city) ? 1 : 0,
-            'address' => !empty($user->address) ? 1 : 0,
-            'social_media_links' => (!empty($user->social_media_links) && count($user->social_media_links) > 0) ? 1 : 0,
+            'avatar' => ! empty($user->avatar) ? 1 : 0,
+            'about' => ! empty($user->about) ? 1 : 0,
+            'mobile' => ! empty($user->mobile) ? 1 : 0,
+            'city' => ! empty($user->city) ? 1 : 0,
+            'address' => ! empty($user->address) ? 1 : 0,
+            'social_media_links' => (! empty($user->social_media_links) && count($user->social_media_links) > 0) ? 1 : 0,
         ];
 
         $totalFields = count($fields);
@@ -589,7 +593,7 @@ class CrystalCalculatorService
         $metric = UserCrystalMetric::firstOrCreate(['user_id' => $user->id]);
 
         // Detect if this is first-time creation
-        $isFirstCreation = !$metric->initial_modifier_applied;
+        $isFirstCreation = ! $metric->initial_modifier_applied;
 
         // Calculate base metrics
         $contentCount = $user->contents()->published()->count();

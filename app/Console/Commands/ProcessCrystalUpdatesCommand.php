@@ -34,17 +34,18 @@ class ProcessCrystalUpdatesCommand extends Command
 
         if (empty($userIds)) {
             $this->info('No pending crystal updates to process.');
+
             return Command::SUCCESS;
         }
 
-        $this->info("Found " . count($userIds) . " user(s) with pending updates.");
+        $this->info('Found '.count($userIds).' user(s) with pending updates.');
 
         // Dispatch recalculation jobs for each user
         foreach ($userIds as $userId) {
             RecalculateCrystalMetricsJob::dispatch($userId);
         }
 
-        $this->info("Queued " . count($userIds) . " crystal recalculation job(s).");
+        $this->info('Queued '.count($userIds).' crystal recalculation job(s).');
 
         return Command::SUCCESS;
     }

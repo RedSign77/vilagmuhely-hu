@@ -46,7 +46,7 @@ class UserObserver
                     $this->crystalCalculator->recalculateMetrics($user);
                 } catch (\Exception $e) {
                     // Log error but don't fail the user update
-                    Log::error('Failed to recalculate crystal metrics for user ' . $user->id . ': ' . $e->getMessage());
+                    Log::error('Failed to recalculate crystal metrics for user '.$user->id.': '.$e->getMessage());
                 }
             });
         }
@@ -63,7 +63,7 @@ class UserObserver
             try {
                 $this->crystalCalculator->recalculateMetrics($user);
             } catch (\Exception $e) {
-                Log::error('Failed to initialize crystal metrics for new user ' . $user->id . ': ' . $e->getMessage());
+                Log::error('Failed to initialize crystal metrics for new user '.$user->id.': '.$e->getMessage());
             }
         });
     }

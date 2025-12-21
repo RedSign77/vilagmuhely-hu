@@ -3,14 +3,9 @@
 namespace App\Filament\Admin\Pages\Auth;
 
 use App\Models\Invitation;
-use Filament\Facades\Filament;
-use Webtechsolutions\UserManager\Models\Role;
-use Filament\Forms\Components\Component;
-use Filament\Forms\Components\TextInput;
-use Filament\Notifications\Notification;
 use Filament\Pages\Auth\Register as BaseRegister;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Model;
+use Webtechsolutions\UserManager\Models\Role;
 
 class Register extends BaseRegister
 {

@@ -8,6 +8,7 @@ use Webtechsolutions\ContentEngine\Models\Content;
 class MyContentOverviewWidget extends ChartWidget
 {
     protected static ?string $heading = 'My Content by Type';
+
     protected static ?int $sort = 2;
 
     protected function getData(): array

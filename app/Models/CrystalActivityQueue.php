@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -32,14 +31,23 @@ class CrystalActivityQueue extends Model
      * Activity type constants
      */
     public const TYPE_CONTENT_PUBLISHED = 'content_published';
+
     public const TYPE_CONTENT_VIEWED = 'content_viewed';
+
     public const TYPE_CONTENT_DOWNLOADED = 'content_downloaded';
+
     public const TYPE_CONTENT_RATED = 'content_rated';
+
     public const TYPE_CONTENT_REVIEWED = 'content_reviewed';
+
     public const TYPE_ACHIEVEMENT_UNLOCKED = 'achievement_unlocked';
+
     public const TYPE_INVITATION_SENT = 'invitation_sent';
+
     public const TYPE_INVITATION_ACCEPTED = 'invitation_accepted';
+
     public const TYPE_CONTENT_MILESTONE_VIEWS = 'content_milestone_views';
+
     public const TYPE_CONTENT_MILESTONE_DOWNLOADS = 'content_milestone_downloads';
 
     /**

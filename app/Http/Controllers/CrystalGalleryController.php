@@ -46,7 +46,7 @@ class CrystalGalleryController extends Controller
     {
         $metric = UserCrystalMetric::where('user_id', $user->id)->first();
 
-        if (!$metric) {
+        if (! $metric) {
             return redirect()->route('crystals.gallery')
                 ->with('error', 'Crystal metrics not yet calculated for this user.');
         }

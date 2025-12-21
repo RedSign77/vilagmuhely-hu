@@ -23,6 +23,7 @@ class HandleInvitationAcceptance
 
         if (! $invitation || $invitation->isExpired()) {
             session()->forget(['invitation_token', 'invitation_name', 'invitation_email']);
+
             return;
         }
 

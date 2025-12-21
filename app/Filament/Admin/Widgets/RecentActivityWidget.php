@@ -10,7 +10,8 @@ use Webtechsolutions\ContentEngine\Models\Content;
 class RecentActivityWidget extends BaseWidget
 {
     protected static ?int $sort = 3;
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {

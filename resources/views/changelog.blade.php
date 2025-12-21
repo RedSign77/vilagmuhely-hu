@@ -4,6 +4,35 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Világműhely') }} - Change Log</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="View the latest updates, features, and improvements to Világműhely. Track our development progress and new crystal features.">
+    <meta name="keywords" content="changelog, updates, features, improvements, version history, development log">
+    <meta name="author" content="Webtech Solutions">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Világműhely - Change Log">
+    <meta property="og:description" content="View the latest updates, features, and improvements to Világműhely.">
+    <meta property="og:image" content="{{ asset('images/og-default.jpg') }}">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="Világműhely - Change Log">
+    <meta name="twitter:description" content="View the latest updates, features, and improvements to Világműhely.">
+    <meta name="twitter:image" content="{{ asset('images/twitter-card.jpg') }}">
+
+    <!-- Additional Meta -->
+    <meta name="theme-color" content="#9333ea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="antialiased bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 text-white">

@@ -58,3 +58,40 @@ Route::get('/invitations/{token}/accept', [InvitationController::class, 'accept'
 Route::get('/email-verification/{id}/{hash}', \App\Http\Controllers\Auth\EmailVerificationController::class)
     ->middleware(['throttle:6,1'])
     ->name('custom.email-verification.verify');
+
+// Sitemap Route
+Route::get('/sitemap.xml', function () {
+    $sitemap = \Spatie\Sitemap\Sitemap::create();
+
+    // Static pages
+    $sitemap->add(\Spatie\Sitemap\Tags\Url::create('/')
+        ->setLastModificationDate(now())
+        ->setPriority(1.0)
+        ->setChangeFrequency(\Spatie\Sitemap\Tags\Url::CHANGE_FREQUENCY_DAILY));
+
+    $sitemap->add(\Spatie\Sitemap\Tags\Url::create('/library')
+        ->setLastModificationDate(now())
+        ->setPriority(0.9)
+        ->setChangeFrequency(\Spatie\Sitemap\Tags\Url::CHANGE_FREQUENCY_DAILY));
+
+    $sitemap->add(\Spatie\Sitemap\Tags\Url::create('/crystals')
+        ->setLastModificationDate(now())
+        ->setPriority(0.9)
+        ->setChangeFrequency(\Spatie\Sitemap\Tags\Url::CHANGE_FREQUENCY_DAILY));
+
+    $sitemap->add(\Spatie\Sitemap\Tags\Url::create('/changelog')
+        ->setLastModificationDate(now())
+        ->setPriority(0.7)
+        ->setChangeFrequency(\Spatie\Sitemap\Tags\Url::CHANGE_FREQUENCY_WEEKLY));
+
+    // Dynamic crystal pages
+    $users = User::has('crystalMetrics')->get();
+    foreach ($users as $user) {
+        $sitemap->add(\Spatie\Sitemap\Tags\Url::create('/crystals/'.$user->id)
+            ->setLastModificationDate($user->updated_at)
+            ->setPriority(0.8)
+            ->setChangeFrequency(\Spatie\Sitemap\Tags\Url::CHANGE_FREQUENCY_WEEKLY));
+    }
+
+    return $sitemap->toResponse(request());
+})->name('sitemap');

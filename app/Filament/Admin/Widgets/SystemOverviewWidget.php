@@ -26,7 +26,7 @@ class SystemOverviewWidget extends BaseWidget
                 ->chart([10, 15, 20, 18, 25, 30, 35]),
 
             Stat::make('Total Content', number_format($totalContent))
-                ->description($publicContent . ' public')
+                ->description($publicContent.' public')
                 ->descriptionIcon('heroicon-m-document-text')
                 ->color('info'),
 

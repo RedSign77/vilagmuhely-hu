@@ -5,16 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Világműhely') }} - Grow Your Crystal</title>
 
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Create content and watch your unique 3D crystal evolve. Join our community of creators with gamified content management and visual progress tracking.">
+    <meta name="keywords" content="crystal growth, content creation platform, gamification, 3D visualization, creative community, RPG content, digital content">
+    <meta name="author" content="Webtech Solutions">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Világműhely - Grow Your Crystal Through Creation">
+    <meta property="og:description" content="Every piece of content you create shapes your unique 3D crystal. More content, more diversity, more interaction - your crystal evolves.">
+    <meta property="og:image" content="{{ asset('images/og-default.jpg') }}">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="Világműhely - Grow Your Crystal Through Creation">
+    <meta name="twitter:description" content="Every piece of content you create shapes your unique 3D crystal. More content, more diversity, more interaction - your crystal evolves.">
+    <meta name="twitter:image" content="{{ asset('images/twitter-card.jpg') }}">
+
+    <!-- Additional Meta -->
+    <meta name="theme-color" content="#9333ea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-488487734"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XRJ6TXDHGC"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-488487734');
+        gtag('config', 'G-XRJ6TXDHGC');
     </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Structured Data (JSON-LD) -->
+    @php
+        $websiteSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => 'Világműhely',
+            'url' => url('/'),
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => url('/library') . '?q={search_term_string}',
+                'query-input' => 'required name=search_term_string'
+            ]
+        ];
+        $orgSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => 'Világműhely',
+            'url' => url('/'),
+            'logo' => asset('images/logo.png'),
+            'description' => 'Creative platform for growing unique 3D crystals through content creation',
+            'sameAs' => [
+                'https://www.facebook.com/profile.php?id=61575724097365',
+                'https://discord.gg/QJAcDyjA',
+                'https://www.tiktok.com/@vilagmuhely',
+                'https://www.instagram.com/vilagmuhely/'
+            ]
+        ];
+    @endphp
+    <script type="application/ld+json">
+    {!! json_encode($websiteSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+    <script type="application/ld+json">
+    {!! json_encode($orgSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
 </head>
 <body class="antialiased bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 text-white">
     <!-- Navigation -->
@@ -577,7 +640,7 @@
     </footer>
 
     <style>
-        @keyframes blob {
+        @@keyframes blob {
             0%, 100% { transform: translate(0, 0) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
             66% { transform: translate(-20px, 20px) scale(0.9); }

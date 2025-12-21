@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('title', 'Crystal Gallery')
+@section('meta_description', 'View the leaderboard of unique 3D crystals grown by our creator community. Each crystal reflects its owner\'s creative journey.')
+@section('meta_keywords', 'crystal gallery, 3D crystals, creator leaderboard, visual progress, gamification leaderboard')
+@section('og_title', 'Világműhely - Crystal Gallery')
+@section('og_description', 'View the leaderboard of unique 3D crystals grown by our creator community. Each crystal reflects its owner\'s creative journey.')
+@section('twitter_title', 'Világműhely - Crystal Gallery')
+@section('twitter_description', 'View the leaderboard of unique 3D crystals grown by our creator community.')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

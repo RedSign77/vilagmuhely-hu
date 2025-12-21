@@ -5,18 +5,14 @@ namespace App\Filament\Admin\Pages;
 use App\Models\ContentDownload;
 use App\Models\ContentRating;
 use App\Models\ContentReview;
-use Filament\Actions\Action;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-use Webtechsolutions\ContentEngine\Events\ContentDownloadedEvent;
 use Webtechsolutions\ContentEngine\Events\ContentReviewedEvent;
 use Webtechsolutions\ContentEngine\Models\Content;
 
@@ -96,14 +92,16 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                         '1' => '1+ Stars',
                     ])
                     ->query(function (Builder $query, array $data) {
-                        if (!empty($data['value'])) {
+                        if (! empty($data['value'])) {
                             $rating = (int) $data['value'];
+
                             return $query->whereHas('ratings', function ($q) use ($rating) {
                                 $q->select('content_id')
                                     ->groupBy('content_id')
                                     ->havingRaw('AVG(rating) >= ?', [$rating]);
                             });
                         }
+
                         return $query;
                     }),
 
@@ -141,7 +139,7 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                                     ->badge(),
                                 \Filament\Infolists\Components\TextEntry::make('average_rating')
                                     ->label('Average Rating')
-                                    ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state, 1) . ' ★' : 'No ratings'),
+                                    ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state, 1).' ★' : 'No ratings'),
                                 \Filament\Infolists\Components\TextEntry::make('views_count')
                                     ->label('Views'),
                                 \Filament\Infolists\Components\TextEntry::make('downloads_count')
@@ -160,7 +158,7 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                             ->disabled(fn () => ! Gate::allows('download', $record))
                             ->requiresConfirmation()
                             ->action(function () use ($record) {
-                                $this->js('window.location.href = "' . route('content.download', $record) . '"');
+                                $this->js('window.location.href = "'.route('content.download', $record).'"');
                             }),
                         Tables\Actions\Action::make('rate')
                             ->label('Rate')
@@ -179,6 +177,7 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                                         return 'Already rated';
                                     }
                                 }
+
                                 return null;
                             })
                             ->form([
@@ -228,6 +227,7 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                                         return 'Already reviewed';
                                     }
                                 }
+
                                 return null;
                             })
                             ->form([
@@ -288,7 +288,7 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                                     ->badge(),
                                 \Filament\Infolists\Components\TextEntry::make('average_rating')
                                     ->label('Average Rating')
-                                    ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state, 1) . ' ★' : 'No ratings'),
+                                    ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state, 1).' ★' : 'No ratings'),
                                 \Filament\Infolists\Components\TextEntry::make('views_count')
                                     ->label('Views'),
                                 \Filament\Infolists\Components\TextEntry::make('downloads_count')
@@ -307,7 +307,7 @@ class ContentLibrary extends Page implements Tables\Contracts\HasTable
                     ->disabled(fn (Content $record) => ! Gate::allows('download', $record))
                     ->requiresConfirmation()
                     ->action(function (Content $record) {
-                        $this->js('window.location.href = "' . route('content.download', $record) . '"');
+                        $this->js('window.location.href = "'.route('content.download', $record).'"');
                     }),
 
                 Tables\Actions\Action::make('rate')

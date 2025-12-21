@@ -4,13 +4,14 @@ namespace App\Filament\Admin\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use Webtechsolutions\ContentEngine\Models\Content;
-use Illuminate\Support\Facades\DB;
 
 class PlatformStatsWidget extends ChartWidget
 {
     protected static ?string $heading = 'Content Created Over Time';
+
     protected static ?int $sort = 12;
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
 
     protected function getData(): array
     {

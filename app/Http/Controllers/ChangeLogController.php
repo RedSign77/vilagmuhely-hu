@@ -16,7 +16,7 @@ class ChangeLogController extends Controller
         }
 
         $markdown = File::get($changelogPath);
-        $converter = new CommonMarkConverter();
+        $converter = new CommonMarkConverter;
         $html = $converter->convert($markdown);
 
         return view('changelog', [

@@ -10,7 +10,8 @@ use Webtechsolutions\ContentEngine\Models\Content;
 class PopularContentWidget extends BaseWidget
 {
     protected static ?int $sort = 5;
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {
@@ -56,7 +57,7 @@ class PopularContentWidget extends BaseWidget
 
                 Tables\Columns\TextColumn::make('average_rating')
                     ->label('Rating')
-                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 1) . ' / 5' : '—')
+                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 1).' / 5' : '—')
                     ->icon('heroicon-m-star')
                     ->iconColor('warning'),
             ])

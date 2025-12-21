@@ -15,7 +15,7 @@ class MyCrystalStatsWidget extends BaseWidget
         $user = auth()->user();
         $metric = UserCrystalMetric::where('user_id', $user->id)->first();
 
-        if (!$metric) {
+        if (! $metric) {
             return [
                 Stat::make('Total Content', '0')
                     ->description('Start creating to grow your crystal')
@@ -35,7 +35,7 @@ class MyCrystalStatsWidget extends BaseWidget
                 ->descriptionIcon('heroicon-m-sparkles')
                 ->color('info'),
 
-            Stat::make('Diversity Index', number_format($metric->diversity_index, 1) . '%')
+            Stat::make('Diversity Index', number_format($metric->diversity_index, 1).'%')
                 ->description('Content variety')
                 ->descriptionIcon('heroicon-m-squares-2x2')
                 ->color('warning'),
