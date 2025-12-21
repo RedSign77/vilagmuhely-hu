@@ -13,11 +13,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Sitemap\Contracts\Sitemapable;
+use Spatie\Sitemap\Tags\Url;
 use Webtechsolutions\ContentEngine\Models\Content;
 use Webtechsolutions\ContentEngine\Models\UserWorldResource;
 use Webtechsolutions\UserManager\Models\Role;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sitemapable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -168,5 +170,16 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->avatar ? asset('storage/'.$this->avatar) : null;
+    }
+
+    /**
+     * Convert the user to a sitemap tag.
+     */
+    public function toSitemapTag(): Url | string | array
+    {
+        return Url::create(route('crystals.show', $this))
+            ->setLastModificationDate($this->updated_at)
+            ->setPriority(0.8)
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY);
     }
 }
