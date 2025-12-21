@@ -5,6 +5,7 @@ use App\Http\Controllers\ContentDownloadController;
 use App\Http\Controllers\ContentLibraryController;
 use App\Http\Controllers\CrystalGalleryController;
 use App\Http\Controllers\InvitationController;
+use App\Models\Post;
 use App\Models\User;
 use App\Models\UserCrystalMetric;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,13 @@ Route::get('/', function () {
         ->limit(3)
         ->get();
 
+    // Get latest 4 blog posts
+    $latestPosts = Post::published()
+        ->with('author')
+        ->orderBy('published_at', 'desc')
+        ->limit(4)
+        ->get();
+
     // Get total users count
     $stats = [
         'total_users' => User::count(),
@@ -32,6 +40,7 @@ Route::get('/', function () {
     return view('welcome', [
         'topCrystals' => $topCrystals,
         'featuredContent' => $featuredContent,
+        'latestPosts' => $latestPosts,
         'stats' => $stats,
     ]);
 });
