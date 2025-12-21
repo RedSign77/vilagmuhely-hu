@@ -56,7 +56,7 @@
                     <span class="hidden sm:inline">·</span>
                     <span>Operated by Webtech Solutions</span>
                     <span class="hidden sm:inline">|</span>
-                    <span>Build: {{ config('version') }}</span>
+                    <span>Build: {{ config('version.version') }}</span>
                 </div>
             </div>
         </div>

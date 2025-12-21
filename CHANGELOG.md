@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.1] - 2025-12-21
+
+### Fixed
+- Fixed TypeError in footer views where version configuration was being accessed incorrectly
+- Public Change Log page with matching home page design
+- Project memory documentation
+
+### Changed
+- Moved application version configuration to dedicated file
+- Updated version references across application to use configuration
+
 
 ## [1.0.0] - 2025-12-21
 
@@ -19,9 +29,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Crystal Gallery
 - Content Library
 - Invitation system
-- Public Change Log page with matching home page design
-- Project memory documentation (`dps/project-memory.md`)
-
-### Changed
-- Moved application version configuration to dedicated `config/version.php` file
-- Updated version references across application to use `config('version')`
