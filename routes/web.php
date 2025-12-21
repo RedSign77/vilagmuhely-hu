@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContentDownloadController;
 use App\Http\Controllers\ContentLibraryController;
 use App\Http\Controllers\CrystalGalleryController;
@@ -41,6 +42,10 @@ Route::get('/crystals/{user}', [CrystalGalleryController::class, 'show'])->name(
 
 // Content Library Route
 Route::get('/library', [ContentLibraryController::class, 'index'])->name('library.index');
+
+// Blog Routes
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{post}', [BlogController::class, 'show'])->name('blog.show');
 
 // Changelog Route
 Route::get('/changelog', [\App\Http\Controllers\ChangeLogController::class, 'index'])->name('changelog.index');

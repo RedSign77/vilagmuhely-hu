@@ -85,6 +85,9 @@
                     <a href="{{ route('crystals.gallery') }}" class="text-gray-200 hover:text-purple-300 transition">
                         Crystal Gallery
                     </a>
+                    <a href="{{ route('blog.index') }}" class="text-gray-200 hover:text-purple-300 transition">
+                        Blog
+                    </a>
                     @auth
                         <a href="{{ route('crystals.show', auth()->user()) }}" class="text-gray-200 hover:text-purple-300 transition">
                             My Crystal

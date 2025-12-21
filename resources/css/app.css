@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 @import './world-viewer.css';
 @import './crystal-viewer.css';
 @import './content-library.css';

@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2025-12-21
+### Added
+- Tailwind CSS Typography plugin for proper blog content formatting
+
+### Fixed
+- Blog post content now displays with correct formatting (headings, paragraphs, lists, code blocks)
+- Typography styles properly applied to blog post content
+
+## [1.0.6] - 2025-12-21
+### Fixed
+- Blog post content styling with proper prose classes for dark theme
+- Character encoding issues in blog views (Unicode escape sequences)
+- Meta description generation now properly strips HTML and limits to exactly 160 characters
+
+### Changed
+- Renamed "Posts" to "Blog Posts" in Filament admin
+- Moved Blog Posts resource under Content Engine navigation group
+- Added Blog link to welcome page navigation
+
+## [1.0.5] - 2025-12-21
+### Added
+- Blog management system with Filament admin resource
+- Intelligent slug generation from post titles
+- Automated SEO metadata generation
+- Public blog pages with pagination
+- Post status management (draft, published, archived)
+- RichEditor for blog content creation
+- Featured image support for blog posts
+- Related posts functionality
+
+### Changed
+- Added blog navigation link to main layout
+
 ## [1.0.4] - 2025-12-21
 ### Added
 - User anonymization on all public pages for privacy protection
