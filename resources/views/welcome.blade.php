@@ -4,6 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Világműhely') }} - Grow Your Crystal</title>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-488487734"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-488487734');
+    </script>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="antialiased bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 text-white">
@@ -289,8 +299,97 @@
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Featured Content Section -->
     <section class="py-20 px-4 sm:px-6 lg:px-8 bg-black/20">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Featured Content</h2>
+                <p class="text-xl text-gray-400">Explore the latest creations from our community</p>
+            </div>
+
+            @if(isset($featuredContent) && $featuredContent->count() > 0)
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                @foreach($featuredContent as $content)
+                <a href="/library" class="group">
+                    <div class="bg-gradient-to-br from-purple-900/50 to-cyan-900/50 rounded-2xl overflow-hidden border border-white/10 shadow-2xl h-full transition transform group-hover:scale-105 group-hover:shadow-purple-500/20">
+                        <div class="aspect-video bg-gradient-to-br from-purple-600/20 to-cyan-600/20 flex items-center justify-center overflow-hidden">
+                            @if($content->featured_image)
+                                <img src="{{ \Illuminate\Support\Facades\Storage::url($content->featured_image) }}"
+                                     alt="{{ $content->title }}"
+                                     class="w-full h-full object-cover">
+                            @else
+                                <div class="text-white/40">
+                                    @if($content->type === 'digital_file')
+                                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                        </svg>
+                                    @elseif($content->type === 'image_gallery')
+                                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                    @elseif($content->type === 'markdown_post')
+                                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                    @elseif($content->type === 'article')
+                                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                        </svg>
+                                    @elseif($content->type === 'rpg_module')
+                                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                        </svg>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 group-hover:text-purple-300 transition line-clamp-2">{{ $content->title }}</h3>
+
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                    {{ $content->type_label }}
+                                </span>
+                                @if($content->category)
+                                    <span class="text-sm text-gray-400">{{ $content->category->name }}</span>
+                                @endif
+                            </div>
+
+                            @if($content->excerpt)
+                                <p class="text-gray-400 text-sm line-clamp-2 mb-4">{{ Str::limit(strip_tags($content->excerpt), 100) }}</p>
+                            @endif
+
+                            <div class="flex items-center justify-between text-xs text-gray-500">
+                                <span>By {{ $content->creator->name }}</span>
+                                <span class="text-purple-400 group-hover:text-purple-300">View →</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+
+            <div class="text-center">
+                <a href="/library" class="inline-flex items-center text-purple-400 hover:text-purple-300 transition text-lg">
+                    <span>Browse Full Library</span>
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </a>
+            </div>
+            @else
+            <div class="text-center py-12">
+                <div class="text-6xl mb-4">📚</div>
+                <p class="text-xl text-gray-400">Content library coming soon!</p>
+                <p class="text-gray-500 mt-2">Be the first to publish content</p>
+            </div>
+            @endif
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div>

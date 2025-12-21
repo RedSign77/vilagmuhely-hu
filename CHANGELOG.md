@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.1] - 2025-12-21
 
+### Added
+- Featured Content section on home page showcasing latest library items
+- Google Analytics tracking across all pages
+- SEO optimization plan documentation
+
 ### Fixed
 - Fixed TypeError in footer views where version configuration was being accessed incorrectly
 - Public Change Log page with matching home page design

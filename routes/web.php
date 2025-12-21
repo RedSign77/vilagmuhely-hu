@@ -14,6 +14,15 @@ Route::get('/', function () {
         ->topInteraction(6)
         ->get();
 
+    // Get featured content from library (3 most recent published items)
+    $featuredContent = \Webtechsolutions\ContentEngine\Models\Content::query()
+        ->public()
+        ->published()
+        ->with(['category', 'creator'])
+        ->orderByDesc('published_at')
+        ->limit(3)
+        ->get();
+
     // Get total users count
     $stats = [
         'total_users' => User::count(),
@@ -21,6 +30,7 @@ Route::get('/', function () {
 
     return view('welcome', [
         'topCrystals' => $topCrystals,
+        'featuredContent' => $featuredContent,
         'stats' => $stats,
     ]);
 });
