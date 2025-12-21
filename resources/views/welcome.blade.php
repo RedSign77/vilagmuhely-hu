@@ -182,13 +182,9 @@
                     <div class="bg-gradient-to-br from-purple-900/50 to-cyan-900/50 rounded-2xl p-6 border border-white/10 shadow-2xl h-full">
                         <div class="text-center mb-4">
                             <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center overflow-hidden">
-                                @if($metric->user->avatar)
-                                <img src="{{ asset('storage/' . $metric->user->avatar) }}" alt="{{ $metric->user->name }}" class="w-full h-full rounded-full object-cover">
-                                @else
                                 <span class="text-3xl">💎</span>
-                                @endif
                             </div>
-                            <h3 class="text-xl font-bold">{{ $metric->user->name }}</h3>
+                            <h3 class="text-xl font-bold">{{ $metric->user->anonymized_name }}</h3>
                             <p class="text-sm text-gray-400">Rank #{{ $index + 1 }}</p>
                         </div>
 
@@ -424,7 +420,7 @@
                             @endif
 
                             <div class="flex items-center justify-between text-xs text-gray-500">
-                                <span>By {{ $content->creator->name }}</span>
+                                <span>By {{ $content->creator->anonymized_name }}</span>
                                 <span class="text-purple-400 group-hover:text-purple-300">View →</span>
                             </div>
                         </div>

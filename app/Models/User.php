@@ -182,4 +182,20 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sit
             ->setPriority(0.8)
             ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY);
     }
+
+    /**
+     * Get the anonymized display name for public pages.
+     */
+    public function getAnonymizedNameAttribute(): string
+    {
+        return 'Creator #'.$this->id;
+    }
+
+    /**
+     * Get the anonymized avatar URL for public pages.
+     */
+    public function getAnonymizedAvatarAttribute(): ?string
+    {
+        return null;
+    }
 }

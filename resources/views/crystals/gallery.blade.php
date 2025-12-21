@@ -53,14 +53,9 @@
                 <!-- User Info -->
                 <div class="crystal-gallery-info">
                     <div class="user-name">
-                        @if($metric->user->avatar)
-                            <img src="{{ asset('storage/' . $metric->user->avatar) }}"
-                                 alt="{{ $metric->user->name }}"
-                                 class="user-avatar">
-                        @endif
                         <a href="{{ route('crystals.show', $metric->user) }}"
                            class="hover:text-indigo-400 transition">
-                            {{ $metric->user->name }}
+                            {{ $metric->user->anonymized_name }}
                         </a>
                     </div>
 

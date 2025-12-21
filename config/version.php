@@ -12,6 +12,6 @@ return [
     |
     */
 
-    'version' => env('APP_VERSION', '1.0.3'),
+    'version' => env('APP_VERSION', '1.0.4'),
 
 ];

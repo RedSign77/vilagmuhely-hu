@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', $user->name . ' - Crystal Profile')
-@section('meta_description', 'View ' . $user->name . '\'s unique 3D crystal grown through creative content. Explore their crystal\'s geometry, colors, and glow intensity.')
-@section('meta_keywords', '3D crystal, ' . $user->name . ', creator profile, content visualization, gamification')
-@section('og_title', $user->name . '\'s Crystal - Világműhely')
-@section('og_description', 'View ' . $user->name . '\'s unique 3D crystal. Facets: ' . ($crystalMetrics->facet_count ?? '0') . ' | Glow: ' . number_format(($crystalMetrics->glow_intensity ?? 0) * 100, 1) . '%')
-@section('twitter_title', $user->name . '\'s Crystal')
-@section('twitter_description', 'View ' . $user->name . '\'s unique 3D crystal grown through creative content.')
+@section('title', $user->anonymized_name . ' - Crystal Profile')
+@section('meta_description', 'View ' . $user->anonymized_name . '\'s unique 3D crystal grown through creative content. Explore their crystal\'s geometry, colors, and glow intensity.')
+@section('meta_keywords', '3D crystal, ' . $user->anonymized_name . ', creator profile, content visualization, gamification')
+@section('og_title', $user->anonymized_name . '\'s Crystal - Világműhely')
+@section('og_description', 'View ' . $user->anonymized_name . '\'s unique 3D crystal. Facets: ' . ($crystalMetrics->facet_count ?? '0') . ' | Glow: ' . number_format(($crystalMetrics->glow_intensity ?? 0) * 100, 1) . '%')
+@section('twitter_title', $user->anonymized_name . '\'s Crystal')
+@section('twitter_description', 'View ' . $user->anonymized_name . '\'s unique 3D crystal grown through creative content.')
 
 @section('content')
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,18 +24,12 @@
     <!-- Profile Header -->
     <div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg p-6 mb-6">
         <div class="flex items-center gap-4">
-            @if($user->avatar)
-                <img src="{{ asset('storage/' . $user->avatar) }}"
-                     alt="{{ $user->name }}"
-                     class="w-20 h-20 rounded-full">
-            @else
-                <div class="w-20 h-20 rounded-full bg-purple-600 flex items-center justify-center text-white text-2xl font-bold">
-                    {{ substr($user->name, 0, 1) }}
-                </div>
-            @endif
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center text-white text-3xl">
+                💎
+            </div>
             <div>
                 <h1 class="text-3xl font-bold bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-400 bg-clip-text text-transparent">
-                    {{ $user->name }}'s Crystal
+                    {{ $user->anonymized_name }}'s Crystal
                 </h1>
                 <p class="text-gray-300">
                     A visual representation of their creative journey
