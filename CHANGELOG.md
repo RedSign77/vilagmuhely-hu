@@ -7,10 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### 2025-12-21
-- Created public Change Log page with matching home page design
-- Added CHANGELOG.md file for tracking project changes
-
 ## [1.0.0] - 2025-12-21
 
 ### Added
@@ -23,3 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Crystal Gallery
 - Content Library
 - Invitation system
+- Public Change Log page with matching home page design
+- Project memory documentation (`dps/project-memory.md`)
+
+### Changed
+- Moved application version configuration to dedicated `config/version.php` file
+- Updated version references across application to use `config('version')`
