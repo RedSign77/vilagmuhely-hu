@@ -31,9 +31,15 @@
                             My Crystal
                         </a>
                     @endauth
+                    @auth
                     <a href="/admin" class="text-gray-200 hover:text-purple-300 transition">
-                        Admin
+                        Dashboard
                     </a>
+                    @else
+                        <a href="/admin" class="text-gray-200 hover:text-purple-300 transition">
+                            Login
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>
