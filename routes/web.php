@@ -32,6 +32,9 @@ Route::get('/crystals/{user}', [CrystalGalleryController::class, 'show'])->name(
 // Content Library Route
 Route::get('/library', [ContentLibraryController::class, 'index'])->name('library.index');
 
+// Changelog Route
+Route::get('/changelog', [\App\Http\Controllers\ChangeLogController::class, 'index'])->name('changelog.index');
+
 // Content Download Route
 Route::get('/content/{content}/download', [ContentDownloadController::class, 'download'])
     ->middleware('auth')

@@ -8,6 +8,7 @@ use App\Listeners\HandleInvitationAcceptance;
 use App\Listeners\QueueCrystalUpdateListener;
 use App\Models\Invitation;
 use App\Models\User;
+use App\Observers\InvitationObserver;
 use App\Observers\UserObserver;
 use App\Policies\ContentPolicy;
 use App\Policies\InvitationPolicy;
@@ -59,6 +60,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Register observers
         User::observe(UserObserver::class);
+        Invitation::observe(InvitationObserver::class);
 
         // Register Crystal update event listeners
         Event::listen(ContentPublishedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentPublished']);

@@ -18,6 +18,7 @@
                 <div class="flex items-center space-x-4">
                     <a href="/library" class="hover:text-purple-300 transition">Content Library</a>
                     <a href="/crystals" class="hover:text-purple-300 transition">Crystal Gallery</a>
+                    <a href="/changelog" class="hover:text-purple-300 transition">Change Log</a>
                     @auth
                         <a href="/admin" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition">Dashboard</a>
                     @else
@@ -455,6 +456,7 @@
                 <div>
                     <h4 class="font-bold mb-4">Resources</h4>
                     <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="/changelog" class="hover:text-white transition">Change Log</a></li>
                         <li><a href="#" class="hover:text-white transition">Documentation</a></li>
                         <li><a href="#" class="hover:text-white transition">Help Center</a></li>
                         <li><a href="#" class="hover:text-white transition">Community</a></li>
