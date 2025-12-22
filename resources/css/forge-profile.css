@@ -1,0 +1,396 @@
+/* The Forge Profile Styles */
+
+/* Hero Section */
+.forge-hero-section {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.forge-crystal-container {
+    min-height: 500px;
+    height: 500px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.forge-crystal-container #crystal-viewer {
+    width: 100%;
+    height: 100%;
+}
+
+.forge-crystal-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+.forge-stats-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.forge-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #a78bfa, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.forge-subtitle {
+    font-size: 1.25rem;
+    color: #d1d5db;
+    font-style: italic;
+}
+
+/* RPG Stat Bars */
+.forge-stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.stat-bar {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9ca3af;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value-large {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #f3f4f6;
+    margin-bottom: 0.75rem;
+}
+
+.stat-progress {
+    width: 100%;
+    height: 0.75rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.stat-progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, #8b5cf6, #a78bfa);
+    transition: width 0.3s ease;
+}
+
+.stat-progress-fill.aura {
+    background: linear-gradient(to right, #f59e0b, #fbbf24);
+}
+
+.stat-progress-fill.essence {
+    background: linear-gradient(to right, #3b82f6, #60a5fa);
+}
+
+.stat-description {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* Portfolio Section */
+.forge-portfolio-section {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 1rem;
+    padding: 2rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #f3f4f6;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: #9ca3af;
+    margin-bottom: 1.5rem;
+}
+
+/* Portfolio Tabs */
+.portfolio-tabs {
+    margin-top: 1.5rem;
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2rem;
+    overflow-x: auto;
+}
+
+.tab-buttons button {
+    padding: 1rem 1.5rem;
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+}
+
+.tab-buttons button.active {
+    color: #a78bfa;
+    border-bottom-color: #a78bfa;
+}
+
+.tab-buttons button:hover {
+    color: #c4b5fd;
+}
+
+/* Content Grid */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.content-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.content-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+}
+
+.content-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.content-type-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(139, 92, 246, 0.2);
+    border-radius: 9999px;
+    color: #c4b5fd;
+}
+
+.content-category {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.content-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #f3f4f6;
+    margin-bottom: 0.75rem;
+}
+
+.content-card-description {
+    font-size: 0.875rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.content-card-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+}
+
+.content-card-actions {
+    margin-top: 1rem;
+}
+
+.btn-view {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    background: linear-gradient(to right, #8b5cf6, #a78bfa);
+    color: white;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.btn-view:hover {
+    opacity: 0.9;
+}
+
+/* Reviews List */
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.review-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.review-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #f3f4f6;
+}
+
+.review-helpful {
+    font-size: 0.875rem;
+    color: #fbbf24;
+}
+
+.review-text {
+    color: #d1d5db;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+.review-content a {
+    color: #a78bfa;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.review-content a:hover {
+    color: #c4b5fd;
+}
+
+/* Activity Timeline */
+.forge-log-section {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 1rem;
+    padding: 2rem;
+}
+
+.activity-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.activity-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid #8b5cf6;
+    border-radius: 0.5rem;
+}
+
+.activity-icon {
+    font-size: 1.5rem;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-message {
+    color: #f3f4f6;
+    margin-bottom: 0.25rem;
+}
+
+.activity-time {
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+.empty-state {
+    text-align: center;
+    color: #9ca3af;
+    padding: 3rem;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .forge-hero-section {
+        padding: 1.5rem;
+    }
+
+    .forge-crystal-container {
+        min-height: 400px;
+        height: 400px;
+    }
+
+    .content-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .forge-title {
+        font-size: 2rem;
+    }
+
+    .tab-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+        border-bottom: none;
+    }
+
+    .tab-buttons button {
+        border-bottom: none;
+        border-left: 3px solid transparent;
+        text-align: left;
+    }
+
+    .tab-buttons button.active {
+        border-left-color: #a78bfa;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .review-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}

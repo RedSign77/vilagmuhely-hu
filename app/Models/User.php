@@ -31,6 +31,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sit
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'email_verified_at',
@@ -197,5 +198,122 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sit
     public function getAnonymizedAvatarAttribute(): ?string
     {
         return null;
+    }
+
+    /**
+     * Get the route key name for route model binding.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'username';
+    }
+
+    /**
+     * Get RPG-style stats based on crystal metrics.
+     */
+    public function getRpgStatsAttribute(): array
+    {
+        $metric = $this->crystalMetric;
+
+        if (! $metric) {
+            return [
+                'rank' => 'Novice',
+                'level' => 1,
+                'aura' => 0,
+                'essence' => 0,
+            ];
+        }
+
+        // Rank/Level based on facet_count (Complexity)
+        $level = min(50, max(1, $metric->facet_count));
+        $rank = $this->calculateRank($level);
+
+        // Aura based on glow_intensity (Brightness) - 0-100 scale
+        $aura = round($metric->glow_intensity * 100);
+
+        // Essence based on purity_level (Clarity) - 0-100 scale
+        $essence = round($metric->purity_level * 100);
+
+        return [
+            'rank' => $rank,
+            'level' => $level,
+            'aura' => $aura,
+            'essence' => $essence,
+        ];
+    }
+
+    /**
+     * Calculate rank title based on level.
+     */
+    private function calculateRank(int $level): string
+    {
+        return match (true) {
+            $level >= 45 => 'Crystal Master',
+            $level >= 35 => 'Artisan',
+            $level >= 25 => 'Craftsperson',
+            $level >= 15 => 'Apprentice',
+            $level >= 8 => 'Journeyman',
+            default => 'Novice',
+        };
+    }
+
+    /**
+     * Get color name for meta description from dominant color.
+     */
+    public function getCrystalColorNameAttribute(): string
+    {
+        $metric = $this->crystalMetric;
+
+        if (! $metric || empty($metric->dominant_colors)) {
+            return 'Gray';
+        }
+
+        $hex = $metric->dominant_colors[0];
+
+        return $this->hexToColorName($hex);
+    }
+
+    /**
+     * Convert hex color to simple color name.
+     */
+    private function hexToColorName(string $hex): string
+    {
+        $hex = ltrim($hex, '#');
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        // Simple color name mapping based on dominant channel
+        if ($r > $g && $r > $b) {
+            return 'Red';
+        }
+        if ($g > $r && $g > $b) {
+            return 'Green';
+        }
+        if ($b > $r && $b > $g) {
+            return 'Blue';
+        }
+        if ($r > 200 && $g > 200 && $b < 100) {
+            return 'Yellow';
+        }
+        if ($r > 200 && $b > 200 && $g < 150) {
+            return 'Purple';
+        }
+        if ($g > 200 && $b > 200 && $r < 150) {
+            return 'Cyan';
+        }
+
+        return 'Multi-colored';
+    }
+
+    /**
+     * Get recent activity feed items.
+     */
+    public function getRecentActivities(int $limit = 20)
+    {
+        return CrystalActivityQueue::where('user_id', $this->id)
+            ->orderByDesc('created_at')
+            ->limit($limit)
+            ->get();
     }
 }

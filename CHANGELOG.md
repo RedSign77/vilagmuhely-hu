@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-12-22
+### Added
+- The Forge user profile system with SEO-friendly username-based URLs
+- RPG-style stats display (Rank/Level, Aura/Resonance, Essence/Clarity)
+- Creator portfolio sections: Authored Works, The Vault, and Echoes
+- Activity feed showing recent creator milestones
+- Username field for users with unique constraint (max 64 characters)
+- Username editing in user profile with validation
+- Forge profile link in admin user navigation menu
+- Forge profiles in sitemap with weekly update frequency
+
+### Changed
+- User profiles now display anonymized names for privacy
+- Username field length increased from 50 to 64 characters
+
+### Fixed
+- Crystal canvas size on forge profile pages now fits container properly
+- 3D crystal viewer displays correctly in full width and height
+- Resolved BelongsToMany relationship issue with downloads on Forge profiles
+
 ## [1.0.9] - 2025-12-22
 ### Added
 - Terms and Conditions acceptance checkbox on registration form

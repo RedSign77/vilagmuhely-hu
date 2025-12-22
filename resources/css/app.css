@@ -3,6 +3,7 @@
 @import './world-viewer.css';
 @import './crystal-viewer.css';
 @import './content-library.css';
+@import './forge-profile.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';

@@ -4,6 +4,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContentDownloadController;
 use App\Http\Controllers\ContentLibraryController;
 use App\Http\Controllers\CrystalGalleryController;
+use App\Http\Controllers\ForgeController;
 use App\Http\Controllers\InvitationController;
 use App\Models\Post;
 use App\Models\User;
@@ -48,6 +49,9 @@ Route::get('/', function () {
 // Crystal Gallery Routes
 Route::get('/crystals', [CrystalGalleryController::class, 'index'])->name('crystals.gallery');
 Route::get('/crystals/{user}', [CrystalGalleryController::class, 'show'])->name('crystals.show');
+
+// The Forge - User Profile Routes
+Route::get('/forge/{user:username}', [ForgeController::class, 'show'])->name('forge.profile');
 
 // Content Library Route
 Route::get('/library', [ContentLibraryController::class, 'index'])->name('library.index');
@@ -96,6 +100,16 @@ Route::get('/sitemap.xml', function () {
                 ->setChangeFrequency(\Spatie\Sitemap\Tags\Url::CHANGE_FREQUENCY_WEEKLY))
             // Dynamic crystal pages using Sitemapable interface
             ->add(User::has('crystalMetric')->get())
+            // Forge profile pages
+            ->add(User::whereNotNull('username')
+                ->has('crystalMetric')
+                ->get()
+                ->map(fn($user) =>
+                    \Spatie\Sitemap\Tags\Url::create("/forge/{$user->username}")
+                        ->setLastModificationDate($user->crystalMetric->last_calculated_at ?? $user->updated_at)
+                        ->setPriority(0.8)
+                        ->setChangeFrequency(\Spatie\Sitemap\Tags\Url::CHANGE_FREQUENCY_WEEKLY)
+                ))
             ->toResponse(request());
     });
 })->name('sitemap');

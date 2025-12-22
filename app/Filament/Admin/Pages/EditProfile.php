@@ -29,6 +29,7 @@ class EditProfile extends Page
         $this->form->fill([
             'avatar' => $user->avatar,
             'name' => $user->name,
+            'username' => $user->username,
             'email' => $user->email,
             'mobile' => $user->mobile,
             'city' => $user->city,
@@ -55,6 +56,18 @@ class EditProfile extends Page
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
+
+                        Forms\Components\TextInput::make('username')
+                            ->required()
+                            ->unique(User::class, 'username', modifyRuleUsing: function ($rule) {
+                                return $rule->ignore(Auth::id());
+                            })
+                            ->maxLength(64)
+                            ->regex('/^[a-zA-Z0-9_-]+$/')
+                            ->helperText('Only alphanumeric characters, hyphens, and underscores allowed')
+                            ->validationMessages([
+                                'regex' => 'Username can only contain letters, numbers, hyphens, and underscores',
+                            ]),
 
                         Forms\Components\TextInput::make('email')
                             ->email()

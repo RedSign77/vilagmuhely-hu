@@ -61,6 +61,14 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-sparkles')
                     ->sort(10),
 
+                'my-forge' => MenuItem::make()
+                    ->label('My Forge Profile')
+                    ->url(fn (): string => auth()->user()->username
+                        ? route('forge.profile', auth()->user()->username)
+                        : route('crystals.show', auth()->user()))
+                    ->icon('heroicon-o-fire')
+                    ->sort(15),
+
                 'crystal-gallery' => MenuItem::make()
                     ->label('Crystal Gallery')
                     ->url(fn (): string => route('crystals.gallery'))
