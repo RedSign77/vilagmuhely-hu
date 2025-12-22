@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9] - 2025-12-22
+### Added
+- Terms and Conditions acceptance checkbox on registration form
+- Privacy Policy acceptance checkbox on registration form
+- Terms and Conditions link in footer (home, public and admin areas)
+- Privacy Policy link in footer (home, public and admin areas)
+- Webtech Solutions link in footer (home, public and admin areas)
+
+### Changed
+- Blog Posts menu restricted to supervisor role only
+
 ## [1.0.8] - 2025-12-21
 ### Added
 - Latest Blog Posts section on home page displaying 4 most recent blog posts

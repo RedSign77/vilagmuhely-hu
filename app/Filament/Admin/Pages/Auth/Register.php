@@ -3,8 +3,10 @@
 namespace App\Filament\Admin\Pages\Auth;
 
 use App\Models\Invitation;
+use Filament\Forms;
 use Filament\Pages\Auth\Register as BaseRegister;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 use Webtechsolutions\UserManager\Models\Role;
 
 class Register extends BaseRegister
@@ -34,6 +36,11 @@ class Register extends BaseRegister
                 ->dehydrated(),
             $this->getPasswordFormComponent(),
             $this->getPasswordConfirmationFormComponent(),
+            Forms\Components\Checkbox::make('terms_accepted')
+                ->label(new HtmlString('I accept the <a href="https://webtech-solutions.hu/terms-and-conditions" target="_blank" class="text-primary-600 hover:underline">Terms and Conditions</a> and <a href="https://webtech-solutions.hu/privacy-policy" target="_blank" class="text-primary-600 hover:underline">Privacy Policy</a>'))
+                ->accepted()
+                ->validationAttribute('terms and conditions')
+                ->required(),
         ];
     }
 

@@ -708,7 +708,16 @@
                 </div>
             </div>
             <div class="border-t border-white/10 pt-8 text-center text-sm text-gray-400">
-                <p>&copy; {{ date('Y') }} Világműhely. Operated by Webtech Solutions</p>
+                <p>&copy; {{ date('Y') }} Világműhely. Operated by <a href="https://webtech-solutions.hu" target="_blank" class="text-purple-400 hover:text-purple-300 hover:underline transition">Webtech Solutions</a></p>
+                <div class="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+                    <a href="https://webtech-solutions.hu/terms-and-conditions" target="_blank" class="text-purple-400 hover:text-purple-300 hover:underline transition">
+                        Terms and Conditions
+                    </a>
+                    <span class="hidden sm:inline">|</span>
+                    <a href="https://webtech-solutions.hu/privacy-policy" target="_blank" class="text-purple-400 hover:text-purple-300 hover:underline transition">
+                        Privacy Policy
+                    </a>
+                </div>
             </div>
         </div>
     </footer>

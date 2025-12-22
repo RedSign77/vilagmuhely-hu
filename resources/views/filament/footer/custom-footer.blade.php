@@ -9,9 +9,18 @@
             <div class="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-1">
                 <span>&copy; {{ date('Y') }}</span>
                 <span class="hidden sm:inline">·</span>
-                <span>Operated by Webtech Solutions</span>
+                <span>Operated by <a href="https://webtech-solutions.hu" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline">Webtech Solutions</a></span>
                 <span class="hidden sm:inline">|</span>
                 <span>Build: {{ config('version.version') }}</span>
+            </div>
+            <div class="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+                <a href="https://webtech-solutions.hu/terms-and-conditions" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline">
+                    Terms and Conditions
+                </a>
+                <span class="hidden sm:inline">|</span>
+                <a href="https://webtech-solutions.hu/privacy-policy" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline">
+                    Privacy Policy
+                </a>
             </div>
         </div>
     </div>
