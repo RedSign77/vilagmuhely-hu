@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Http\Responses\EmailVerificationResponse;
 use App\Http\Responses\RegistrationResponse;
 use App\Listeners\HandleInvitationAcceptance;
+use App\Listeners\NotifyFollowersOfNewContent;
+use App\Listeners\NotifyFollowersOfNewReview;
 use App\Listeners\QueueCrystalUpdateListener;
 use App\Models\Invitation;
 use App\Models\Post;
@@ -71,6 +73,10 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ContentDownloadedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentDownloaded']);
         Event::listen(ContentRatedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentRated']);
         Event::listen(ContentReviewedEvent::class, [QueueCrystalUpdateListener::class, 'handleContentReviewed']);
+
+        // Follow system notifications
+        Event::listen(ContentPublishedEvent::class, NotifyFollowersOfNewContent::class);
+        Event::listen(ContentReviewedEvent::class, NotifyFollowersOfNewReview::class);
 
         // Invitation acceptance is now handled in Register page
         // Event::listen(Registered::class, HandleInvitationAcceptance::class);

@@ -4,8 +4,10 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContentDownloadController;
 use App\Http\Controllers\ContentLibraryController;
 use App\Http\Controllers\CrystalGalleryController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\ForgeController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\NotificationController;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\UserCrystalMetric;
@@ -71,6 +73,22 @@ Route::get('/content/{content}/download', [ContentDownloadController::class, 'do
 // Invitation Routes
 Route::get('/invitations/{token}/accept', [InvitationController::class, 'accept'])
     ->name('invitations.accept');
+
+// Follow System Routes (authenticated only)
+Route::middleware('auth')->group(function () {
+    Route::post('/users/{user:username}/follow', [FollowController::class, 'follow'])->name('users.follow');
+    Route::delete('/users/{user:username}/follow', [FollowController::class, 'unfollow'])->name('users.unfollow');
+    Route::get('/users/{user:username}/follow-status', [FollowController::class, 'status'])->name('users.follow-status');
+});
+
+// Notification Routes (authenticated only)
+Route::middleware('auth')->prefix('notifications')->name('notifications.')->group(function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('index');
+    Route::patch('/{id}/read', [NotificationController::class, 'markAsRead'])->name('mark-read');
+    Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+    Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
+    Route::delete('/read/clear', [NotificationController::class, 'clearRead'])->name('clear-read');
+});
 
 // Custom Email Verification Route (unauthenticated)
 Route::get('/email-verification/{id}/{hash}', \App\Http\Controllers\Auth\EmailVerificationController::class)

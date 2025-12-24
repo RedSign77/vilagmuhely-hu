@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Sitemap\Contracts\Sitemapable;
 use Spatie\Sitemap\Tags\Url;
 use Webtechsolutions\ContentEngine\Models\Content;
@@ -41,6 +42,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sit
         'address',
         'social_media_links',
         'about',
+        'notification_preferences',
     ];
 
     /**
@@ -64,6 +66,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sit
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'social_media_links' => 'array',
+            'notification_preferences' => 'array',
         ];
     }
 
@@ -315,5 +318,96 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sit
             ->orderByDesc('created_at')
             ->limit($limit)
             ->get();
+    }
+
+    /**
+     * Users this user is following (Crystal Masters they watch)
+     */
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'follower_id', 'following_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * Users following this user (Their apprentices)
+     */
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'following_id', 'follower_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * Check if this user is following another user
+     */
+    public function isFollowing(User $user): bool
+    {
+        return $this->following()->where('following_id', $user->id)->exists();
+    }
+
+    /**
+     * Follow a Crystal Master
+     */
+    public function follow(User $user): void
+    {
+        if ($this->id === $user->id) {
+            throw new \InvalidArgumentException('Cannot follow yourself');
+        }
+
+        if (! $this->isFollowing($user)) {
+            $this->following()->attach($user->id);
+
+            // Queue activity
+            CrystalActivityQueue::create([
+                'user_id' => $this->id,
+                'activity_type' => 'user_followed',
+                'metadata' => [
+                    'followed_user_id' => $user->id,
+                    'followed_user_name' => $user->anonymized_name,
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * Unfollow a Crystal Master
+     */
+    public function unfollow(User $user): void
+    {
+        $this->following()->detach($user->id);
+    }
+
+    /**
+     * Get follower count (cached)
+     */
+    public function getFollowerCountAttribute(): int
+    {
+        return Cache::remember("user.{$this->id}.followers_count", 3600, function () {
+            return $this->followers()->count();
+        });
+    }
+
+    /**
+     * Get following count (cached)
+     */
+    public function getFollowingCountAttribute(): int
+    {
+        return Cache::remember("user.{$this->id}.following_count", 3600, function () {
+            return $this->following()->count();
+        });
+    }
+
+    /**
+     * Get notification preference
+     */
+    public function prefersNotification(string $type): bool
+    {
+        $prefs = $this->notification_preferences ?? [];
+
+        return $prefs[$type] ?? match ($type) {
+            'web_on_new_content', 'web_on_new_review' => true,
+            default => false,
+        };
     }
 }

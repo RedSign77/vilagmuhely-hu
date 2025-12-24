@@ -19,7 +19,8 @@
       "Bash(git -C /home/unreality1/projects/vilagmuhely show HEAD:app/Providers/Filament/AdminPanelProvider.php)",
       "Bash(chmod:*)",
       "Bash(ls:*)",
-      "Bash(git -C /home/unreality1/projects/vilagmuhely log --oneline --all)"
+      "Bash(git -C /home/unreality1/projects/vilagmuhely log --oneline --all)",
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": []
