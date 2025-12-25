@@ -22,13 +22,15 @@ git pull
 
 # Install/update PHP dependencies
 echo "📦 Installing Composer dependencies..."
+
+# Check if composer.lock is missing or out of sync
+if [ ! -f composer.lock ] || ! php composer.phar validate --no-check-all --quiet 2>/dev/null; then
+    echo "   ⚠️  Cleaning vendor directory for fresh install..."
+    rm -rf vendor/
+fi
+
 if [ "$APP_ENV" = "production" ]; then
     echo "   Using production mode (--no-dev)"
-    # Check if lock file is out of sync and update if needed
-    if ! php composer.phar validate --no-check-all --quiet 2>/dev/null; then
-        echo "   ⚠️  composer.lock out of sync, updating..."
-        php composer.phar update --lock --no-interaction
-    fi
     php composer.phar install --no-dev --optimize-autoloader --no-interaction
 else
     echo "   Using development mode (with dev dependencies)"
