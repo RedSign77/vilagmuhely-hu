@@ -9,6 +9,7 @@ namespace App\Filament\Resources;
 use App\Models\ScheduledEmail;
 use App\Models\User;
 use Cron\CronExpression;
+use Webtechsolutions\UserManager\Models\Role;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -107,7 +108,7 @@ class ScheduledEmailResource extends Resource
                             ->label('Data Source')
                             ->options([
                                 'users' => 'Users',
-                                'orders' => 'Orders',
+                                'invited_users' => 'Invited Users',
                             ])
                             ->required()
                             ->default('users')
@@ -130,10 +131,8 @@ class ScheduledEmailResource extends Resource
                             ->label('Select Roles')
                             ->multiple()
                             ->searchable()
-                            ->options([
-                                'supervisor' => 'Supervisor',
-                                'user' => 'Regular User',
-                            ])
+                            ->options(fn () => Role::pluck('name', 'id')->toArray())
+                            ->preload()
                             ->visible(fn (Get $get) => $get('data_source') === 'users' && $get('recipient_type') === 'roles')
                             ->helperText('Select one or more roles to target'),
 
@@ -157,28 +156,17 @@ class ScheduledEmailResource extends Resource
                             ->visible(fn (Get $get) => $get('data_source') === 'users' && $get('recipient_type') === 'individual')
                             ->helperText('Search and select specific users'),
 
-                        Forms\Components\Select::make('order_statuses')
-                            ->label('Order Statuses')
+                        Forms\Components\Select::make('invitation_statuses')
+                            ->label('Invitation Status')
                             ->multiple()
                             ->options([
                                 'pending' => 'Pending',
-                                'packing' => 'Packing',
-                                'paid' => 'Paid',
-                                'shipped' => 'Shipped',
-                                'delivered' => 'Delivered',
-                                'completed' => 'Completed',
+                                'accepted' => 'Accepted',
+                                'expired' => 'Expired',
                                 'cancelled' => 'Cancelled',
                             ])
-                            ->visible(fn (Get $get) => $get('data_source') === 'orders')
-                            ->helperText('Filter orders by status'),
-
-                        Forms\Components\TextInput::make('lookback_hours')
-                            ->label('Look-back Window (hours)')
-                            ->numeric()
-                            ->default(24)
-                            ->minValue(1)
-                            ->visible(fn (Get $get) => $get('data_source') === 'orders')
-                            ->helperText('Only include orders updated within the last X hours'),
+                            ->visible(fn (Get $get) => $get('data_source') === 'invited_users')
+                            ->helperText('Filter invited users by invitation status'),
                     ])->columns(2),
 
                 Forms\Components\Section::make('Execution Statistics')
@@ -218,7 +206,7 @@ class ScheduledEmailResource extends Resource
                     ->badge()
                     ->color(fn ($state) => match ($state) {
                         'users' => 'success',
-                        'orders' => 'warning',
+                        'invited_users' => 'warning',
                         default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('cron_expression')
@@ -244,7 +232,7 @@ class ScheduledEmailResource extends Resource
                 Tables\Filters\SelectFilter::make('data_source')
                     ->options([
                         'users' => 'Users',
-                        'orders' => 'Orders',
+                        'invited_users' => 'Invited Users',
                     ]),
                 Tables\Filters\TernaryFilter::make('is_enabled')
                     ->label('Active'),

@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.3] - 2025-12-25
+## [1.1.4] - 2025-12-25
+### Changed
+- Select Roles field in scheduled emails now connected to Roles resource instead of hardcoded options
+- Data Source option changed from "Orders" to "Invited Users"
+- Added invitation status filtering for invited users (pending, accepted, expired, cancelled)
+
+## [1.1.1 - 1.1.3] - 2025-12-25
 ### Changed
 - Email templates now use Laravel mail layout with Cards Forge custom theme
 - Email Templates and Scheduled Emails moved to System Settings navigation group
@@ -32,133 +38,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2025-12-22
 ### Added
-- The Forge user profile system with SEO-friendly username-based URLs
-- RPG-style stats display (Rank/Level, Aura/Resonance, Essence/Clarity)
-- Creator portfolio sections: Authored Works, The Vault, and Echoes
-- Activity feed showing recent creator milestones
-- Username field for users with unique constraint (max 64 characters)
-- Username editing in user profile with validation
-- Forge profile link in admin user navigation menu
-- Forge profiles in sitemap with weekly update frequency
-
+- The Forge user profile system with username-based URLs, RPG-style stats, portfolio sections, and activity feed
 ### Changed
-- User profiles now display anonymized names for privacy
-- Username field length increased from 50 to 64 characters
-
+- User profiles display anonymized names for privacy
 ### Fixed
-- Crystal canvas size on forge profile pages now fits container properly
-- 3D crystal viewer displays correctly in full width and height
-- Resolved BelongsToMany relationship issue with downloads on Forge profiles
+- Crystal canvas sizing and BelongsToMany relationship issues on Forge profiles
 
 ## [1.0.9] - 2025-12-22
 ### Added
-- Terms and Conditions acceptance checkbox on registration form
-- Privacy Policy acceptance checkbox on registration form
-- Terms and Conditions link in footer (home, public and admin areas)
-- Privacy Policy link in footer (home, public and admin areas)
-- Webtech Solutions link in footer (home, public and admin areas)
-
+- Terms and Conditions and Privacy Policy acceptance on registration with footer links
 ### Changed
-- Blog Posts menu restricted to supervisor role only
+- Blog Posts menu restricted to supervisor role
 
-## [1.0.8] - 2025-12-21
+## [1.0.5 - 1.0.8] - 2025-12-21
 ### Added
-- Latest Blog Posts section on home page displaying 4 most recent blog posts
-- Blog posts grid layout with featured images and excerpts
-- "View All Blog Posts" link to full blog page
-
-## [1.0.7] - 2025-12-21
-### Added
-- Tailwind CSS Typography plugin for proper blog content formatting
-
+- Blog management system with Filament admin, SEO metadata, pagination, and home page section
+- Tailwind CSS Typography plugin
 ### Fixed
-- Blog post content now displays with correct formatting (headings, paragraphs, lists, code blocks)
-- Typography styles properly applied to blog post content
-
-## [1.0.6] - 2025-12-21
-### Fixed
-- Blog post content styling with proper prose classes for dark theme
-- Character encoding issues in blog views (Unicode escape sequences)
-- Meta description generation now properly strips HTML and limits to exactly 160 characters
-
-### Changed
-- Renamed "Posts" to "Blog Posts" in Filament admin
-- Moved Blog Posts resource under Content Engine navigation group
-- Added Blog link to welcome page navigation
-
-## [1.0.5] - 2025-12-21
-### Added
-- Blog management system with Filament admin resource
-- Intelligent slug generation from post titles
-- Automated SEO metadata generation
-- Public blog pages with pagination
-- Post status management (draft, published, archived)
-- RichEditor for blog content creation
-- Featured image support for blog posts
-- Related posts functionality
-
-### Changed
-- Added blog navigation link to main layout
+- Blog post styling and character encoding issues
 
 ## [1.0.4] - 2025-12-21
 ### Added
-- User anonymization on all public pages for privacy protection
+- User anonymization on all public pages
 
-### Changed
-- Anonymized user names and avatars on public pages (Featured Content, Top Crystals, Crystal Gallery, Individual Crystal pages)
-
-## [1.0.3] - 2025-12-21
-
+## [1.0.2 - 1.0.3] - 2025-12-21
 ### Added
-- Dynamic sitemap generation with 12-hour caching
-- Sitemapable interface implementation on User
-- sitemap artisan command for manual sitemap generation
-
-### Changed
-- Optimized sitemap generation
-- Added performance caching to sitemap route
-
-## [1.0.2] - 2025-12-21
-
-### Added
-- Comprehensive SEO meta tags including description, keywords, and author
-- Open Graph tags for enhanced social media sharing on Facebook
-- Twitter Card tags for better Twitter previews
-- Canonical URLs for all pages
-- Theme color and mobile app meta tags
-- JSON-LD structured data for Organization and WebSite schemas
-- Robots.txt configuration
-- Spatie Laravel Sitemap package integration
-
-### Changed
-- Enhanced all view templates with SEO meta sections
+- Comprehensive SEO meta tags (Open Graph, Twitter Cards, JSON-LD)
+- Dynamic sitemap generation with caching
+- Google Analytics tracking
 
 ## [1.0.1] - 2025-12-21
-
 ### Added
-- Featured Content section on home page showcasing latest library items
-- Google Analytics tracking across all pages
-- SEO optimization plan documentation
-
+- Featured Content section on home page
 ### Fixed
-- Fixed TypeError in footer views where version configuration was being accessed incorrectly
-- Public Change Log page with matching home page design
-- Project memory documentation
-
-### Changed
-- Moved application version configuration to dedicated file
-- Updated version references across application to use configuration
-
+- Version configuration TypeError in footer views
 
 ## [1.0.0] - 2025-12-21
-
 ### Added
-- Initial release of Világműhely
-- Crystal visualization system
-- Content management
-- User authentication and registration
-- Crystal metrics calculation (facets, glow, colors, geometry)
-- Automatic crystal updates every 30 minutes
-- Crystal Gallery
-- Content Library
-- Invitation system
+- Initial release with crystal visualization, content management, authentication, and invitation system
