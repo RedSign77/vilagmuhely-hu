@@ -12,7 +12,6 @@
         "laravel/tinker": "^2.10.1",
         "spatie/laravel-sitemap": "^7.3",
         "webtechsolutions/content-engine": "@dev",
-        "webtechsolutions/mailer": "@dev",
         "webtechsolutions/queue-manager": "@dev",
         "webtechsolutions/sessions": "@dev",
         "webtechsolutions/user-manager": "@dev"
@@ -33,7 +32,6 @@
             "Database\\Seeders\\": "database/seeders/",
             "Webtechsolutions\\Sessions\\": "packages/sessions/src/",
             "Webtechsolutions\\QueueManager\\": "packages/queue-manager/src/",
-            "Webtechsolutions\\Mailer\\": "packages/mailer/src/",
             "Webtechsolutions\\UserManager\\": "packages/user-manager/src/"
         }
     },
@@ -50,10 +48,6 @@
         {
             "type": "path",
             "url": "./packages/queue-manager"
-        },
-        {
-            "type": "path",
-            "url": "./packages/mailer"
         },
         {
             "type": "path",

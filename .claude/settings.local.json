@@ -20,7 +20,8 @@
       "Bash(chmod:*)",
       "Bash(ls:*)",
       "Bash(git -C /home/unreality1/projects/vilagmuhely log --oneline --all)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []

@@ -23,9 +23,6 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Webtechsolutions\ContentEngine\Filament\Resources\ContentCategoryResource;
 use Webtechsolutions\ContentEngine\Filament\Resources\ContentResource;
 use Webtechsolutions\ContentEngine\Filament\Resources\ContentTagResource;
-use Webtechsolutions\Mailer\Filament\Pages\ComposeEmail;
-use Webtechsolutions\Mailer\Filament\Resources\EmailTemplateResource;
-use Webtechsolutions\Mailer\Filament\Resources\SentEmailResource;
 use Webtechsolutions\QueueManager\Filament\Resources\CompletedJobResource;
 use Webtechsolutions\QueueManager\Filament\Resources\FailedJobResource;
 use Webtechsolutions\QueueManager\Filament\Resources\PendingJobResource;
@@ -87,13 +84,10 @@ class AdminPanelProvider extends PanelProvider
                 PendingJobResource::class,
                 FailedJobResource::class,
                 CompletedJobResource::class,
-                EmailTemplateResource::class,
-                SentEmailResource::class,
             ])
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
                 \App\Filament\Admin\Pages\Dashboard::class,
-                ComposeEmail::class,
                 EditProfile::class,
                 ContentLibrary::class,
             ])
