@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2025-12-25
+### Changed
+- Email templates now use Laravel mail layout with Cards Forge custom theme
+- Email Templates and Scheduled Emails moved to System Settings navigation group
+- Preview modal now displays emails with actual site header and footer styling
+- Renamed "Run Now" to "Force Run" action with enhanced feedback showing sent/skipped counts
+- Force Run action now explicitly shows scheduled time being bypassed in confirmation modal
+
+### Added
+- Custom Email Template System for managing email templates with Markdown support
+- EmailTemplate model and database table for storing reusable email templates
+- EmailTemplateResource in Filament admin panel (supervisor-only access)
+- Markdown editor with live preview functionality for email content
+- Variable injection system supporting {{ variable }} placeholders in subject and body
+- TemplateEmail mailable class for sending template-based emails with custom HTML layout
+- Preview modal for templates showing rendered content
+- Available variables cheat sheet in template form
+- Custom HTML email template with responsive design and inline CSS
+- Feature documentation in dps/features/custom-email-templates.md
+- Advanced Scheduled Email Dispatcher for automated email campaigns
+- ScheduledEmail model with cron expression scheduling and multi-source data support
+- EmailDispatchLog model for deduplication tracking
+- Cron expression validation with human-friendly display
+- Dynamic recipient targeting (all users, specific roles, individual selection)
+
 ## [1.1.0] - 2025-12-22
 ### Added
 - The Forge user profile system with SEO-friendly username-based URLs

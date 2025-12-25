@@ -37,17 +37,18 @@ Where creativity crystallizes into something beautiful.
 <td width="25%" valign="top" style="padding-right: 8px;">
 <p style="font-weight: bold; font-size: 14px; color: #ffffff; margin: 0 0 12px 0;">Resources</p>
 <p style="margin: 0; padding: 0;">
-<a href="{{ config('app.url') }}#" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Documentation</a>
-<a href="{{ config('app.url') }}#" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Help Center</a>
-<a href="{{ config('app.url') }}#" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Community</a>
+<a href="{{ config('app.url') }}/changelog" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Change Log</a>
+<a href="mailto:info@webtech-solutions.hu" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Help Center</a>
+<a href="https://discord.gg/QJAcDyjA" target="_blank" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Community</a>
 </p>
 </td>
 <td width="25%" valign="top" style="padding-right: 8px;">
 <p style="font-weight: bold; font-size: 14px; color: #ffffff; margin: 0 0 12px 0;">Connect</p>
 <p style="margin: 0; padding: 0;">
-<a href="#" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">GitHub</a>
-<a href="#" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Discord</a>
-<a href="#" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Twitter</a>
+<a href="https://www.facebook.com/profile.php?id=61575724097365" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Facebook</a>
+<a href="https://discord.gg/QJAcDyjA" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Discord</a>
+<a href="https://www.tiktok.com/@vilagmuhely" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">TikTok</a>
+<a href="https://www.instagram.com/vilagmuhely/" style="display: block; font-size: 12px; color: #9ca3af; text-decoration: none; margin-bottom: 6px;">Instagram</a>
 </p>
 </td>
 <td width="25%" valign="top">
