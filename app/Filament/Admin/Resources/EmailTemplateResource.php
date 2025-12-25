@@ -24,7 +24,7 @@ class EmailTemplateResource extends Resource
 
     protected static ?string $navigationGroup = 'Configuration';
 
-    protected static ?int $navigationSort = 40;
+    protected static ?int $navigationSort = 5;
 
     public static function canAccess(): bool
     {

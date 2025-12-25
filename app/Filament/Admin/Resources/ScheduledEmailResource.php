@@ -25,7 +25,7 @@ class ScheduledEmailResource extends Resource
 
     protected static ?string $navigationGroup = 'Configuration';
 
-    protected static ?int $navigationSort = 41;
+    protected static ?int $navigationSort = 7;
 
     public static function canAccess(): bool
     {
