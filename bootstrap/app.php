@@ -30,11 +30,6 @@ return Application::configure(basePath: dirname(__DIR__))
             ->dailyAt('02:00')
             ->onOneServer();
 
-        // Clean up sent emails older than 7 days - runs daily at 3:00 AM
-        $schedule->command('mailer:cleanup-sent --days=7')
-            ->dailyAt('03:00')
-            ->onOneServer();
-
         // Clean up user activity logs older than 90 days - runs daily at 4:00 AM
         $schedule->command('user-manager:cleanup-activity-logs --days=90')
             ->dailyAt('04:00')
@@ -54,5 +49,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('invitations:cleanup')
             ->dailyAt('01:00')
             ->onOneServer();
+
+        $schedule->command('emails:process-scheduled')
+            ->everyMinute()
+            ->withoutOverlapping();
+
     })
     ->create();

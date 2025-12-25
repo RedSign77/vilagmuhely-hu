@@ -1,0 +1,97 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        EMAIL AUTOMATION SUITE v1.0.0                         ║
+║                         Copyright © 2025 Webtech-solutions                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+PACKAGE CONTENTS
+───────────────────────────────────────────────────────────────────────────────
+✓ Custom Email Templates System
+  - Markdown-based templates with live preview
+  - Variable injection ({{ placeholder }} support)
+  - Filament admin integration
+  - Supervisor access control
+
+✓ Advanced Scheduled Email Dispatcher
+  - Cron expression scheduling
+  - Multi-source data (Users/Orders)
+  - Dynamic recipient targeting
+  - Automatic deduplication
+  - Force run & testing capabilities
+
+REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+• Laravel 11.x or 12.x
+• PHP 8.2+
+• Filament 3.x
+• dragonmantank/cron-expression ^3.6
+
+INSTALLATION
+───────────────────────────────────────────────────────────────────────────────
+OPTION 1 - Automated (Recommended):
+  $ bash install.sh
+  $ php artisan migrate
+  $ php artisan optimize:clear
+
+OPTION 2 - Manual:
+  See README.md for step-by-step instructions
+
+OPTION 3 - Extract Archive:
+  $ tar -xzf email-automation-suite-v1.0.0.tar.gz
+  or
+  $ unzip email-automation-suite-v1.0.0.zip
+
+QUICK ACCESS
+───────────────────────────────────────────────────────────────────────────────
+After installation, access in Filament:
+  → System Settings > Email Templates
+  → System Settings > Scheduled Emails
+
+DOCUMENTATION
+───────────────────────────────────────────────────────────────────────────────
+README.md ...................... Complete installation & usage guide
+QUICK-START.md ................. Fast setup instructions
+docs/custom-email-templates.md .. Email Templates feature documentation
+docs/advanced-scheduled-email-dispatcher.md .. Scheduled Emails documentation
+MANIFEST.txt ................... Full file listing
+composer.json .................. Package metadata
+
+PACKAGE STRUCTURE
+───────────────────────────────────────────────────────────────────────────────
+database/migrations/ ........... 3 migration files
+src/Models/ .................... 3 model classes
+src/Mail/ ...................... 1 mailable class
+src/Console/Commands/ .......... 1 artisan command
+src/Filament/Resources/ ........ 2 Filament resources + pages
+resources/views/emails/ ........ 2 Blade templates
+docs/ .......................... 2 feature documentation files
+
+TOTAL FILES: 25
+
+FILE SIZES
+───────────────────────────────────────────────────────────────────────────────
+Package Directory: ~50 KB
+Tarball (.tar.gz): 21 KB
+ZIP Archive: 37 KB
+
+SUPPORT
+───────────────────────────────────────────────────────────────────────────────
+Contact: Webtech-solutions
+Email: info@webtech-solutions.com
+
+LICENSE
+───────────────────────────────────────────────────────────────────────────────
+Proprietary software. All rights reserved.
+May not be redistributed without permission from Webtech-solutions.
+
+VERSION HISTORY
+───────────────────────────────────────────────────────────────────────────────
+v1.0.0 (2025-12-24)
+  • Initial release
+  • Custom Email Templates feature
+  • Advanced Scheduled Email Dispatcher feature
+  • Filament 3.x integration
+  • Laravel 11.x/12.x support
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           READY FOR DEPLOYMENT                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
