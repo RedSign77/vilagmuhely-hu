@@ -424,6 +424,101 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sit
     }
 
     /**
+     * Get user's expedition enrollments
+     */
+    public function expeditionEnrollments(): HasMany
+    {
+        return $this->hasMany(ExpeditionEnrollment::class);
+    }
+
+    /**
+     * Get active expeditions (not completed)
+     */
+    public function activeExpeditions(): BelongsToMany
+    {
+        return $this->belongsToMany(Expedition::class, 'expedition_enrollments')
+            ->whereNull('expedition_enrollments.completed_at')
+            ->withPivot(['enrolled_at', 'progress', 'reward_claimed'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Get completed expeditions
+     */
+    public function completedExpeditions(): BelongsToMany
+    {
+        return $this->belongsToMany(Expedition::class, 'expedition_enrollments')
+            ->whereNotNull('expedition_enrollments.completed_at')
+            ->withPivot(['enrolled_at', 'completed_at', 'reward_claimed'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Get expedition effects
+     */
+    public function expeditionEffects(): HasMany
+    {
+        return $this->hasMany(UserExpeditionEffect::class);
+    }
+
+    /**
+     * Enroll in an expedition
+     */
+    public function enrollInExpedition(Expedition $expedition): ExpeditionEnrollment
+    {
+        if (!$expedition->isEnrollable()) {
+            throw new \Exception('Expedition is not enrollable');
+        }
+
+        if ($this->isEnrolledIn($expedition)) {
+            throw new \Exception('Already enrolled in this expedition');
+        }
+
+        return ExpeditionEnrollment::create([
+            'expedition_id' => $expedition->id,
+            'user_id' => $this->id,
+            'enrolled_at' => now(),
+            'progress' => [
+                'posts_created' => 0,
+                'total_required' => $expedition->requirements['required_count'] ?? 3,
+                'qualifying_post_ids' => [],
+                'last_checked_at' => now()->toISOString(),
+            ],
+        ]);
+    }
+
+    /**
+     * Check if enrolled in expedition
+     */
+    public function isEnrolledIn(Expedition $expedition): bool
+    {
+        return $this->expeditionEnrollments()
+            ->where('expedition_id', $expedition->id)
+            ->exists();
+    }
+
+    /**
+     * Get active expedition effects
+     */
+    public function getActiveExpeditionEffects(): \Illuminate\Support\Collection
+    {
+        return $this->expeditionEffects()
+            ->active()
+            ->get();
+    }
+
+    /**
+     * Check if user has winner aura effect
+     */
+    public function hasExpeditionWinnerAura(): bool
+    {
+        return $this->expeditionEffects()
+            ->active()
+            ->where('effect_type', 'expedition_winner_aura')
+            ->exists();
+    }
+
+    /**
      * Check if user has public identity enabled
      */
     public function hasPublicIdentity(): bool

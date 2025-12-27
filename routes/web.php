@@ -64,6 +64,13 @@ Route::get('/library', [ContentLibraryController::class, 'index'])->name('librar
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{post}', [BlogController::class, 'show'])->name('blog.show');
 
+// Expedition Routes
+Route::get('/expeditions', [\App\Http\Controllers\ExpeditionController::class, 'index'])->name('expeditions.index');
+Route::get('/expeditions/{expedition}', [\App\Http\Controllers\ExpeditionController::class, 'show'])->name('expeditions.show');
+Route::post('/expeditions/{expedition}/enroll', [\App\Http\Controllers\ExpeditionController::class, 'enroll'])
+    ->middleware('auth')
+    ->name('expeditions.enroll');
+
 // Changelog Route
 Route::get('/changelog', [\App\Http\Controllers\ChangeLogController::class, 'index'])->name('changelog.index');
 

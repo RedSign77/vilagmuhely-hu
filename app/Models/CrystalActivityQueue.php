@@ -50,6 +50,12 @@ class CrystalActivityQueue extends Model
 
     public const TYPE_CONTENT_MILESTONE_DOWNLOADS = 'content_milestone_downloads';
 
+    public const TYPE_EXPEDITION_ENROLLED = 'expedition_enrolled';
+
+    public const TYPE_EXPEDITION_COMPLETED = 'expedition_completed';
+
+    public const TYPE_EXPEDITION_EFFECT_ACTIVATED = 'expedition_effect_activated';
+
     /**
      * Get the user this activity belongs to
      */

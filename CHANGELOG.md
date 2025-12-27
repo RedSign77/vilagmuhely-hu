@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-28
+### Added
+- Forge Expeditions - Timed content creation challenges with crystal growth multipliers and visual effects
+- Expedition enrollment system with automatic progress tracking
+- Expedition admin interface with status management, participant tracking, and statistics
+- Public expedition pages showing active, upcoming, and completed challenges
+- Automatic qualification checking when blog posts are published
+- Expedition rewards system with crystal multipliers, engagement bonuses, and visual effects
+- Expedition completion processing command (expedition:process-completions)
+- Sample expedition seeding command (expedition:seed)
+- Crystal activity queue extensions for expedition events
+- Expedition completion notifications
+
 ## [1.1.8] - 2025-12-27
 ### Added
 - Forge Identity & Personal Branding system with anonymous/public mode toggle
