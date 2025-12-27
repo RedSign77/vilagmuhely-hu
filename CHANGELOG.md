@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2025-12-27
+### Added
+- Social media sharing image optimization system with platform-specific variants
+- Artisan command for generating optimized social media images
+- Enhanced Open Graph and Twitter Card meta tags with image dimensions and alt text
+- Comprehensive social media images guide documentation
+### Fixed
+- Added missing updated_at column to user_follows table to fix follower notifications
+
 ## [1.1.4] - 2025-12-25
 ### Changed
 - Select Roles field in scheduled emails now connected to Roles resource instead of hardcoded options

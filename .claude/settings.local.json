@@ -21,7 +21,8 @@
       "Bash(ls:*)",
       "Bash(git -C /home/unreality1/projects/vilagmuhely log --oneline --all)",
       "Bash(xargs:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(docker ps:*)"
     ],
     "deny": [],
     "ask": []
