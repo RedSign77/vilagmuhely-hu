@@ -1,29 +1,17 @@
 # Work items
 
-## 2025-12-26
+Blog feature request:
+1. Related Contents: As a user I want to see a Related Contents grid with a maximum of 4 content card (like on Content Library page's content cards) in one row under the blog post text.
 
-### SEO Social Media Images - COMPLETED ✓
+Make a feature plan for the following:
+Epic: Forge Identity & Personal Branding
+As a Creator, I want to control how my identity is displayed on my public Forge profile so that I can choose between absolute privacy and building a recognizable personal brand for social sharing.
 
-Created comprehensive guide and implementation:
-- Created `dps/features/social-media-images.md` with detailed specifications
-- Planned 5 image variants for different platforms (OG, Twitter, various sizes)
-- Created `app/Console/Commands/GenerateSocialImages.php` command using GD library
-- Updated `resources/views/layouts/app.blade.php` with proper meta tags:
-  - Open Graph image: `images/og/vilagmuhely-og.jpg` (1200x630)
-  - Twitter Card image: `images/twitter/vilagmuhely-twitter.jpg` (1200x628)
-  - Added width, height, and alt attributes for better SEO
+User Stories:
 
-**Next steps**:
-- Run `php artisan social:generate-images` when Docker is available to create image variants
-- Test social sharing on Facebook, Twitter, LinkedIn using debugging tools
-
-### Database Fix - user_follows Table
-
-**Issue**: Production error - missing `updated_at` column in `user_follows` table
-- Error occurred in `NotifyFollowersOfNewContent` listener when processing follower notifications
-- BelongsToMany relationship used `->withTimestamps()` but table only had `created_at`
-
-**Fix**: Created migration `2025_12_27_000001_add_updated_at_to_user_follows_table.php`
-- Adds `updated_at` timestamp column to `user_follows` table
-- Run migration in production: `php artisan migrate`
-
+1. Identity Toggle: As a user, I want a toggle in my "Profile Settings" to switch between Anonymous Mode (Creator #ID) and Public Identity (Username).
+2. Username Display: As a user, when "Public Identity" is enabled, I want my unique username to replace the anonymized placeholder in the Forge profile header, URL, and metadata.
+3. SEO Personalization: As a user, I want the meta title and description of my Forge page to automatically update to include my username, making my profile more searchable and professional when shared on social media. 
+4. Visual Distinction: As a creator, I want my choice of identity to be reflected in the Content Library as well, so that my contributions are credited to my username rather than a generic ID. 
+5. Dynamic URL Binding: As a user, I want the system to handle automatic redirects if I change my identity settings, ensuring that old links to my "Forge" profile don't break for my followers. 
+6. Privacy Guardrails: As a user, I want a clear warning that enabling "Public Identity" makes my chosen username visible to the public, while my real name remains strictly hidden and private at all times.

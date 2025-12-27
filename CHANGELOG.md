@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2025-12-27
+## [1.1.6] - 2025-12-27
+### Added
+- Technical specification for Forge Expeditions content creation challenge system
+- Technical specification for Crystal Resonator community interaction system
+- Technical specification for Weekly Performance Digest creator analytics system
+
+## [1.1.5] - 2025-12-27
 ### Added
 - Social media sharing image optimization system with platform-specific variants
 - Artisan command for generating optimized social media images

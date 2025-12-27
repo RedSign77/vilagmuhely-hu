@@ -1,5 +1,7 @@
 # Social Media Images Feature
 
+Status: Implemented
+
 ## Overview
 Implementation of optimized social media sharing images for Open Graph and Twitter Card meta tags to improve social media presence and sharing appearance.
 

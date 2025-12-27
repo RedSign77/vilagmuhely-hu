@@ -1,5 +1,7 @@
 # Invitation System Feature Specification
 
+Status: Implemented
+
 ## Overview
 
 A comprehensive user invitation system that allows authenticated supervisors to invite new users to the Világműhely platform via email. Invited users receive a unique invitation link that pre-fills registration forms and automatically verifies their email upon signup.
