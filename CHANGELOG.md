@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sample expedition seeding command (expedition:seed)
 - Crystal activity queue extensions for expedition events
 - Expedition completion notifications
+- Invitation reminder system with daily cronjob to send reminder emails 24 hours before expiration
+- Daily cronjob to automatically mark expired invitations as expired
+- Reminder tracking with reminded_at timestamp
+### Fixed
+- Invitation Resend action visibility formatting and logic clarity
 
 ## [1.1.8] - 2025-12-27
 ### Added

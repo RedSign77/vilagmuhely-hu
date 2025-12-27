@@ -30,4 +30,14 @@ return [
     |
     */
     'cleanup_after_days' => env('INVITATION_CLEANUP_DAYS', 30),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reminder Hours Before Expiry
+    |--------------------------------------------------------------------------
+    |
+    | Number of hours before expiration to send reminder emails. Default is 24 hours.
+    |
+    */
+    'reminder_hours_before_expiry' => env('INVITATION_REMINDER_HOURS', 24),
 ];

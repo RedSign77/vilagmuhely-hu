@@ -105,8 +105,7 @@ class InvitationResource extends Resource
                     ->label('Expires')
                     ->dateTime('M d, Y H:i')
                     ->sortable()
-                    ->color(fn (Invitation $record) => $record->isExpired() ? 'danger' : 'success'
-                    ),
+                    ->color(fn (Invitation $record) => $record->isExpired() ? 'danger' : 'success'),
 
                 Tables\Columns\TextColumn::make('accepted_at')
                     ->label('Accepted')
@@ -148,8 +147,7 @@ class InvitationResource extends Resource
                     ->label('Resend')
                     ->icon('heroicon-o-paper-airplane')
                     ->color('success')
-                    ->visible(fn (Invitation $record) => $record->status === 'pending' && ! $record->isExpired()
-                    )
+                    ->visible(fn (Invitation $record) => $record->status === 'pending' && !$record->isExpired())
                     ->requiresConfirmation()
                     ->action(function (Invitation $record) {
                         Notification::route('mail', $record->email)
@@ -180,8 +178,7 @@ class InvitationResource extends Resource
                     ->label('Copy Link')
                     ->icon('heroicon-o-link')
                     ->color('info')
-                    ->visible(fn (Invitation $record) => $record->status === 'pending' && ! $record->isExpired()
-                    )
+                    ->visible(fn (Invitation $record) => $record->status === 'pending' && !$record->isExpired())
                     ->action(function (Invitation $record) {
                         $url = route('invitations.accept', $record->token);
 
@@ -211,8 +208,7 @@ class InvitationResource extends Resource
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
                         ->requiresConfirmation()
-                        ->action(fn ($records) => $records->each->update(['status' => 'cancelled'])
-                        ),
+                        ->action(fn ($records) => $records->each->update(['status' => 'cancelled'])),
                 ]),
             ]);
     }
@@ -253,8 +249,7 @@ class InvitationResource extends Resource
                         TextEntry::make('expires_at')
                             ->label('Expires At')
                             ->dateTime()
-                            ->color(fn (Invitation $record) => $record->isExpired() ? 'danger' : 'success'
-                            ),
+                            ->color(fn (Invitation $record) => $record->isExpired() ? 'danger' : 'success'),
                         TextEntry::make('accepted_at')
                             ->label('Accepted At')
                             ->dateTime()

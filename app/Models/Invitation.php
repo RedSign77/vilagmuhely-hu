@@ -17,6 +17,7 @@ class Invitation extends Model
         'expires_at',
         'accepted_at',
         'accepted_by_user_id',
+        'reminded_at',
         'status',
     ];
 
@@ -25,6 +26,7 @@ class Invitation extends Model
         return [
             'expires_at' => 'datetime',
             'accepted_at' => 'datetime',
+            'reminded_at' => 'datetime',
         ];
     }
 
