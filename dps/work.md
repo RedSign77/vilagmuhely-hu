@@ -1,7 +1,13 @@
 # Work items
 
-Blog feature request:
-1. Related Contents: As a user I want to see a Related Contents grid with a maximum of 4 content card (like on Content Library page's content cards) in one row under the blog post text.
+Completed features:
+1. Blog Related Contents → `dps/features/blog-related-contents.md` (IMPLEMENTED ✅)
+
+Technical specifications created:
+1. Forge Expeditions → `dps/features/forge-expeditions.md`
+2. Crystal Resonator → `dps/features/crystal-resonator.md`
+3. Weekly Performance Digest → `dps/features/weekly-performance-digest.md`
+4. Forge Identity & Personal Branding → `dps/features/forge-identity-branding.md`
 
 Make a feature plan for the following:
 Epic: Forge Identity & Personal Branding

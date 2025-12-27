@@ -59,6 +59,29 @@
                 prose-li:text-gray-300">
                 {!! $post->content !!}
             </div>
+
+            {{-- Related Contents Section --}}
+            @if(isset($relatedContents) && $relatedContents->count() > 0)
+                <div class="mt-12 pt-12 border-t border-white/20">
+                    <h2 class="text-2xl font-bold text-white mb-6">📚 Related Resources</h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        @foreach($relatedContents as $content)
+                            @include('blog.partials.content-card', ['content' => $content])
+                        @endforeach
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <a href="{{ route('library.index') }}"
+                           class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
+                            Browse All Content
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </article>
 

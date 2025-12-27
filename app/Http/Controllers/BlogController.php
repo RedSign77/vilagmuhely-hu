@@ -41,9 +41,13 @@ class BlogController extends Controller
             ->limit(3)
             ->get();
 
+        // Get related contents (max 3)
+        $relatedContents = $post->getRelatedContents(3);
+
         return view('blog.show', [
             'post' => $post,
             'relatedPosts' => $relatedPosts,
+            'relatedContents' => $relatedContents,
         ]);
     }
 }

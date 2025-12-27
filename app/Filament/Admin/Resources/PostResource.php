@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use Webtechsolutions\ContentEngine\Models\Content;
 
 class PostResource extends Resource
 {
@@ -121,6 +122,31 @@ class PostResource extends Resource
                             ->helperText('Comma-separated keywords for SEO'),
                     ])
                     ->columns(1)
+                    ->collapsible(),
+
+                Forms\Components\Section::make('Related Contents')
+                    ->description('Select up to 3 related contents to display under the blog post')
+                    ->schema([
+                        Forms\Components\Select::make('related_content_ids')
+                            ->label('Related Contents')
+                            ->multiple()
+                            ->searchable()
+                            ->preload()
+                            ->options(function () {
+                                return Content::whereIn('status', [Content::STATUS_PUBLIC, Content::STATUS_MEMBERS_ONLY])
+                                    ->orderBy('title')
+                                    ->pluck('title', 'id');
+                            })
+                            ->maxItems(3)
+                            ->helperText('Select up to 3 contents to display. If left empty, the system will auto-suggest related contents based on post keywords.')
+                            ->columnSpanFull(),
+
+                        Forms\Components\Placeholder::make('auto_discovery_note')
+                            ->label('')
+                            ->content('**Auto-Discovery:** If you select fewer than 3 contents (or none), the system will automatically suggest related contents based on post title and content keywords.')
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsed()
                     ->collapsible(),
             ]);
     }
