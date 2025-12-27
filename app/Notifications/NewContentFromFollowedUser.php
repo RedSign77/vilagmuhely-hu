@@ -40,7 +40,7 @@ class NewContentFromFollowedUser extends Notification implements ShouldQueue
         return [
             'type' => 'new_content',
             'creator_id' => $this->creator->id,
-            'creator_name' => $this->creator->anonymized_name,
+            'creator_name' => $this->creator->getDisplayName(),
             'creator_username' => $this->creator->username,
             'content_id' => $this->content->id,
             'content_title' => $this->content->title,
@@ -48,7 +48,7 @@ class NewContentFromFollowedUser extends Notification implements ShouldQueue
             'content_excerpt' => $this->content->excerpt ?? '',
             'url' => route('library.index') . '?highlight=' . $this->content->id,
             'icon' => '📝',
-            'message' => "{$this->creator->anonymized_name} published new content: {$this->content->title}",
+            'message' => "{$this->creator->getDisplayName()} published new content: {$this->content->title}",
         ];
     }
 
@@ -58,9 +58,9 @@ class NewContentFromFollowedUser extends Notification implements ShouldQueue
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("{$this->creator->anonymized_name} published new content")
+            ->subject("{$this->creator->getDisplayName()} published new content")
             ->greeting("New from a Crystal Master you follow!")
-            ->line("{$this->creator->anonymized_name} just published: **{$this->content->title}**")
+            ->line("{$this->creator->getDisplayName()} just published: **{$this->content->title}**")
             ->line($this->content->excerpt ?? $this->content->description ?? '')
             ->action('View Content', route('library.index') . '?highlight=' . $this->content->id)
             ->line('Happy adventuring!');

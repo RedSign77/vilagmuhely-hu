@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\CrystalActivityQueue;
 use App\Models\User;
 use App\Models\UserCrystalMetric;
+use Illuminate\Http\Request;
 
 class ForgeController extends Controller
 {
     /**
      * Display user's Forge profile.
      */
-    public function show(User $user)
+    public function show(Request $request)
     {
+        // Get user from middleware
+        $user = $request->input('user');
+
         // Check if user has crystal metrics
         $metric = UserCrystalMetric::where('user_id', $user->id)->first();
 
@@ -54,9 +58,9 @@ class ForgeController extends Controller
 
         // SEO meta data
         $colorName = $user->crystal_color_name;
-        $anonymizedName = $user->anonymized_name;
-        $pageTitle = "{$anonymizedName}'s Forge – {$colorName} Crystal {$rpgStats['rank']} | Világműhely";
-        $pageDescription = "Explore {$anonymizedName}'s creative forge: Level {$rpgStats['level']} {$rpgStats['rank']} with {$counts['authored']} works, {$metric->facet_count} crystal facets, and {$rpgStats['aura']}% aura resonance.";
+        $displayName = $user->getDisplayName();
+        $pageTitle = $user->getMetaTitle();
+        $pageDescription = $user->getMetaDescription();
 
         return view('forge.profile', [
             'user' => $user,
@@ -65,6 +69,7 @@ class ForgeController extends Controller
             'activities' => $activities,
             'counts' => $counts,
             'downloads' => $downloads,
+            'displayName' => $displayName,
             'pageTitle' => $pageTitle,
             'pageDescription' => $pageDescription,
             'colorName' => $colorName,

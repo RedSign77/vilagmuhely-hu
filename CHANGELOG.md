@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.8] - 2025-12-27
+### Added
+- Forge Identity & Personal Branding system with anonymous/public mode toggle
+- Username-based redirect system for profile URL changes
+- Display mode tracking with automatic SEO meta tag updates
+- Public/Anonymous badge on Forge profiles
+- Middleware for handling old username redirects
+- Identity & Privacy configuration section in Edit Profile page with display mode toggle, privacy notes, and last changed timestamp
+### Changed
+- Crystal Gallery, My Crystal page, Blog index, Blog post page, and Welcome page now display username when public identity mode is enabled
+### Fixed
+- Forge profile route now properly handles username resolution before 404
+- UserUrlHistory table name mismatch with Laravel's auto-pluralization
+
 ## [1.1.7] - 2025-12-27
 ### Added
 - Blog related contents feature with manual selection and auto-discovery

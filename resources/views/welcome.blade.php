@@ -185,7 +185,7 @@
                             <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center overflow-hidden">
                                 <span class="text-3xl">💎</span>
                             </div>
-                            <h3 class="text-xl font-bold">{{ $metric->user->anonymized_name }}</h3>
+                            <h3 class="text-xl font-bold">{{ $metric->user->getDisplayName() }}</h3>
                             <p class="text-sm text-gray-400">Rank #{{ $index + 1 }}</p>
                         </div>
 
@@ -421,7 +421,7 @@
                             @endif
 
                             <div class="flex items-center justify-between text-xs text-gray-500">
-                                <span>By {{ $content->creator->anonymized_name }}</span>
+                                <span>By {{ $content->creator->getDisplayName() }}</span>
                                 <span class="text-purple-400 group-hover:text-purple-300">View →</span>
                             </div>
                         </div>
@@ -476,7 +476,7 @@
 
                     <div class="p-6">
                         <div class="flex items-center gap-2 text-sm text-gray-400 mb-3">
-                            <span>By {{ $post->author->anonymized_name }}</span>
+                            <span>By {{ $post->author->getDisplayName() }}</span>
                             <span>•</span>
                             <time datetime="{{ $post->published_at->toISOString() }}">
                                 {{ $post->published_at->format('M d, Y') }}

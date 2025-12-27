@@ -53,7 +53,9 @@ Route::get('/crystals', [CrystalGalleryController::class, 'index'])->name('cryst
 Route::get('/crystals/{user}', [CrystalGalleryController::class, 'show'])->name('crystals.show');
 
 // The Forge - User Profile Routes
-Route::get('/forge/{user:username}', [ForgeController::class, 'show'])->name('forge.profile');
+Route::get('/forge/{username}', [ForgeController::class, 'show'])
+    ->name('forge.profile')
+    ->middleware('forge.redirect');
 
 // Content Library Route
 Route::get('/library', [ContentLibraryController::class, 'index'])->name('library.index');

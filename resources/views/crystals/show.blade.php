@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', $user->anonymized_name . ' - Crystal Profile')
-@section('meta_description', 'View ' . $user->anonymized_name . '\'s unique 3D crystal grown through creative content. Explore their crystal\'s geometry, colors, and glow intensity.')
-@section('meta_keywords', '3D crystal, ' . $user->anonymized_name . ', creator profile, content visualization, gamification')
-@section('og_title', $user->anonymized_name . '\'s Crystal - Világműhely')
-@section('og_description', 'View ' . $user->anonymized_name . '\'s unique 3D crystal. Facets: ' . ($crystalMetrics->facet_count ?? '0') . ' | Glow: ' . number_format(($crystalMetrics->glow_intensity ?? 0) * 100, 1) . '%')
-@section('twitter_title', $user->anonymized_name . '\'s Crystal')
-@section('twitter_description', 'View ' . $user->anonymized_name . '\'s unique 3D crystal grown through creative content.')
+@section('title', $user->getDisplayName() . ' - Crystal Profile')
+@section('meta_description', 'View ' . $user->getDisplayName() . '\'s unique 3D crystal grown through creative content. Explore their crystal\'s geometry, colors, and glow intensity.')
+@section('meta_keywords', '3D crystal, ' . $user->getDisplayName() . ', creator profile, content visualization, gamification')
+@section('og_title', $user->getDisplayName() . '\'s Crystal - Világműhely')
+@section('og_description', 'View ' . $user->getDisplayName() . '\'s unique 3D crystal. Facets: ' . ($crystalMetrics->facet_count ?? '0') . ' | Glow: ' . number_format(($crystalMetrics->glow_intensity ?? 0) * 100, 1) . '%')
+@section('twitter_title', $user->getDisplayName() . '\'s Crystal')
+@section('twitter_description', 'View ' . $user->getDisplayName() . '\'s unique 3D crystal grown through creative content.')
 
 @section('content')
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,7 +29,7 @@
             </div>
             <div>
                 <h1 class="text-3xl font-bold bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-400 bg-clip-text text-transparent">
-                    {{ $user->anonymized_name }}'s Crystal
+                    {{ $user->getDisplayName() }}'s Crystal
                 </h1>
                 <p class="text-gray-300">
                     A visual representation of their creative journey

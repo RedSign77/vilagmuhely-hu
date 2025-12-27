@@ -36,6 +36,7 @@ class EditProfile extends Page
             'address' => $user->address,
             'social_media_links' => $user->social_media_links,
             'about' => $user->about,
+            'display_mode' => $user->display_mode ?? 'anonymous',
         ]);
     }
 
@@ -93,6 +94,49 @@ class EditProfile extends Page
                             ->visible(fn ($get) => filled($get('password'))),
                     ])
                     ->columns(2),
+
+                Forms\Components\Section::make('Identity & Privacy')
+                    ->description('Control how your identity appears on public profiles')
+                    ->schema([
+                        Forms\Components\Radio::make('display_mode')
+                            ->label('Display Mode')
+                            ->options([
+                                'anonymous' => 'Anonymous (Creator #ID)',
+                                'public' => 'Public (Username)',
+                            ])
+                            ->default('anonymous')
+                            ->inline()
+                            ->helperText('Anonymous mode displays "Creator #ID", Public mode displays the username')
+                            ->live()
+                            ->columnSpanFull(),
+
+                        Forms\Components\Placeholder::make('privacy_note')
+                            ->label('')
+                            ->content(fn () => new \Illuminate\Support\HtmlString('<div class="text-sm text-gray-600 dark:text-gray-400"><strong>Privacy:</strong> Your real name is never displayed publicly, regardless of display mode. Only your username becomes visible when Public Identity is enabled.</div>'))
+                            ->columnSpanFull(),
+
+                        Forms\Components\Placeholder::make('current_display')
+                            ->label('Current Display')
+                            ->content(function () {
+                                $user = Auth::user();
+                                $displayName = $user->getDisplayName();
+                                $mode = $user->hasPublicIdentity() ? 'Public' : 'Anonymous';
+                                return new \Illuminate\Support\HtmlString("<div class='flex items-center gap-2'><span class='font-semibold'>{$displayName}</span><span class='px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded text-xs'>{$mode}</span></div>");
+                            })
+                            ->columnSpanFull(),
+
+                        Forms\Components\Placeholder::make('last_changed')
+                            ->label('Last Changed')
+                            ->content(function () {
+                                $user = Auth::user();
+                                return $user?->display_mode_changed_at
+                                    ? $user->display_mode_changed_at->diffForHumans()
+                                    : 'Never';
+                            })
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible()
+                    ->collapsed(),
 
                 Forms\Components\Section::make('Contact Information')
                     ->schema([
@@ -163,6 +207,12 @@ class EditProfile extends Page
         // Remove password if empty
         if (empty($data['password'])) {
             unset($data['password']);
+        }
+
+        // Handle display mode change
+        if (isset($data['display_mode']) && $user->display_mode !== $data['display_mode']) {
+            $user->updateDisplayMode($data['display_mode']);
+            unset($data['display_mode']); // Remove from data as it's already updated
         }
 
         $user->update($data);

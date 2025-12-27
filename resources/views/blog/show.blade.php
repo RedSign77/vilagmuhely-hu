@@ -31,7 +31,7 @@
 
         <div class="p-8">
             <div class="flex items-center gap-3 text-sm text-gray-400 mb-6">
-                <span>By {{ $post->author->anonymized_name }}</span>
+                <span>By {{ $post->author->getDisplayName() }}</span>
                 <span>•</span>
                 <time datetime="{{ $post->published_at->toISOString() }}">
                     {{ $post->published_at->format('F d, Y') }}

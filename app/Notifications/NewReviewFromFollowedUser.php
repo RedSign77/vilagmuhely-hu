@@ -37,7 +37,7 @@ class NewReviewFromFollowedUser extends Notification implements ShouldQueue
         return [
             'type' => 'new_review',
             'reviewer_id' => $this->reviewer->id,
-            'reviewer_name' => $this->reviewer->anonymized_name,
+            'reviewer_name' => $this->reviewer->getDisplayName(),
             'reviewer_username' => $this->reviewer->username,
             'review_id' => $this->review->id,
             'review_title' => $this->review->title,
@@ -46,16 +46,16 @@ class NewReviewFromFollowedUser extends Notification implements ShouldQueue
             'content_title' => $this->content->title,
             'url' => route('library.index') . '?highlight=' . $this->content->id . '#review-' . $this->review->id,
             'icon' => '💬',
-            'message' => "{$this->reviewer->anonymized_name} reviewed: {$this->content->title}",
+            'message' => "{$this->reviewer->getDisplayName()} reviewed: {$this->content->title}",
         ];
     }
 
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("{$this->reviewer->anonymized_name} posted a review")
+            ->subject("{$this->reviewer->getDisplayName()} posted a review")
             ->greeting("New review from a Crystal Master you follow!")
-            ->line("{$this->reviewer->anonymized_name} reviewed **{$this->content->title}**")
+            ->line("{$this->reviewer->getDisplayName()} reviewed **{$this->content->title}**")
             ->line("*{$this->review->title}*")
             ->line(Str::limit($this->review->review_text, 150))
             ->action('Read Full Review', route('library.index') . '?highlight=' . $this->content->id . '#review-' . $this->review->id)

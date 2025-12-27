@@ -55,7 +55,7 @@
                     <div class="user-name">
                         <a href="{{ route('crystals.show', $metric->user) }}"
                            class="hover:text-indigo-400 transition">
-                            {{ $metric->user->anonymized_name }}
+                            {{ $metric->user->getDisplayName() }}
                         </a>
                     </div>
 

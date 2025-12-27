@@ -20,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'api/*',
         ]);
+
+        // Register middleware aliases
+        $middleware->alias([
+            'forge.redirect' => \App\Http\Middleware\HandleForgeProfileRedirects::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

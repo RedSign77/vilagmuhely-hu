@@ -2,10 +2,10 @@
 
 @section('title', $pageTitle)
 @section('meta_description', $pageDescription)
-@section('meta_keywords', 'creator profile, ' . $user->anonymized_name . ', ' . $colorName . ' crystal, level ' . $rpgStats['level'])
-@section('og_title', $user->anonymized_name . "'s Forge - " . $rpgStats['rank'] . " | Világműhely")
+@section('meta_keywords', 'creator profile, ' . $displayName . ', ' . $colorName . ' crystal, level ' . $rpgStats['level'])
+@section('og_title', $pageTitle)
 @section('og_description', $pageDescription)
-@section('twitter_title', $user->anonymized_name . "'s Forge")
+@section('twitter_title', $displayName . "'s Forge")
 @section('twitter_description', $pageDescription)
 
 @section('content')
@@ -40,8 +40,26 @@
 
             {{-- RPG-Style Stats Panel --}}
             <div class="forge-stats-panel">
-                <h1 class="forge-title">{{ $user->anonymized_name }}'s Forge</h1>
-                <p class="forge-subtitle">{{ $rpgStats['rank'] }}</p>
+                <h1 class="forge-title">{{ $displayName }}'s Forge</h1>
+                <div class="flex items-center gap-2 mb-2">
+                    <p class="forge-subtitle">{{ $rpgStats['rank'] }}</p>
+                    @if($user->hasPublicIdentity())
+                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-purple-600/20 text-purple-300 rounded text-xs font-semibold">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Public
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-gray-600/20 text-gray-400 rounded text-xs font-semibold">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Anonymous
+                        </span>
+                    @endif
+                </div>
 
                 {{-- Stat Bars --}}
                 <div class="forge-stats-grid">

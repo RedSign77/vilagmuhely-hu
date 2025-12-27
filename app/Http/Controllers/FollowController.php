@@ -36,7 +36,7 @@ class FollowController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Successfully followed ' . $user->anonymized_name,
+                'message' => 'Successfully followed ' . $user->getDisplayName(),
                 'follower_count' => $user->fresh()->follower_count,
             ]);
         } catch (\Exception $e) {
@@ -67,7 +67,7 @@ class FollowController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Successfully unfollowed ' . $user->anonymized_name,
+                'message' => 'Successfully unfollowed ' . $user->getDisplayName(),
                 'follower_count' => $user->fresh()->follower_count,
             ]);
         } catch (\Exception $e) {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\DisplayModeChanged;
 use App\Notifications\CustomVerifyEmail;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
@@ -43,6 +44,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sit
         'social_media_links',
         'about',
         'notification_preferences',
+        'display_mode',
+        'display_mode_changed_at',
     ];
 
     /**
@@ -67,6 +70,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sit
             'password' => 'hashed',
             'social_media_links' => 'array',
             'notification_preferences' => 'array',
+            'display_mode_changed_at' => 'datetime',
         ];
     }
 
@@ -409,5 +413,136 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Sit
             'web_on_new_content', 'web_on_new_review' => true,
             default => false,
         };
+    }
+
+    /**
+     * URL history for redirects
+     */
+    public function urlHistory(): HasMany
+    {
+        return $this->hasMany(UserUrlHistory::class);
+    }
+
+    /**
+     * Check if user has public identity enabled
+     */
+    public function hasPublicIdentity(): bool
+    {
+        return $this->display_mode === 'public';
+    }
+
+    /**
+     * Get display name based on identity mode
+     */
+    public function getDisplayName(): string
+    {
+        return $this->hasPublicIdentity()
+            ? $this->username
+            : $this->anonymized_name;
+    }
+
+    /**
+     * Update display mode and track change
+     */
+    public function updateDisplayMode(string $mode): void
+    {
+        if (! in_array($mode, ['anonymous', 'public'])) {
+            throw new \InvalidArgumentException('Invalid display mode');
+        }
+
+        if ($this->display_mode === $mode) {
+            return; // No change needed
+        }
+
+        $oldMode = $this->display_mode;
+
+        $this->update([
+            'display_mode' => $mode,
+            'display_mode_changed_at' => now(),
+        ]);
+
+        // Trigger event for analytics/notifications
+        event(new DisplayModeChanged($this, $oldMode, $mode));
+    }
+
+    /**
+     * Update username and create redirect
+     */
+    public function updateUsername(string $newUsername): void
+    {
+        $oldUsername = $this->username;
+
+        // Validate username
+        if (! $this->isValidUsername($newUsername)) {
+            throw new \InvalidArgumentException('Invalid username format');
+        }
+
+        // Check uniqueness
+        if (static::where('username', $newUsername)->where('id', '!=', $this->id)->exists()) {
+            throw new \InvalidArgumentException('Username already taken');
+        }
+
+        // Update username
+        $this->update(['username' => $newUsername]);
+
+        // Create redirect history
+        if ($oldUsername !== $newUsername) {
+            UserUrlHistory::create([
+                'user_id' => $this->id,
+                'old_username' => $oldUsername,
+                'new_username' => $newUsername,
+                'changed_at' => now(),
+                'redirect_enabled' => true,
+            ]);
+        }
+    }
+
+    /**
+     * Validate username format
+     */
+    protected function isValidUsername(string $username): bool
+    {
+        // Alphanumeric, hyphens, underscores, 3-64 characters
+        return preg_match('/^[a-zA-Z0-9_-]{3,64}$/', $username);
+    }
+
+    /**
+     * Get SEO-optimized meta title
+     */
+    public function getMetaTitle(): string
+    {
+        if (! $this->crystalMetric) {
+            return $this->getDisplayName()."'s Forge | Világműhely";
+        }
+
+        $rank = $this->calculateRank($this->crystalMetric->facet_count);
+        $colorName = $this->hexToColorName($this->crystalMetric->dominant_colors[0] ?? '#ffffff');
+
+        if ($this->hasPublicIdentity()) {
+            return "{$this->username}'s Forge – {$colorName} Crystal {$rank} | Világműhely";
+        }
+
+        return "{$this->anonymized_name}'s Forge – {$colorName} Crystal {$rank} | Világműhely";
+    }
+
+    /**
+     * Get SEO-optimized meta description
+     */
+    public function getMetaDescription(): string
+    {
+        if (! $this->crystalMetric) {
+            return "Explore {$this->getDisplayName()}'s creative forge on Világműhely.";
+        }
+
+        $rank = $this->calculateRank($this->crystalMetric->facet_count);
+        $level = $this->crystalMetric->facet_count;
+        $worksCount = $this->contents()->whereIn('status', [Content::STATUS_PUBLIC, Content::STATUS_MEMBERS_ONLY])->count();
+        $aura = round($this->crystalMetric->glow_intensity * 100);
+
+        if ($this->hasPublicIdentity()) {
+            return "Explore {$this->username}'s creative forge: Level {$level} {$rank} with {$worksCount} works and {$aura}% aura resonance. Discover unique content and worldbuilding resources.";
+        }
+
+        return "Explore {$this->anonymized_name}'s creative forge: Level {$level} {$rank} with {$worksCount} works, {$this->crystalMetric->facet_count} crystal facets, and {$aura}% aura resonance.";
     }
 }
